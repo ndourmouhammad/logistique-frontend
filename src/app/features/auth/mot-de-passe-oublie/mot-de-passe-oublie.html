@@ -17,7 +17,7 @@
     <!-- Étape 1 : Choix méthode -->
     <div *ngIf="etape === 1" class="fade-up">
       <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+        <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
           <i class="ti ti-lock-question text-3xl text-indigo-600"></i>
         </div>
         <h1 class="text-lg font-bold text-slate-800 mb-1">Réinitialiser le mot de passe</h1>
@@ -77,7 +77,7 @@
 
       <div *ngIf="etape === 2" class="fade-up">
         <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+          <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
             <i [class]="methode === 'sms' ? 'ti ti-phone text-3xl text-indigo-600' : 'ti ti-mail text-3xl text-indigo-600'"></i>
           </div>
           <h1 class="text-lg font-bold text-slate-800 mb-1">Saisie de vos coordonnées</h1>
@@ -188,7 +188,7 @@
         </div>
       </div>
       <button (click)="reinitialiser()" [disabled]="isLoading"
-        class="btn-press w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
+        class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
         <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
         {{ isLoading ? 'Réinitialisation...' : 'Réinitialiser' }}
       </button>
@@ -218,12 +218,12 @@
       <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-500/8 rounded-full blur-3xl"></div>
     </div>
     <a routerLink="/onboarding" class="flex items-center gap-3 relative z-10">
-      <div class="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">TT</div>
+      <div class="w-11 h-11 bg-linear-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">TT</div>
       <span class="text-white font-semibold text-lg">Tiak-Tiak</span>
     </a>
     <div class="relative z-10 max-w-md">
       <div class="mb-8 float-slow">
-        <div class="w-20 h-20 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl">
+        <div class="w-20 h-20 bg-linear-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl">
           <i class="ti ti-lock-question text-white text-4xl"></i>
         </div>
       </div>
@@ -374,7 +374,7 @@
           </div>
         </div>
         <button (click)="reinitialiser()" [disabled]="isLoading"
-          class="btn-press w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
+          class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
           <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
           {{ isLoading ? 'Réinitialisation...' : 'Réinitialiser' }}
         </button>

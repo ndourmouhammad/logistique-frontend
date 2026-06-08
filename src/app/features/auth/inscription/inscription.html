@@ -161,7 +161,7 @@
         <p class="text-xs text-indigo-700">En continuant, vous acceptez les <u>CGU</u> et la <u>politique de confidentialité</u>.</p>
       </div>
       <button (click)="doRegister()" [disabled]="isLoading"
-        class="btn-press w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-5 shadow-lg shadow-orange-500/20">
+        class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-5 shadow-lg shadow-orange-500/20">
         <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
         {{ isLoading ? 'Création...' : 'Créer mon compte' }}
       </button>
@@ -174,15 +174,15 @@
   <!-- Left Panel -->
   <div class="bg-navy p-12 flex flex-col justify-between relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute top-[-10%] right-[-15%] w-[500px] h-[500px] bg-gradient-to-br from-tt-orange/8 to-transparent rounded-full blur-3xl"></div>
+      <div class="absolute top-[-10%] right-[-15%] w-[500px] h-[500px] bg-linear-to-br from-tt-orange/8 to-transparent rounded-full blur-3xl"></div>
     </div>
     <a routerLink="/onboarding" class="flex items-center gap-3 relative z-10">
-      <div class="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-orange-500/20">TT</div>
+      <div class="w-11 h-11 bg-linear-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-orange-500/20">TT</div>
       <span class="text-white font-semibold text-lg">Tiak-Tiak</span>
     </a>
     <div class="relative z-10 max-w-md">
       <div class="mb-8 float-slow">
-        <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/20">
+        <div class="w-20 h-20 bg-linear-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/20">
           <i class="ti ti-user-plus text-white text-4xl"></i>
         </div>
       </div>
@@ -325,7 +325,7 @@
           <p class="text-xs text-indigo-700">En continuant, vous acceptez les <u>CGU</u> et la <u>politique de confidentialité</u>.</p>
         </div>
         <button (click)="doRegister()" [disabled]="isLoading"
-          class="btn-press w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-5 shadow-lg shadow-orange-500/20">
+          class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-5 shadow-lg shadow-orange-500/20">
           <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
           {{ isLoading ? 'Création...' : 'Créer mon compte' }}
         </button>
