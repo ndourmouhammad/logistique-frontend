@@ -1,0 +1,212 @@
+<div class="bg-slate-50 h-screen flex flex-col">
+
+  <!-- Header -->
+  <div class="bg-linear-to-br from-red-600 to-red-700 text-white px-4 py-4 flex items-center gap-3 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-white rounded-full"></div>
+      <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-white rounded-full"></div>
+    </div>
+    <a routerLink="/livreur/validation-livraison" class="w-8 h-8 bg-white/15 backdrop-blur rounded-full flex items-center justify-center relative z-10 cursor-pointer hover:bg-white/25 transition active:scale-90">
+      <i class="ti ti-arrow-left"></i>
+    </a>
+    <div class="relative z-10">
+      <div class="font-semibold">Déclarer un échec</div>
+      <div class="text-[10px] text-white/70">Livraison non effectuée</div>
+    </div>
+    <div class="ml-auto w-10 h-10 bg-white/15 backdrop-blur rounded-full flex items-center justify-center relative z-10">
+      <i class="ti ti-alert-triangle text-xl"></i>
+    </div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="flex-1 overflow-y-auto px-4 py-5 space-y-5">
+
+    <!-- Info Colis -->
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-red-50 text-red-500 rounded-xl flex items-center justify-center">
+          <i class="ti ti-package-off text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-semibold text-slate-800">Colis non livré</div>
+          <div class="text-xs text-slate-500 font-mono mt-0.5">#{{ codeColis }}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Destinataire</div>
+          <div class="text-sm font-semibold text-slate-700">{{ nomDestinataire }}</div>
+        </div>
+      </div>
+      <div class="mt-3 pt-3 border-t border-slate-50 flex items-center gap-2 text-xs text-slate-500">
+        <i class="ti ti-map-pin text-red-400"></i>
+        <span>{{ adresse }}</span>
+        <span class="ml-auto text-slate-400">{{ telDestinataire }}</span>
+      </div>
+    </div>
+
+    <!-- Étape 1 : Motif de l'échec -->
+    <div>
+      <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+        Motif de l'échec
+      </h2>
+      <div class="space-y-2.5">
+        <label *ngFor="let r of raisons"
+               class="flex items-center gap-3 bg-white rounded-xl border-2 p-3.5 cursor-pointer transition-all duration-200 active:scale-[0.98]"
+               [ngClass]="raisonEchec === r.value ? 'border-navy bg-slate-50 shadow-[0_0_0_2px_#1A2E4A]' : 'border-transparent'"
+               (click)="raisonEchec = r.value">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200"
+               [ngClass]="raisonEchec === r.value ? 'bg-navy text-white' : 'bg-slate-100 text-slate-500'">
+            <i class="ti text-lg" [ngClass]="r.icon"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-sm font-semibold text-slate-800">{{ r.label }}</div>
+            <div class="text-xs text-slate-500">{{ r.sousTitre }}</div>
+          </div>
+          <div class="w-5 h-5 bg-navy rounded-full flex items-center justify-center transition-all duration-200"
+               [ngClass]="raisonEchec === r.value ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+            <i class="ti ti-check text-white text-xs"></i>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Étape 2 : Photo preuve -->
+    <div>
+      <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+        Photo preuve
+        <span class="text-[10px] text-slate-400 font-normal ml-1">(recommandé)</span>
+      </h2>
+      <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+        <div class="flex gap-3">
+          <label class="w-24 h-24 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-navy hover:bg-slate-100 transition-all group">
+            <i class="ti ti-camera-plus text-2xl text-slate-400 group-hover:text-navy transition-colors"></i>
+            <span class="text-[10px] text-slate-400 mt-1 font-medium group-hover:text-navy transition-colors">Ajouter</span>
+            <input type="file" accept="image/*" capture="environment" class="hidden">
+          </label>
+          <div class="w-24 h-24 bg-slate-100 rounded-xl relative overflow-hidden">
+            <div class="absolute inset-0 bg-linear-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+              <i class="ti ti-photo text-3xl text-slate-400"></i>
+            </div>
+            <button class="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center shadow-sm">
+              <i class="ti ti-x text-xs"></i>
+            </button>
+            <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[9px] text-center py-0.5">14:32</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 mt-3 pt-3 border-t border-slate-50">
+          <i class="ti ti-info-circle text-slate-400 mt-0.5"></i>
+          <p class="text-[11px] text-slate-400 leading-relaxed">Prenez une photo de la porte / de l'adresse pour justifier l'échec. La photo est horodatée et géolocalisée automatiquement.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 3 : Tentatives de contact -->
+    <div>
+      <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+        Tentatives de contact
+      </h2>
+      <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+        <div class="text-sm text-slate-700 font-medium mb-3">Nombre de tentatives d'appel</div>
+        <div class="flex items-center gap-3 justify-center mb-4">
+          <button (click)="incrementerTentatives(-1)" class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-transform cursor-pointer">
+            <i class="ti ti-minus text-lg"></i>
+          </button>
+          <div class="w-16 h-14 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center">
+            <span class="text-2xl font-bold text-navy">{{ nbTentatives }}</span>
+          </div>
+          <button (click)="incrementerTentatives(1)" class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-90 transition-transform cursor-pointer">
+            <i class="ti ti-plus text-lg"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="flex items-center justify-center gap-2 bg-emerald-50 text-emerald-700 py-2.5 rounded-xl text-xs font-semibold active:scale-95 transition-transform cursor-pointer">
+            <i class="ti ti-phone"></i> Appeler client
+          </button>
+          <button class="flex items-center justify-center gap-2 bg-blue-50 text-blue-700 py-2.5 rounded-xl text-xs font-semibold active:scale-95 transition-transform cursor-pointer">
+            <i class="ti ti-brand-whatsapp"></i> WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 4 : Commentaire -->
+    <div>
+      <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+        Commentaire
+        <span class="text-[10px] text-slate-400 font-normal ml-1">(optionnel)</span>
+      </h2>
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <textarea rows="3" maxlength="300" [(ngModel)]="commentaire"
+                  placeholder="Décrivez les circonstances de l'échec…"
+                  class="w-full p-4 text-sm text-slate-700 placeholder-slate-300 resize-none border-none outline-none focus:ring-0"></textarea>
+        <div class="px-4 pb-3 flex justify-between items-center">
+          <div class="flex gap-1.5">
+            <button (click)="insertQuick('Porte fermée, personne ne répond.')" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer">Porte fermée</button>
+            <button (click)="insertQuick('Numéro de téléphone erroné.')" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer">Tel erroné</button>
+            <button (click)="insertQuick('Adresse incomplète.')" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer">Adresse incomplète</button>
+          </div>
+          <span class="text-[10px] text-slate-300 font-mono">{{ commentaire.length }}/300</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avertissement -->
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+      <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center shrink-0">
+        <i class="ti ti-alert-triangle text-amber-600"></i>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-amber-800 mb-0.5">Impact sur votre taux de réussite</div>
+        <p class="text-[11px] text-amber-700 leading-relaxed">Cette déclaration sera enregistrée et pourra affecter vos statistiques. Le colis sera réacheminé au hub pour reprogrammation.</p>
+      </div>
+    </div>
+    <div class="h-4"></div>
+  </div>
+
+  <!-- Bottom Actions -->
+  <div class="bg-white border-t border-slate-200 p-4 space-y-2.5">
+    <button (click)="signalerEchec()" [disabled]="isLoading"
+            class="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 active:scale-[0.97] transition-all shadow-lg shadow-red-600/20 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer">
+      <i class="ti" [ngClass]="isLoading ? 'ti-loader animate-spin' : 'ti-alert-circle'"></i>
+      {{ isLoading ? 'Envoi en cours…' : 'Confirmer l\'échec de livraison' }}
+    </button>
+    <a routerLink="/livreur/validation-livraison" class="w-full py-3 text-sm font-medium text-slate-500 flex items-center justify-center gap-1.5 hover:text-navy transition-colors cursor-pointer">
+      <i class="ti ti-arrow-left text-xs"></i> Revenir à la validation
+    </a>
+  </div>
+
+  <!-- Modal de confirmation d'échec -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl">
+      <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="ti ti-circle-check text-4xl text-red-500"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800 mb-2">Échec déclaré</h3>
+      <p class="text-sm text-slate-500 mb-1">Le colis <span class="font-mono font-semibold text-slate-700">#{{ codeColis }}</span> a été signalé.</p>
+      <p class="text-xs text-slate-400 mb-6">Le client et le hub ont été notifiés. Le colis sera reprogrammé automatiquement.</p>
+
+      <div class="bg-slate-50 rounded-xl p-3 mb-6">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400">Motif</span>
+          <span class="font-medium text-slate-700">{{ raisonLabel }}</span>
+        </div>
+        <div class="flex items-center justify-between text-xs mt-2">
+          <span class="text-slate-400">Heure</span>
+          <span class="font-medium text-slate-700">{{ heureActuelle }}</span>
+        </div>
+        <div class="flex items-center justify-between text-xs mt-2">
+          <span class="text-slate-400">Prochaine étape</span>
+          <span class="font-medium text-amber-600">Retour au Hub</span>
+        </div>
+      </div>
+
+      <button (click)="retourDashboard()" class="block w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold active:scale-95 transition-transform cursor-pointer">
+        Retour au tableau de bord
+      </button>
+    </div>
+  </div>
+
+</div>

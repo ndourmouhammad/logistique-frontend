@@ -1,0 +1,122 @@
+<app-client-layout activeTab="expeditions">
+  <div class="max-w-7xl mx-auto px-4 py-5">
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-4 mb-6">
+      <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2 flex-1 max-w-sm shadow-sm">
+        <i class="ti ti-search text-slate-400"></i>
+        <input type="text" [(ngModel)]="recherche" placeholder="Rechercher par code, destination..." class="bg-transparent text-sm outline-none flex-1 placeholder:text-slate-400 font-medium">
+      </div>
+      <div class="flex gap-2">
+        <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
+                [ngClass]="filtreStatut === 'tous' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut = 'tous'">Toutes</button>
+        <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
+                [ngClass]="filtreStatut === 'EN_COURS' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut = 'EN_COURS'">En cours</button>
+        <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
+                [ngClass]="filtreStatut === 'LIVRE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut = 'LIVRE'">Livrées</button>
+        <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition hidden sm:block"
+                [ngClass]="filtreStatut === 'CREE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut = 'CREE'">Planifiées</button>
+        <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition hidden sm:block"
+                [ngClass]="filtreStatut === 'RETOURNE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut = 'RETOURNE'">Échecs</button>
+      </div>
+      <div class="ml-auto flex gap-3">
+        <button class="bg-white border border-slate-200 text-slate-500 text-[11px] px-4 py-2 rounded-xl flex items-center gap-1.5 font-bold hover:bg-slate-50 transition shadow-sm"><i class="ti ti-calendar text-sm"></i> Période</button>
+        <button class="bg-white border border-slate-200 text-slate-500 text-[11px] px-4 py-2 rounded-xl flex items-center gap-1.5 font-bold hover:bg-slate-50 transition shadow-sm"><i class="ti ti-download text-sm"></i> Exporter</button>
+        <a routerLink="/client/expedition" class="bg-tt-orange hover:bg-orange-600 text-white text-[11px] px-4 py-2 rounded-xl flex items-center gap-1.5 font-bold shadow-md shadow-orange-500/20 transition cursor-pointer"><i class="ti ti-plus text-sm"></i> Nouvelle</a>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <!-- Mobile View (Cards) -->
+      <div class="block lg:hidden divide-y divide-slate-100">
+        
+        <div *ngFor="let exp of expeditionsFiltrees" class="p-4 transition" [ngClass]="exp.statut === 'RETOURNE' ? 'hover:bg-red-50/30 bg-red-50/10' : 'hover:bg-slate-50'">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="font-mono text-sm font-semibold text-navy block">{{ exp.code }}</span>
+              <span class="text-[11px] text-slate-400 font-medium">{{ exp.date }}</span>
+            </div>
+            <div class="flex flex-col items-end gap-1.5">
+              <span *ngIf="exp.statut === 'EN_COURS'" class="bg-orange-50 text-orange-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">En cours</span>
+              <span *ngIf="exp.statut === 'LIVRE'" class="bg-emerald-50 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Livrée</span>
+              <span *ngIf="exp.statut === 'CREE'" class="bg-indigo-50 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Planifiée</span>
+              <span *ngIf="exp.statut === 'RETOURNE'" class="bg-red-50 text-red-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Échec</span>
+              
+              <span class="text-[10px] px-2 py-0.5 rounded-full font-medium" [ngClass]="(exp.statut === 'EN_COURS' || exp.statut === 'CREE') ? 'bg-orange-50 text-orange-700' : 'bg-slate-100 text-slate-500'">
+                {{ (exp.statut === 'EN_COURS' || exp.statut === 'CREE') ? 'Express' : 'Standard' }}
+              </span>
+            </div>
+          </div>
+          <div class="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2"><i class="ti ti-map-pin text-slate-400"></i> Dakar → {{ exp.destination }}</div>
+          <div class="flex justify-between items-end">
+            <div class="text-base font-bold text-navy">{{ exp.montant | number }} <span class="text-xs font-normal text-slate-500">FCFA</span></div>
+            <a *ngIf="exp.statut !== 'RETOURNE'" routerLink="/client/tracking" class="text-xs text-navy border border-slate-200 px-3 py-1.5 rounded-lg font-medium hover:bg-white shadow-sm transition cursor-pointer">Suivre</a>
+            <button *ngIf="exp.statut === 'RETOURNE'" class="text-xs text-red-700 border border-red-200 bg-white px-3 py-1.5 rounded-lg font-medium hover:bg-red-50 shadow-sm transition">Relancer</button>
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Desktop View (Table) -->
+      <div class="hidden lg:block overflow-x-auto bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-white text-[10px] text-slate-400 font-bold uppercase tracking-wider border-b border-slate-100">
+              <th class="text-left px-6 py-4">Code</th>
+              <th class="text-left px-6 py-4">Itinéraire</th>
+              <th class="text-left px-6 py-4">Date</th>
+              <th class="text-left px-6 py-4">Service</th>
+              <th class="text-left px-6 py-4">Montant</th>
+              <th class="text-left px-6 py-4">Statut</th>
+              <th class="text-right px-6 py-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let exp of expeditionsFiltrees" class="border-b border-slate-50 hover:bg-slate-50/50 transition group">
+              <td class="px-6 py-4"><span class="font-bold text-xs text-navy">{{ exp.code }}</span></td>
+              <td class="px-6 py-4 text-xs font-medium text-slate-600 flex items-center gap-2">Dakar <i class="ti ti-arrow-right text-slate-300"></i> {{ exp.destination }}</td>
+              <td class="px-6 py-4 text-xs font-medium text-slate-400">{{ exp.date }}</td>
+              <td class="px-6 py-4">
+                <span *ngIf="exp.statut === 'EN_COURS' || exp.statut === 'CREE'" class="bg-orange-50 text-orange-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Express</span>
+                <span *ngIf="exp.statut === 'LIVRE' || exp.statut === 'RETOURNE'" class="bg-slate-100 text-slate-500 text-[10px] px-2.5 py-1 rounded-full font-bold">Standard</span>
+              </td>
+              <td class="px-6 py-4 text-xs font-bold text-navy">{{ exp.montant | number }} FCFA</td>
+              <td class="px-6 py-4">
+                <span *ngIf="exp.statut === 'EN_COURS'" class="bg-orange-50 text-orange-700 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 w-max border border-orange-100"><i class="ti ti-truck-delivery"></i> En cours</span>
+                <span *ngIf="exp.statut === 'LIVRE'" class="bg-emerald-50 text-emerald-700 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 w-max border border-emerald-100"><i class="ti ti-check"></i> Livrée</span>
+                <span *ngIf="exp.statut === 'CREE'" class="bg-purple-50 text-purple-700 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 w-max border border-purple-100"><i class="ti ti-box"></i> Planifiée</span>
+                <span *ngIf="exp.statut === 'RETOURNE'" class="bg-red-50 text-red-700 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 w-max border border-red-100"><i class="ti ti-alert-triangle"></i> Échec</span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <a *ngIf="exp.statut === 'EN_COURS' || exp.statut === 'CREE'" routerLink="/client/tracking" class="inline-flex items-center gap-1.5 text-[11px] text-slate-600 font-bold border border-slate-200 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-lg shadow-sm transition cursor-pointer"><i class="ti ti-map-pin text-slate-400 text-sm"></i> Suivre</a>
+                <div *ngIf="exp.statut === 'LIVRE'" class="flex items-center justify-end gap-1.5">
+                  <a class="inline-flex items-center justify-center w-8 h-8 text-slate-500 border border-slate-200 bg-white hover:bg-slate-50 rounded-lg shadow-sm transition cursor-pointer"><i class="ti ti-eye text-sm"></i></a>
+                  <a class="inline-flex items-center justify-center w-8 h-8 text-slate-500 border border-slate-200 bg-white hover:bg-slate-50 rounded-lg shadow-sm transition cursor-pointer"><i class="ti ti-download text-sm"></i></a>
+                </div>
+                <div *ngIf="exp.statut === 'RETOURNE'" class="flex items-center justify-end gap-1.5">
+                  <a class="inline-flex items-center justify-center w-8 h-8 text-slate-500 border border-slate-200 bg-white hover:bg-slate-50 rounded-lg shadow-sm transition cursor-pointer"><i class="ti ti-eye text-sm"></i></a>
+                  <button class="inline-flex items-center justify-center w-8 h-8 text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg shadow-sm transition"><i class="ti ti-refresh text-sm"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Pagination (Placeholder) -->
+    <div class="flex items-center justify-between mt-6 text-xs text-slate-400 font-medium px-1">
+      <span>1-{{ expeditionsFiltrees.length }} sur {{ expeditionsFiltrees.length }}</span>
+      <div class="flex gap-2">
+        <button class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition shadow-sm"><i class="ti ti-chevron-left text-sm"></i></button>
+        <button class="w-8 h-8 bg-navy text-white rounded-lg flex items-center justify-center font-bold shadow-sm">1</button>
+        <button class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition shadow-sm"><i class="ti ti-chevron-right text-sm"></i></button>
+      </div>
+    </div>
+  </div>
+</app-client-layout>

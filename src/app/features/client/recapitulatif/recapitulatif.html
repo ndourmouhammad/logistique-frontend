@@ -1,0 +1,112 @@
+<app-client-layout activeTab="expeditions">
+  <!-- Steps -->
+  <div class="bg-white border-b border-slate-200 px-4 py-4">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 bg-navy text-white rounded-full flex items-center justify-center text-xs shadow-sm"><i class="ti ti-check"></i></div>
+        <span class="text-sm font-semibold text-navy hidden sm:inline">Informations</span>
+      </div>
+      <div class="flex-1 h-0.5 bg-slate-300"></div>
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 bg-tt-orange text-white rounded-full flex items-center justify-center text-xs font-bold shadow-sm">2</div>
+        <span class="text-sm font-semibold text-tt-orange hidden sm:inline">Récapitulatif</span>
+      </div>
+      <div class="flex-1 h-px bg-slate-200"></div>
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 bg-white border border-slate-300 text-slate-400 rounded-full flex items-center justify-center text-xs font-bold">3</div>
+        <span class="text-sm font-medium text-slate-400 hidden sm:inline">Paiement</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-4 py-6 grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <h2 class="text-base font-bold text-navy mb-2">Vérifiez votre expédition</h2>
+      
+      <!-- Itinéraire -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-route text-lg text-slate-400"></i> Itinéraire</div>
+        <div class="flex items-center gap-6">
+          <div>
+            <div class="font-bold text-navy text-lg">{{ expedition.villeDepart }}</div>
+            <div class="text-xs text-slate-400">{{ expedition.adresseDepart }}</div>
+          </div>
+          <div class="flex-1 border-t-2 border-slate-100 relative">
+            <span *ngIf="expedition.estExpress" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-[10px] font-medium text-slate-400 px-3 border border-slate-100 rounded-full">Express · ~6h</span>
+            <span *ngIf="!expedition.estExpress" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-[10px] font-medium text-slate-400 px-3 border border-slate-100 rounded-full">Standard</span>
+          </div>
+          <div class="text-right">
+            <div class="font-bold text-navy text-lg">{{ expedition.villeArrivee }}</div>
+            <div class="text-xs text-slate-400">{{ expedition.adresseArrivee }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colis -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-package text-lg text-slate-400"></i> Détails du colis</div>
+        <div class="space-y-4 text-sm">
+          <div class="flex justify-between"><span class="text-slate-400">Poids</span><span class="font-bold text-navy">{{ expedition.poids }} kg</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Volume estimé</span><span class="font-bold text-navy">{{ expedition.volume }} m³</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Contenu</span><span class="font-bold text-navy">{{ expedition.description }}</span></div>
+          <div class="flex justify-between items-center mt-2 pt-2">
+            <span class="text-slate-400">Options</span>
+            <div class="flex gap-2">
+              <span *ngIf="expedition.avecRamassage" class="bg-indigo-50 text-indigo-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Ramassage</span>
+              <span *ngIf="expedition.estExpress" class="bg-orange-50 text-orange-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Express</span>
+              <span *ngIf="!expedition.avecRamassage && !expedition.estExpress" class="text-slate-400 text-xs italic">Aucune option</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clients -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-user text-lg text-slate-400"></i> Clients</div>
+        <div class="space-y-4 text-sm">
+          <div class="flex justify-between"><span class="text-slate-400">Nom destinataire</span><span class="font-bold text-navy">{{ expedition.nomDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Téléphone</span><span class="font-bold text-navy">{{ expedition.telDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Nom expéditeur</span><span class="font-bold text-navy">{{ expedition.nomExpediteur }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Téléphone</span><span class="font-bold text-navy">{{ expedition.telExpediteur }}</span></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-4 pt-2">
+        <a routerLink="/client/expedition" class="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 px-6 py-3.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer"><i class="ti ti-arrow-left"></i> Modifier</a>
+        <button (click)="confirmerEtPayer()" class="flex-1 bg-tt-orange hover:bg-orange-600 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition cursor-pointer">Confirmer & payer</button>
+      </div>
+    </div>
+    <!-- Sidebar tarif -->
+    <div class="space-y-6 lg:mt-8">
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-receipt text-lg text-slate-400"></i> Détail du tarif</div>
+        <div class="space-y-4 text-sm mb-6">
+          <div class="flex justify-between"><span class="text-slate-400">Transport standard</span><span class="font-bold text-navy">2 400 FCFA</span></div>
+          <div class="flex justify-between" *ngIf="expedition.estExpress"><span class="text-slate-400">Supplément Express</span><span class="font-bold text-navy">+ 800 FCFA</span></div>
+          <div class="flex justify-between" *ngIf="expedition.avecRamassage"><span class="text-slate-400">Ramassage</span><span class="font-bold text-navy">+ 400 FCFA</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Assurance</span><span class="text-slate-300">non souscrite</span></div>
+        </div>
+        <hr class="border-slate-100 mb-6">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-navy">Total</span>
+          <span class="text-xl font-bold text-tt-orange">{{ expedition.fraisLivraison | number }} FCFA</span>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 flex gap-3 items-start shadow-sm" *ngIf="expedition.estExpress">
+        <i class="ti ti-circle-check text-emerald-600 text-xl mt-0.5"></i>
+        <p class="text-xs text-emerald-700 leading-relaxed">Délai estimé : <strong>livraison sous 6h</strong> après paiement. Vous recevrez un SMS de suivi.</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="text-xs font-semibold text-slate-500 mb-4">Modes de paiement</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-teal-50 text-teal-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-teal-100">Wave</span>
+          <span class="bg-orange-50 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-orange-100">Orange Money</span>
+          <span class="bg-purple-50 text-purple-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-purple-100">Espèces</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-client-layout>

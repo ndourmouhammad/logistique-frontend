@@ -1,1 +1,48 @@
-<p>sidebar works!</p>
+<aside class="w-64 min-h-screen bg-navy flex flex-col">
+
+  <!-- Logo -->
+  <div class="px-6 py-5 border-b border-white/10">
+    <a routerLink="/accueil" class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-tt-orange rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-orange-500/20">TT</div>
+      <span class="text-white font-semibold">Tiak-Tiak</span>
+    </a>
+  </div>
+
+  <!-- Menu -->
+  <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+    <a *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      [class]="isActive(item.route)
+        ? 'flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 text-white font-medium text-sm'
+        : 'flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition text-sm'">
+      <i [class]="'ti ' + item.icon + ' text-lg'"></i>
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <!-- Badges rôle -->
+  <div class="px-4 pb-4">
+    <div class="bg-white/5 rounded-xl px-4 py-3 flex items-center gap-2 mb-3">
+      <i class="ti ti-shield-check text-tt-orange text-sm"></i>
+      <span class="text-white/50 text-xs capitalize">{{ role }}</span>
+    </div>
+  </div>
+
+  <!-- Profil + Déconnexion -->
+  <div class="px-4 pb-6 border-t border-white/10 pt-4">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-9 h-9 bg-tt-orange rounded-full flex items-center justify-center text-white text-sm font-semibold">
+        {{ userInitiales }}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-white text-sm font-medium truncate">{{ userNom }}</div>
+        <div class="text-white/40 text-xs capitalize">{{ role }}</div>
+      </div>
+    </div>
+    <button (click)="logout()"
+      class="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition text-sm">
+      <i class="ti ti-logout text-lg"></i> Déconnexion
+    </button>
+  </div>
+
+</aside>

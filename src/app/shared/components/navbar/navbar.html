@@ -1,1 +1,65 @@
-<p>navbar works!</p>
+<nav class="bg-navy">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-12">
+      <a routerLink="/accueil" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 bg-tt-orange rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-sm">TT</div>
+        <span class="text-white font-semibold text-sm">Tiak-Tiak</span>
+      </a>
+
+      <!-- Liens navigation (Espace client) -->
+      <div *ngIf="showNav && !showAuthButtons" class="hidden md:flex items-center gap-2">
+        <a routerLink="/client/dashboard"
+          [class]="activeLink === 'dashboard'
+            ? 'text-white bg-white/10 text-sm px-4 py-2 rounded-xl font-medium'
+            : 'text-white/60 hover:text-white text-sm px-4 py-2 rounded-xl transition'">
+          Tableau de bord
+        </a>
+        <a routerLink="/client/historique"
+          [class]="activeLink === 'expeditions'
+            ? 'text-white bg-white/10 text-sm px-4 py-2 rounded-xl font-medium'
+            : 'text-white/60 hover:text-white text-sm px-4 py-2 rounded-xl transition'">
+          Mes expéditions
+        </a>
+        <a routerLink="/client/tracking"
+          [class]="activeLink === 'tracking'
+            ? 'text-white bg-white/10 text-sm px-4 py-2 rounded-xl font-medium'
+            : 'text-white/60 hover:text-white text-sm px-4 py-2 rounded-xl transition'">
+          Suivi
+        </a>
+      </div>
+
+      <!-- Liens navigation (Page publique accueil) -->
+      <div *ngIf="showAuthButtons" class="hidden md:flex items-center gap-1">
+        <a routerLink="/accueil" class="text-white bg-white/10 text-sm px-4 py-2 rounded-lg font-medium">Accueil</a>
+        <a href="#tarifs" class="text-white/60 hover:text-white text-sm px-4 py-2 rounded-lg transition">Tarifs</a>
+        <a href="#relais" class="text-white/60 hover:text-white text-sm px-4 py-2 rounded-lg transition">Points relais</a>
+      </div>
+    </div>
+
+    <!-- Droite -->
+    <div class="flex items-center gap-3">
+      <!-- Boutons auth (page publique) -->
+      <ng-container *ngIf="showAuthButtons">
+        <a routerLink="/connexion"
+          class="hidden md:block text-white/80 border border-white/30 hover:border-white/60 text-sm px-4 py-2 rounded-lg transition">
+          Se connecter
+        </a>
+        <a routerLink="/inscription"
+          class="hidden md:block bg-tt-orange text-white text-sm font-medium px-5 py-2 rounded-lg shadow-lg shadow-orange-500/20">
+          Créer un compte
+        </a>
+      </ng-container>
+
+      <!-- Avatar utilisateur connecté -->
+      <div *ngIf="!showAuthButtons" class="relative cursor-pointer hover:opacity-80 transition">
+        <div class="w-8 h-8 bg-tt-orange rounded-full flex items-center justify-center text-white text-xs font-semibold">
+          {{ userInitiales }}
+        </div>
+        <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-tt-orange border-2 border-navy rounded-full"></span>
+      </div>
+    </div>
+
+  </div>
+</nav>

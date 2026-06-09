@@ -1,0 +1,192 @@
+<!-- NAVBAR -->
+<nav class="bg-navy sticky top-0 z-50 shadow-lg shadow-navy/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14 lg:h-16">
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2.5" id="navLogo">
+        <div class="w-9 h-9 bg-tt-orange rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-orange-500/20">TT</div>
+        <span class="text-white font-semibold text-base">Tiak-Tiak</span>
+      </a>
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-1">
+        <a routerLink="/" class="text-white bg-white/10 text-sm px-4 py-2 rounded-lg font-medium">Accueil</a>
+        <a href="#tarifs" class="text-white/60 hover:text-white text-sm px-4 py-2 rounded-lg transition">Tarifs</a>
+        <a href="#relais" class="text-white/60 hover:text-white text-sm px-4 py-2 rounded-lg transition">Points relais</a>
+        <!-- <a routerLink="/client/tracking" class="text-white/60 hover:text-white text-sm px-4 py-2 rounded-lg transition">Suivre un colis</a> -->
+      </div>
+      <!-- Auth buttons -->
+      <div class="hidden md:flex items-center gap-3">
+        <a routerLink="/connexion" class="text-white/80 border border-white/30 hover:border-white/60 text-sm px-4 py-2 rounded-lg transition" id="navLogin">Se connecter</a>
+        <a routerLink="/inscription" class="bg-tt-orange text-white text-sm font-medium px-5 py-2 rounded-lg btn-hover shadow-lg shadow-orange-500/20" id="navRegister">Créer un compte</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button class="md:hidden text-white/70 hover:text-white p-2" id="mobileMenuBtn" (click)="mobileMenuOpen = !mobileMenuOpen">
+        <i class="ti ti-menu-2 text-xl"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div class="md:hidden" [class.hidden]="!mobileMenuOpen" id="mobileMenu">
+    <div class="px-4 py-3 space-y-1">
+      <a routerLink="/" class="block text-white bg-white/10 text-sm px-4 py-2.5 rounded-lg font-medium">Accueil</a>
+      <a href="#tarifs" class="block text-white/60 text-sm px-4 py-2.5 rounded-lg">Tarifs</a>
+      <a href="#relais" class="block text-white/60 text-sm px-4 py-2.5 rounded-lg">Points relais</a>
+      <!-- <a routerLink="/client/tracking" class="block text-white/60 text-sm px-4 py-2.5 rounded-lg">Suivre un colis</a> -->
+      <hr class="border-white/10 my-2">
+      <a routerLink="/connexion" class="block text-white/80 text-sm px-4 py-2.5 rounded-lg border border-white/20 text-center">Se connecter</a>
+      <a routerLink="/inscription" class="block bg-tt-orange text-white text-sm font-medium px-4 py-2.5 rounded-lg text-center">Créer un compte</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="relative overflow-hidden bg-linear-to-r from-cyan-50/70 via-white to-orange-50/50">
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Left: Text -->
+      <div class="relative z-10">
+        <div class="fade-up">
+          <span class="inline-flex items-center gap-2 bg-orange-50 text-tt-orange text-xs font-semibold uppercase tracking-wider px-4 py-1.5 rounded-full mb-6">
+            <i class="ti ti-bolt text-sm"></i> Livraison rapide & sécurisée au Sénégal
+          </span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy leading-tight mb-6 fade-up fade-up-d1">
+          Expédiez vos colis<br>partout au Sénégal<br>
+          <span class="text-tt-orange">en toute confiance</span>
+        </h1>
+        <p class="text-slate-500 text-base lg:text-lg leading-relaxed mb-8 max-w-lg fade-up fade-up-d2">
+          Créez votre expédition en ligne, payez via Mobile Money et suivez votre colis en temps réel avec notre réseau de livreurs certifiés.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 fade-up fade-up-d3">
+          <a routerLink="/client/expedition" class="bg-navy text-white px-6 py-3.5 rounded-xl text-sm font-semibold btn-hover shadow-lg shadow-navy/20 flex items-center justify-center gap-2" id="heroCreateBtn">
+            <i class="ti ti-plus text-base"></i> Créer une expédition
+          </a>
+          <a routerLink="/client/tracking" class="bg-tt-orange text-white px-6 py-3.5 rounded-xl text-sm font-semibold btn-hover shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2" id="heroTrackBtn">
+            <i class="ti ti-search text-base"></i> Suivre mon colis
+          </a>
+        </div>
+        <!-- Trust badges -->
+        <div class="flex items-center gap-6 mt-8 fade-up fade-up-d4">
+          <div class="flex items-center gap-2 text-sm text-slate-400"><i class="ti ti-shield-check text-tt-green text-lg"></i> 100% sécurisé</div>
+          <div class="flex items-center gap-2 text-sm text-slate-400"><i class="ti ti-truck text-tt-orange text-lg"></i> Livraison 24h</div>
+          <div class="hidden sm:flex items-center gap-2 text-sm text-slate-400"><i class="ti ti-star text-yellow-400 text-lg"></i> 4.8/5</div>
+        </div>
+      </div>
+
+      <!-- Right: Estimator Card -->
+      <div class="fade-up fade-up-d2">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 lg:p-8 shadow-xl shadow-slate-200/50 float" id="estimatorCard">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+              <i class="ti ti-calculator text-tt-orange text-xl"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold text-navy">Estimez votre tarif</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Résultat instantané</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville de départ</label>
+              <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 input-focus transition" id="estFrom" [(ngModel)]="villeDepart" (change)="calculerEstimation()">
+                <option *ngFor="let v of villes" [value]="v">{{v}}</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville d'arrivée</label>
+              <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 input-focus transition" id="estTo" [(ngModel)]="villeArrivee" (change)="calculerEstimation()">
+                <option *ngFor="let v of villes" [value]="v">{{v}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label class="text-xs font-medium text-slate-500 mb-1.5 block">Poids (kg)</label>
+              <input type="number" placeholder="Ex : 2.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 input-focus transition" id="estWeight" [(ngModel)]="poids" (input)="calculerEstimation()">
+            </div>
+            <div>
+              <label class="text-xs font-medium text-slate-500 mb-1.5 block">Type de service</label>
+              <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 input-focus transition" id="estService" [(ngModel)]="service" (change)="calculerEstimation()">
+                <option value="Standard">Standard</option>
+                <option value="Express">Express</option>
+              </select>
+            </div>
+          </div>
+          <!-- Result -->
+          <div class="bg-navy rounded-xl p-4 flex items-center justify-between mb-4 pulse-glow">
+            <div>
+              <div class="text-xs text-white/50">Estimation</div>
+              <div class="text-[10px] text-white/30 mt-0.5">hors assurance</div>
+            </div>
+            <div class="text-2xl font-bold text-tt-orange" id="estResult">{{ estimation | number }} FCFA</div>
+          </div>
+          <a routerLink="/client/expedition" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold btn-hover shadow-lg shadow-navy/20 flex items-center justify-center gap-2" id="estCreateBtn">
+            Créer cette expédition <i class="ti ti-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="bg-white py-16 lg:py-24" id="tarifs">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-2xl lg:text-3xl font-bold text-navy mb-3">Comment ça marche ?</h2>
+      <p class="text-slate-400 text-sm max-w-md mx-auto">En 3 étapes simples</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10 lg:gap-16">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <i class="ti ti-package text-2xl text-tt-orange"></i>
+        </div>
+        <div class="text-xs font-bold text-tt-orange uppercase tracking-wider mb-2">Étape 1</div>
+        <h3 class="font-semibold text-navy mb-3 text-lg">Créez votre expédition</h3>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">Renseignez les infos de votre colis et choisissez vos options.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <i class="ti ti-credit-card text-2xl text-indigo-500"></i>
+        </div>
+        <div class="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2">Étape 2</div>
+        <h3 class="font-semibold text-navy mb-3 text-lg">Payez en Mobile Money</h3>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">Wave, Orange Money ou espèces au hub. C'est simple et sécurisé.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <i class="ti ti-map-pin text-2xl text-emerald-500"></i>
+        </div>
+        <div class="text-xs font-bold text-emerald-500 uppercase tracking-wider mb-2">Étape 3</div>
+        <h3 class="font-semibold text-navy mb-3 text-lg">Suivez en temps réel</h3>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">Suivez votre colis GPS et recevez des notifications à chaque étape.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<!-- <section class="py-16 bg-navy text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+      <div><div class="text-3xl lg:text-4xl font-bold text-tt-orange mb-1">15K+</div><div class="text-sm text-white/50">Colis livrés</div></div>
+      <div><div class="text-3xl lg:text-4xl font-bold text-tt-orange mb-1">98%</div><div class="text-sm text-white/50">Taux de succès</div></div>
+      <div><div class="text-3xl lg:text-4xl font-bold text-tt-orange mb-1">200+</div><div class="text-sm text-white/50">Livreurs certifiés</div></div>
+      <div><div class="text-3xl lg:text-4xl font-bold text-tt-orange mb-1">14</div><div class="text-sm text-white/50">Régions couvertes</div></div>
+    </div>
+  </div>
+</section> -->
+
+<!-- FOOTER -->
+<footer class="bg-navy-light text-white py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+    <div class="flex items-center gap-2.5 mb-4">
+      <div class="w-8 h-8 bg-tt-orange rounded-xl flex items-center justify-center text-white font-bold text-xs">TT</div>
+      <span class="font-medium text-sm">Tiak-Tiak</span>
+    </div>
+    <div class="text-center text-xs text-slate-400">
+      © 2026 Tiak-Tiak. Livraison rapide & sécurisée au Sénégal.
+    </div>
+  </div>
+</footer>

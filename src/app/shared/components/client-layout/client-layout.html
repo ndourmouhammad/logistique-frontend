@@ -1,0 +1,37 @@
+<!-- NAVBAR Desktop -->
+<app-navbar [activeLink]="activeTab"></app-navbar>
+
+<!-- Contenu de la page -->
+<ng-content></ng-content>
+
+<!-- BOTTOM NAV Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 flex justify-around pb-3 pt-2 px-2 z-99">
+  <a routerLink="/client/dashboard"
+    [class]="activeTab === 'dashboard'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-dashboard text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Tableau de bord</span>
+  </a>
+  <a routerLink="/client/historique"
+    [class]="activeTab === 'expeditions'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-package text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Mes expéditions</span>
+  </a>
+  <a routerLink="/client/tracking"
+    [class]="activeTab === 'tracking'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-map-pin text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Suivi</span>
+  </a>
+  <a routerLink="/profil"
+    [class]="activeTab === 'profil'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-user text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Profil</span>
+  </a>
+</nav>
