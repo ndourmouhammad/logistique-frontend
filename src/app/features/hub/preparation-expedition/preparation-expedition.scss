@@ -1,0 +1,5 @@
+.sidebar-item { transition: all 0.2s ease; }
+.sidebar-item:hover { background: rgba(255,255,255,0.08); }
+.sidebar-item.active { background: rgba(255,255,255,0.12); }
+.driver-card { transition: all 0.2s ease; }
+.driver-card:hover { border-color: #1A2E4A; box-shadow: 0 4px 12px rgba(26, 46, 74, 0.08); }

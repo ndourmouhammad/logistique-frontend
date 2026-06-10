@@ -1,0 +1,213 @@
+<app-hub-layout active="plan">
+
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-40">
+    <div class="flex-1">
+      <h1 class="text-sm font-semibold text-slate-800">Plan du hub — Vue stock temps réel</h1>
+      <p class="text-xs text-slate-400 mt-0.5">Hub Dakar · {{ colisStockes }} / {{ capaciteTotale }} emplacements occupés</p>
+    </div>
+    <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
+      <i class="ti ti-refresh text-sm"></i> Actualiser
+    </button>
+    <div class="w-8 h-8 bg-navy rounded-full flex items-center justify-center text-white text-xs font-medium">GH</div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="flex-1 p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column - WMS Plan -->
+      <div class="space-y-4">
+        <!-- Interactive Plan -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+            <i class="ti ti-map text-slate-500 text-sm"></i>
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Plan interactif des zones</span>
+          </div>
+          <div class="p-4">
+            <div class="bg-slate-100 rounded-xl p-4 space-y-1.5">
+              <!-- Header Row -->
+              <div class="grid grid-cols-5 gap-1.5">
+                <div class="h-8"></div>
+                <div class="h-8 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">A1</div>
+                <div class="h-8 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">A2</div>
+                <div class="h-8 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">A3</div>
+                <div class="h-8 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">A4</div>
+              </div>
+
+              <!-- Zones dynamically rendered - we use a mock loop or hardcoded grid to match visual style -->
+              <!-- For the sake of the visual mockup, we keep the grid structure but could dynamically color it -->
+              <!-- Zone A -->
+              <div class="grid grid-cols-5 gap-1.5">
+                <div class="h-9 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">A</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone A-A1: 4/5">4/5</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone A-A2: 3/5">3/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone A-A3: 1/5">1/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone A-A4: 0/5">0/5</div>
+              </div>
+              <!-- Allee -->
+              <div class="grid grid-cols-1">
+                <div class="wms-cell allee h-4 bg-slate-200/50 rounded flex items-center justify-center">
+                  <span class="text-[8px] text-slate-400 tracking-wider uppercase">Allée principale</span>
+                </div>
+              </div>
+              <!-- Zone B -->
+              <div class="grid grid-cols-5 gap-1.5">
+                <div class="h-9 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">B</div>
+                <div class="wms-cell h-9 bg-red-50 border border-red-200 rounded-md flex items-center justify-center text-red-700 text-[10px] font-semibold" title="Zone B-A1: 5/5 PLEIN">5/5</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone B-A2: 4/5">4/5</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone B-A3: 3/5">3/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone B-A4: 2/5">2/5</div>
+              </div>
+              <!-- Zone C -->
+              <div class="grid grid-cols-5 gap-1.5">
+                <div class="h-9 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">C</div>
+                <div class="wms-cell h-9 bg-red-50 border border-red-200 rounded-md flex items-center justify-center text-red-700 text-[10px] font-semibold" title="Zone C-A1: 5/5 PLEIN">5/5</div>
+                <div class="wms-cell h-9 bg-red-50 border border-red-200 rounded-md flex items-center justify-center text-red-700 text-[10px] font-semibold" title="Zone C-A2: 5/5 PLEIN">5/5</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone C-A3: 4/5">4/5</div>
+                <div class="wms-cell h-9 bg-orange-50 border border-orange-200 rounded-md flex items-center justify-center text-orange-700 text-[10px] font-semibold" title="Zone C-A4: 3/5">3/5</div>
+              </div>
+              <!-- Zone D -->
+              <div class="grid grid-cols-5 gap-1.5">
+                <div class="h-9 bg-navy rounded-md flex items-center justify-center text-white/70 text-[10px] font-semibold">D</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone D-A1: 2/5">2/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone D-A2: 1/5">1/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone D-A3: 0/5">0/5</div>
+                <div class="wms-cell h-9 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-700 text-[10px] font-semibold" title="Zone D-A4: 0/5">0/5</div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div class="flex gap-4 mt-4 flex-wrap">
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div class="w-2.5 h-2.5 bg-emerald-50 border border-emerald-200 rounded-sm"></div> Libre
+              </div>
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div class="w-2.5 h-2.5 bg-orange-50 border border-orange-200 rounded-sm"></div> Occupé
+              </div>
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div class="w-2.5 h-2.5 bg-red-50 border border-red-200 rounded-sm"></div> Plein
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Occupation Summary -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i class="ti ti-chart-bar text-slate-500 text-sm"></i>
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Occupation par zone</span>
+          </div>
+          <div class="space-y-3">
+            <div *ngFor="let zone of zones">
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-500 font-medium">{{ zone.nom }}</span>
+                <span class="font-semibold" [ngClass]="(zone.nbColis / zone.capacite) > 0.8 ? 'text-red-600' : 'text-slate-700'">
+                  {{ zone.nbColis }} / {{ zone.capacite }}
+                </span>
+              </div>
+              <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all"
+                     [ngClass]="zone.couleur"
+                     [style.width.%]="(zone.nbColis / zone.capacite) * 100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Stock Detail -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-packages text-slate-500 text-sm"></i>
+              <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Colis en stock — Détail</span>
+              <span class="bg-navy/10 text-navy text-[10px] font-bold px-2 py-0.5 rounded-full">{{ colisStockes }} colis</span>
+            </div>
+            <div class="flex gap-2">
+              <select class="text-[11px] border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none">
+                <option>Toutes les zones</option>
+                <option *ngFor="let zone of zones">{{ zone.nom }}</option>
+              </select>
+              <select class="text-[11px] border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none">
+                <option>Tous statuts</option>
+                <option>Prêt</option>
+                <option>En prépa</option>
+                <option>En retard</option>
+              </select>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-left">
+                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Code tracking</th>
+                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Zone</th>
+                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Destination</th>
+                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Durée stock</th>
+                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Statut</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr class="table-row">
+                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy tracking-wide">TT-DKR-4839</span></td>
+                  <td class="px-4 py-3"><span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded">A · A1</span></td>
+                  <td class="px-4 py-3 text-slate-700 font-medium">Saint-Louis</td>
+                  <td class="px-4 py-3 text-slate-600">2h15</td>
+                  <td class="px-4 py-3"><span class="bg-orange-50 text-orange-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">En prépa</span></td>
+                </tr>
+                <tr class="table-row">
+                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy tracking-wide">TT-DKR-4720</span></td>
+                  <td class="px-4 py-3"><span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded">A · A2</span></td>
+                  <td class="px-4 py-3 text-slate-700 font-medium">Dakar</td>
+                  <td class="px-4 py-3 text-slate-600">45 min</td>
+                  <td class="px-4 py-3"><span class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">Prêt</span></td>
+                </tr>
+                <tr class="table-row bg-red-50/30">
+                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy tracking-wide">TT-DKR-4680</span></td>
+                  <td class="px-4 py-3"><span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded">B · A1</span></td>
+                  <td class="px-4 py-3 text-slate-700 font-medium">Thiès</td>
+                  <td class="px-4 py-3 text-red-600 font-semibold">50h</td>
+                  <td class="px-4 py-3">
+                    <span class="bg-red-50 text-red-700 text-[10px] font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                      <i class="ti ti-alert-triangle text-[10px]"></i> En retard
+                    </span>
+                  </td>
+                </tr>
+                <tr class="table-row">
+                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy tracking-wide">TT-DKR-4610</span></td>
+                  <td class="px-4 py-3"><span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded">C · A1</span></td>
+                  <td class="px-4 py-3 text-slate-700 font-medium">Kaolack</td>
+                  <td class="px-4 py-3 text-slate-600">3h</td>
+                  <td class="px-4 py-3"><span class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">Prêt</span></td>
+                </tr>
+                <tr class="table-row bg-red-50/30">
+                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy tracking-wide">TT-DKR-4590</span></td>
+                  <td class="px-4 py-3"><span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded">C · A2</span></td>
+                  <td class="px-4 py-3 text-slate-700 font-medium">Louga</td>
+                  <td class="px-4 py-3 text-red-600 font-semibold">49h</td>
+                  <td class="px-4 py-3">
+                    <span class="bg-red-50 text-red-700 text-[10px] font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                      <i class="ti ti-alert-triangle text-[10px]"></i> En retard
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Pagination -->
+          <div class="px-4 py-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Affichage 1-5 sur {{ colisStockes }} colis</span>
+            <div class="flex gap-1">
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-400 text-xs hover:bg-slate-50"><i class="ti ti-chevron-left"></i></button>
+              <button class="w-7 h-7 rounded-md bg-navy text-white flex items-center justify-center text-xs font-medium">1</button>
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-600 text-xs hover:bg-slate-50">2</button>
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-600 text-xs hover:bg-slate-50">3</button>
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-400 text-xs hover:bg-slate-50"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</app-hub-layout>

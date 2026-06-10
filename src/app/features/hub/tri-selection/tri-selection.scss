@@ -1,0 +1,7 @@
+.sidebar-item { transition: all 0.2s ease; }
+.sidebar-item:hover { background: rgba(255,255,255,0.08); }
+.sidebar-item.active { background: rgba(255,255,255,0.12); }
+.table-row { transition: background 0.15s ease; }
+.table-row:hover { background: #F8FAFC; }
+.table-row.selected { background: #EEF2FF; }
+.checkbox-custom { accent-color: #1A2E4A; }

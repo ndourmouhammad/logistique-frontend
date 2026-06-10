@@ -1,0 +1,36 @@
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="w-[56px] bg-navy flex flex-col items-center py-4 gap-1 fixed top-0 left-0 h-full z-50">
+    <div class="w-8 h-8 bg-tt-orange rounded-lg flex items-center justify-center text-white text-xs font-bold mb-3">TT</div>
+
+    <a *ngFor="let item of navItems"
+       [routerLink]="item.route"
+       [class]="isActive(item.id)
+         ? 'sidebar-item active w-9 h-9 rounded-lg flex items-center justify-center'
+         : 'sidebar-item w-9 h-9 rounded-lg flex items-center justify-center'"
+       [title]="item.label">
+      <i [class]="'ti ' + item.icon + (isActive(item.id) ? ' text-white text-lg' : ' text-white/40 text-lg')"></i>
+    </a>
+
+    <div class="w-6 h-px bg-white/10 my-2"></div>
+
+    <a routerLink="/hub/dashboard"
+       class="sidebar-item w-9 h-9 rounded-lg flex items-center justify-center"
+       title="Alertes">
+      <i class="ti ti-bell text-tt-orange text-lg"></i>
+    </a>
+
+    <div class="mt-auto">
+      <a routerLink="/profil"
+         class="sidebar-item w-9 h-9 rounded-lg flex items-center justify-center"
+         title="Profil">
+        <i class="ti ti-user text-white/40 text-lg"></i>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Contenu principal -->
+  <div class="flex-1 ml-[56px] flex flex-col">
+    <ng-content></ng-content>
+  </div>
+</div>

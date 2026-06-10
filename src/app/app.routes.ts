@@ -37,5 +37,14 @@ export const routes: Routes = [
 { path: 'chauffeur/validation-transfert', loadComponent: () => import('./features/chauffeur/validation-transfert/validation-transfert').then(m => m.ValidationTransfert) },
 { path: 'chauffeur/historique-tournees', loadComponent: () => import('./features/chauffeur/historique-tournees/historique-tournees').then(m => m.HistoriqueTournees) },
 
+// Hub
+{ path: 'hub/dashboard', loadComponent: () => import('./features/hub/dashboard-hub/dashboard-hub').then(m => m.DashboardHub) },
+{ path: 'hub/reception', loadComponent: () => import('./features/hub/reception-colis/reception-colis').then(m => m.ReceptionColis) },
+{ path: 'hub/plan', loadComponent: () => import('./features/hub/plan-hub/plan-hub').then(m => m.PlanHub) },
+{ path: 'hub/tri', loadComponent: () => import('./features/hub/tri-selection/tri-selection').then(m => m.TriSelection) },
+{ path: 'hub/preparation', loadComponent: () => import('./features/hub/preparation-expedition/preparation-expedition').then(m => m.PreparationExpedition) },
+{ path: 'hub/validation-depart', loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
+{ path: 'hub/remise-guichet', loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },
+
   { path: '**', redirectTo: 'accueil' }
 ];

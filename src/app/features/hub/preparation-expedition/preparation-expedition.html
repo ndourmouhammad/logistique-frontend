@@ -1,0 +1,170 @@
+<app-hub-layout active="preparation">
+
+  <!-- Step Bar -->
+  <div class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-0">
+    <!-- Etape 1 -->
+    <div class="flex items-center gap-3 flex-1 cursor-pointer" routerLink="/hub/tri">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+        <i class="ti ti-check text-white text-xs"></i>
+      </div>
+      <div>
+        <div class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Tri & Sélection</div>
+        <div class="text-[10px] text-emerald-600 font-medium">{{ colisSelectionnes.length }} colis validés</div>
+      </div>
+    </div>
+    <div class="w-px h-8 bg-slate-200 mx-4"></div>
+    <!-- Etape 2 -->
+    <div class="flex items-center gap-3 flex-1">
+      <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+        <span class="text-white text-xs font-bold">2</span>
+      </div>
+      <div>
+        <div class="text-[11px] font-bold text-navy uppercase tracking-wider">Préparation</div>
+        <div class="text-[10px] text-slate-400">Affectation livreur</div>
+      </div>
+    </div>
+    <div class="w-px h-8 bg-slate-200 mx-4"></div>
+    <!-- Etape 3 -->
+    <div class="flex items-center gap-3 flex-1 opacity-40">
+      <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
+        <span class="text-slate-400 text-xs font-bold">3</span>
+      </div>
+      <div>
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Validation</div>
+        <div class="text-[10px] text-slate-400">Départ hub</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <main class="flex-1 p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left Column - Recap Colis -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-140px)]">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div class="flex items-center gap-2">
+            <i class="ti ti-packages text-navy text-lg"></i>
+            <span class="text-sm font-bold text-navy">Lot à expédier</span>
+          </div>
+          <span class="bg-navy/10 text-navy text-xs font-bold px-2.5 py-1 rounded-full">{{ colisSelectionnes.length }} colis</span>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-3">
+          <div *ngFor="let c of colisSelectionnes" class="bg-slate-50 border border-slate-100 rounded-lg p-3 flex items-center justify-between">
+            <div>
+              <div class="font-mono text-xs font-bold text-slate-700">{{ c.code }}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5"><i class="ti ti-map-pin text-[10px]"></i> {{ c.destination }}</div>
+            </div>
+            <span [ngClass]="c.type === 'Express' ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-white text-slate-600 border-slate-200'" class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider">
+              {{ c.type }}
+            </span>
+          </div>
+        </div>
+        <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+          <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+            <span>Poids total estimé</span>
+            <span class="text-slate-800 font-bold">~ 12.5 kg</span>
+          </div>
+          <div class="flex justify-between text-xs font-medium text-slate-600">
+            <span>Zone principale</span>
+            <span class="text-slate-800 font-bold">Dakar (Centrale)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Livreurs -->
+      <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-140px)]">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div>
+            <h2 class="text-sm font-bold text-navy flex items-center gap-2">
+              <i class="ti ti-users text-lg"></i>
+              Affectation Livreur / Véhicule
+            </h2>
+            <p class="text-[11px] text-slate-500 mt-0.5">Sélectionnez le transporteur pour ce lot</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-medium text-slate-500">Filtrer :</span>
+            <select class="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none">
+              <option>Tous les véhicules</option>
+              <option>Motos</option>
+              <option>Camions</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let l of livreurs"
+                 (click)="selectionnerLivreur(l.initiales)"
+                 class="livreur-card rounded-xl p-4 cursor-pointer relative overflow-hidden group transition-all duration-200"
+                 [ngClass]="l.selectionne ? 'bg-indigo-50/50 border-2 border-navy shadow-md ring-4 ring-navy/5' : 'bg-white border border-slate-200 hover:border-navy/30 hover:shadow-sm'">
+
+              <!-- Active checkmark -->
+              <div *ngIf="l.selectionne" class="absolute top-3 right-3 w-6 h-6 bg-navy text-white rounded-full flex items-center justify-center shadow-sm z-10 fade-in">
+                <i class="ti ti-check text-sm"></i>
+              </div>
+
+              <!-- Header -->
+              <div class="flex items-start gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                     [ngClass]="l.selectionne ? 'bg-navy text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-navy group-hover:text-white transition-colors'">
+                  {{ l.initiales }}
+                </div>
+                <div>
+                  <div class="font-bold text-slate-800 text-sm">{{ l.nom }}</div>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-[10px] font-medium text-slate-500 flex items-center gap-1"><i [class]="l.vehicule === 'Moto' ? 'ti ti-scooter' : 'ti ti-truck'"></i> {{ l.vehicule }}</span>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <span class="text-[10px] font-medium text-slate-500">{{ l.zone }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats grid -->
+              <div class="grid grid-cols-3 gap-2 mb-3">
+                <div class="bg-slate-50 rounded-lg p-2 text-center" [ngClass]="l.selectionne ? 'bg-white border border-indigo-100' : ''">
+                  <div class="text-[10px] text-slate-400 mb-0.5">Note</div>
+                  <div class="text-xs font-bold text-slate-700 flex items-center justify-center gap-0.5">
+                    <i class="ti ti-star-filled text-amber-400 text-[10px]"></i> {{ l.note }}
+                  </div>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-2 text-center" [ngClass]="l.selectionne ? 'bg-white border border-indigo-100' : ''">
+                  <div class="text-[10px] text-slate-400 mb-0.5">Courses</div>
+                  <div class="text-xs font-bold text-slate-700">{{ l.courses }}</div>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-2 text-center" [ngClass]="l.selectionne ? 'bg-white border border-indigo-100' : ''">
+                  <div class="text-[10px] text-slate-400 mb-0.5">Taux succ.</div>
+                  <div class="text-xs font-bold text-emerald-600">{{ l.taux }}%</div>
+                </div>
+              </div>
+
+              <!-- Footer info -->
+              <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <span class="relative flex h-2 w-2">
+                    <span [ngClass]="l.statut === 'DISPONIBLE' ? 'bg-emerald-400' : 'bg-orange-400'" class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"></span>
+                    <span [ngClass]="l.statut === 'DISPONIBLE' ? 'bg-emerald-500' : 'bg-orange-500'" class="relative inline-flex rounded-full h-2 w-2"></span>
+                  </span>
+                  <span class="text-[10px] font-semibold" [ngClass]="l.statut === 'DISPONIBLE' ? 'text-emerald-700' : 'text-orange-700'">{{ l.statut === 'DISPONIBLE' ? 'Disponible' : 'En cours' }}</span>
+                </div>
+                <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                  <i class="ti ti-map-pin"></i> à {{ l.distance }} km
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 border-t border-slate-100 bg-white flex justify-end gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)] z-10">
+          <button routerLink="/hub/tri" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+            Annuler
+          </button>
+          <button (click)="confirmerAffectation()" [disabled]="!livreurSelectionne" class="bg-tt-orange hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-md shadow-orange-500/20 active:scale-[0.98]">
+            Confirmer l'affectation <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</app-hub-layout>
