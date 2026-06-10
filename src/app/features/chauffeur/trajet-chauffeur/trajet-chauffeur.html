@@ -1,0 +1,85 @@
+<div class="h-screen flex flex-col bg-[#0f1f35] relative overflow-hidden text-white">
+
+  <!-- Fausse carte en fond (Dark Mode) -->
+  <div class="absolute inset-0 z-0">
+    <svg class="w-full h-full" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+      <!-- Grid patterns or routes -->
+      <path d="M 0 150 L 400 150 M 0 350 L 400 350" stroke="#1e3a5a" stroke-width="2"/>
+      <path d="M 120 0 L 120 800 M 300 0 L 300 800" stroke="#1e3a5a" stroke-width="2"/>
+      
+      <!-- Route -->
+      <path d="M 50 700 Q 80 500 120 400 Q 200 200 300 50" fill="none" stroke="#1e3a5a" stroke-width="14" stroke-linecap="round"/>
+      <path d="M 50 700 Q 80 500 120 400 Q 200 200 300 50" fill="none" stroke="#F97316" stroke-width="6" stroke-dasharray="10,6" opacity="0.9"/>
+      
+      <!-- Hub Destination -->
+      <circle cx="300" cy="50" r="12" fill="#3730A3" stroke="white" stroke-width="3"/>
+    </svg>
+  </div>
+
+  <!-- Top bar Navigation Info -->
+  <div class="relative z-10 p-4 pt-10">
+    <div class="bg-navy/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl flex items-center overflow-hidden">
+      <div class="bg-navy-dark p-4 flex items-center justify-center"><i class="ti ti-arrow-bear-right text-3xl text-tt-orange"></i></div>
+      <div class="p-4 flex-1">
+        <div class="text-lg font-bold">Continuer sur la N1</div>
+        <div class="text-xs text-white/70">vers {{ prochainHub }} · {{ kmRestants }} km</div>
+      </div>
+      <div class="p-4 text-right">
+        <div class="text-lg font-bold text-tt-orange">~52<span class="text-xs">m</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 relative z-10 pointer-events-none">
+    <!-- Marqueur camion sur la carte -->
+    <div class="absolute top-1/2 left-[38%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+      <div class="relative">
+        <div class="absolute inset-0 bg-tt-orange rounded-full animate-ping opacity-30 w-16 h-16 -left-4 -top-4"></div>
+        <div class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center relative border-2 border-tt-orange">
+          <i class="ti ti-truck-delivery text-xl text-tt-orange transform -rotate-12"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Panel -->
+  <div class="relative z-10 bg-white text-slate-800 rounded-t-3xl shadow-[0_-10px_30px_rgba(0,0,0,0.3)] pb-24">
+    <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto my-3"></div>
+    <div class="px-5 pb-5">
+      
+      <div class="bg-navy rounded-xl p-3 flex justify-between items-center mb-4 text-white">
+        <div>
+          <div class="text-[10px] text-white/60 uppercase">Prochain arrêt</div>
+          <div class="text-sm font-bold">{{ prochainHub }}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-lg font-bold text-tt-orange">{{ eta }}</div>
+          <div class="text-[10px] text-white/60 uppercase">Arrivée estimée</div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 mb-5">
+        <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl p-3 text-center">
+          <div class="text-lg font-bold text-navy">{{ vitesse }}</div>
+          <div class="text-[10px] text-slate-500 font-medium">km/h</div>
+        </div>
+        <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl p-3 text-center">
+          <div class="text-lg font-bold text-navy">{{ kmRestants }}</div>
+          <div class="text-[10px] text-slate-500 font-medium">km restants</div>
+        </div>
+        <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl p-3 text-center">
+          <div class="text-lg font-bold text-navy">{{ nbColis }}</div>
+          <div class="text-[10px] text-slate-500 font-medium">Colis</div>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button (click)="declarerArrivee()" class="flex-1 bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 active:scale-95 transition-transform"><i class="ti ti-map-pin"></i> Déclarer arrivée au hub</button>
+        <button (click)="activerSOS()" [class.bg-red-500]="sosActive" [class.text-white]="sosActive" class="w-14 bg-red-50 text-red-600 rounded-xl flex items-center justify-center border border-red-100 shadow-sm active:scale-95 transition-transform"><i class="ti ti-alert-triangle text-xl"></i></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-chauffeur-layout active="carte"></app-chauffeur-layout>

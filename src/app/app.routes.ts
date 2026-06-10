@@ -30,5 +30,12 @@ export const routes: Routes = [
 { path: 'livreur/echec-livraison', loadComponent: () => import('./features/livreur/echec-livraison/echec-livraison').then(m => m.EchecLivraison) },
 { path: 'livreur/historique-gains', loadComponent: () => import('./features/livreur/historique-gains/historique-gains').then(m => m.HistoriqueGains) },
 
+// Chauffeur
+{ path: 'chauffeur/feuille-route', loadComponent: () => import('./features/chauffeur/feuille-route/feuille-route').then(m => m.FeuilleRoute) },
+{ path: 'chauffeur/scan-lot', loadComponent: () => import('./features/chauffeur/scan-lot/scan-lot').then(m => m.ScanLot) },
+{ path: 'chauffeur/trajet', loadComponent: () => import('./features/chauffeur/trajet-chauffeur/trajet-chauffeur').then(m => m.TrajetChauffeur) },
+{ path: 'chauffeur/validation-transfert', loadComponent: () => import('./features/chauffeur/validation-transfert/validation-transfert').then(m => m.ValidationTransfert) },
+{ path: 'chauffeur/historique-tournees', loadComponent: () => import('./features/chauffeur/historique-tournees/historique-tournees').then(m => m.HistoriqueTournees) },
+
   { path: '**', redirectTo: 'accueil' }
 ];
