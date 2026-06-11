@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-connexion',
@@ -15,19 +16,38 @@ export class Connexion {
   resterConnecte = false;
   showPassword   = false;
   isLoading      = false;
+  erreurMessage  = '';
 
-  constructor(private router: Router) {}
+  private authService = inject(Auth);
 
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
   doLogin() {
-    this.isLoading = true;
-    // TODO : appel API Spring Boot
-    setTimeout(() => {
-      this.isLoading = false;
-      this.router.navigate(['/client/dashboard']);
-    }, 1500);
+    if (!this.email || !this.motDePasse) {
+      this.erreurMessage = 'Veuillez remplir tous les champs.';
+      return;
+    }
+
+    this.isLoading     = true;
+    this.erreurMessage = '';
+
+    this.authService.login({
+      email:      this.email,
+      motDePasse: this.motDePasse
+    }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        // Redirection automatique selon le rôle
+        this.authService.redirectByRole();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.erreurMessage = err.status === 401
+          ? 'Email ou mot de passe incorrect.'
+          : 'Erreur serveur. Réessayez plus tard.';
+      }
+    });
   }
 }

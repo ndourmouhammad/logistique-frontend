@@ -57,6 +57,12 @@
     </div>
 
     <!-- Bouton connexion -->
+    @if (erreurMessage) {
+      <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
+        <i class="ti ti-alert-circle text-sm"></i>
+        {{ erreurMessage }}
+      </div>
+    }
     <button
       (click)="doLogin()"
       [disabled]="isLoading"
@@ -162,6 +168,12 @@
         <label class="text-sm text-slate-500">Rester connecté</label>
       </div>
 
+      @if (erreurMessage) {
+        <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
+          <i class="ti ti-alert-circle text-sm"></i>
+          {{ erreurMessage }}
+        </div>
+      }
       <button (click)="doLogin()" [disabled]="isLoading"
         class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-navy-dark transition shadow-lg shadow-navy/20 mb-4 fade-up">
         <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
