@@ -55,5 +55,12 @@ export const routes: Routes = [
 { path: 'admin/rapports', loadComponent: () => import('./features/admin/rapports/rapports').then(m => m.Rapports) },
 { path: 'admin/parametres', loadComponent: () => import('./features/admin/parametres/parametres').then(m => m.Parametres) },
 
+// Point Relais
+{ path: 'relais/dashboard', loadComponent: () => import('./features/relais/dashboard-relais/dashboard-relais').then(m => m.DashboardRelais) },
+{ path: 'relais/reception', loadComponent: () => import('./features/relais/reception-relais/reception-relais').then(m => m.ReceptionRelais) },
+{ path: 'relais/stock', loadComponent: () => import('./features/relais/stock-relais/stock-relais').then(m => m.StockRelais) },
+{ path: 'relais/remise', loadComponent: () => import('./features/relais/remise-relais/remise-relais').then(m => m.RemiseRelais) },
+{ path: 'relais/commissions', loadComponent: () => import('./features/relais/commissions-relais/commissions-relais').then(m => m.CommissionsRelais) },
+
   { path: '**', redirectTo: 'accueil' }
 ];

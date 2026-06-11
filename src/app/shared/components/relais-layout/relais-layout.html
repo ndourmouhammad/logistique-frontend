@@ -1,0 +1,79 @@
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-[200px] bg-navy flex flex-col fixed top-0 left-0 h-full z-40">
+
+    <!-- Logo -->
+    <div class="px-4 py-3.5 border-b border-white/[.08] flex items-center gap-2.5">
+      <div class="w-7 h-7 bg-tt-orange rounded-lg flex items-center justify-center text-white text-[10px] font-bold">TT</div>
+      <div>
+        <div class="text-[13px] font-medium text-white">Tiak-Tiak</div>
+        <div class="text-[10px] text-white/40">Point Relais</div>
+      </div>
+    </div>
+
+    <div class="px-3 pt-4 pb-1 text-[9px] font-medium tracking-widest uppercase text-white/30">Gestion</div>
+
+    <!-- Menu -->
+    <nav class="flex-1 px-2 space-y-0.5">
+      <a routerLink="/relais/dashboard"
+        [class]="active === 'dashboard'
+          ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+          : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+        <i [class]="active === 'dashboard' ? 'ti ti-layout-dashboard text-white text-base' : 'ti ti-layout-dashboard text-white/45 text-base'"></i>
+        <span [class]="active === 'dashboard' ? 'text-xs text-white' : 'text-xs text-white/55'">Tableau de bord</span>
+      </a>
+
+      <a routerLink="/relais/reception"
+        [class]="active === 'reception'
+          ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+          : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+        <i [class]="active === 'reception' ? 'ti ti-package text-white text-base' : 'ti ti-package text-white/45 text-base'"></i>
+        <span [class]="active === 'reception' ? 'text-xs text-white' : 'text-xs text-white/55'">Réception colis</span>
+      </a>
+
+      <a routerLink="/relais/stock"
+        [class]="active === 'stock'
+          ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+          : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+        <i [class]="active === 'stock' ? 'ti ti-building-warehouse text-white text-base' : 'ti ti-building-warehouse text-white/45 text-base'"></i>
+        <span [class]="active === 'stock' ? 'text-xs text-white flex-1' : 'text-xs text-white/55 flex-1'">Mon stock</span>
+        <span class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ nbStock }}</span>
+      </a>
+
+      <a routerLink="/relais/remise"
+        [class]="active === 'remise'
+          ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+          : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+        <i [class]="active === 'remise' ? 'ti ti-hand-grab text-white text-base' : 'ti ti-hand-grab text-white/45 text-base'"></i>
+        <span [class]="active === 'remise' ? 'text-xs text-white' : 'text-xs text-white/55'">Remise client</span>
+      </a>
+
+      <a routerLink="/relais/commissions"
+        [class]="active === 'commissions'
+          ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+          : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+        <i [class]="active === 'commissions' ? 'ti ti-cash text-white text-base' : 'ti ti-cash text-white/45 text-base'"></i>
+        <span [class]="active === 'commissions' ? 'text-xs text-white' : 'text-xs text-white/55'">Commissions</span>
+      </a>
+    </nav>
+
+    <!-- Profil -->
+    <div class="border-t border-white/[.08] px-3 py-3 flex items-center gap-2.5">
+      <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center text-tt-orange text-[10px] font-medium">
+        {{ userInitiales }}
+      </div>
+      <div>
+        <div class="text-[11px] font-medium text-white/70">{{ userNom }}</div>
+        <div class="text-[9px] text-white/30">Gérant relais</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Contenu principal -->
+  <div class="flex-1 ml-[200px] flex flex-col">
+    <ng-content></ng-content>
+  </div>
+
+</div>

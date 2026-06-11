@@ -1,0 +1,98 @@
+<app-relais-layout active="remise">
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-30">
+    <div class="flex-1">
+      <h1 class="text-sm font-semibold text-slate-800">Remise colis au destinataire</h1>
+      <p class="text-xs text-slate-400 mt-0.5">Vérifiez l'identité avant toute remise</p>
+    </div>
+    <span class="bg-orange-50 text-orange-700 border border-orange-200 text-[11px] font-semibold px-3 py-1 rounded-full">5 en attente de retrait</span>
+  </header>
+
+  <main class="flex-1 p-6">
+    <div class="grid grid-cols-2 gap-5">
+
+      <!-- Left Column -->
+      <div class="flex flex-col gap-4">
+        <!-- Identifier le colis -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <h3 class="text-[11px] font-medium text-slate-500 mb-3 flex items-center gap-1.5"><i class="ti ti-qrcode text-sm"></i> Identifier le colis à remettre</h3>
+          <div class="flex gap-2 mb-3">
+            <input type="text" [(ngModel)]="codeRecherche" placeholder="TT-DKR-XXXX" class="flex-1 bg-surface border border-navy rounded-lg px-3 py-2 text-[12px] text-slate-800 font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-navy/20 transition-all">
+            <button (click)="rechercherColis()" class="bg-navy hover:bg-navy-light text-white px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors text-[12px] font-medium"><i class="ti ti-search text-sm"></i> Chercher</button>
+          </div>
+          <!-- Fiche colis -->
+          <div *ngIf="colisEnCours" class="bg-[#EEF2FF] rounded-xl border border-indigo-200 p-4">
+            <div class="font-mono text-[16px] font-semibold text-navy mb-3">{{ colisEnCours.code }}</div>
+            <div class="grid grid-cols-2 gap-3 text-[12px]">
+              <div><span class="text-slate-400 text-[11px]">Destinataire</span><div class="font-medium text-slate-800 mt-0.5">{{ colisEnCours.destinataire }}</div></div>
+              <div><span class="text-slate-400 text-[11px]">Téléphone</span><div class="font-medium text-slate-800 mt-0.5">{{ colisEnCours.tel }}</div></div>
+              <div><span class="text-slate-400 text-[11px]">Contenu</span><div class="text-slate-600 mt-0.5">{{ colisEnCours.contenu }}</div></div>
+              <div><span class="text-slate-400 text-[11px]">Emplacement</span><div class="mt-0.5"><span class="bg-teal-50 text-teal-700 border border-teal-200 text-[10px] font-semibold px-2 py-0.5 rounded-full">{{ colisEnCours.emplacement }}</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vérification identité -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <h3 class="text-[11px] font-medium text-slate-500 mb-3 flex items-center gap-1.5"><i class="ti ti-id text-sm"></i> Vérification d'identité</h3>
+          <div class="flex flex-col gap-2 mb-3">
+            <label class="check-item flex items-center gap-3 text-[12px] cursor-pointer p-2 rounded-lg hover:bg-slate-50 transition-colors">
+              <input type="checkbox" [(ngModel)]="cniVerifiee" class="w-4 h-4 rounded border-slate-300 text-navy focus:ring-navy accent-[#1A2E4A]">
+              <span class="text-slate-700">Pièce d'identité vérifiée (CNI / Passeport)</span>
+              <i *ngIf="cniVerifiee" class="ti ti-circle-check text-emerald-500 text-sm ml-auto"></i>
+            </label>
+            <label class="check-item flex items-center gap-3 text-[12px] cursor-pointer p-2 rounded-lg hover:bg-slate-50 transition-colors">
+              <input type="checkbox" [(ngModel)]="nomCorrespond" class="w-4 h-4 rounded border-slate-300 text-navy focus:ring-navy accent-[#1A2E4A]">
+              <span class="text-slate-700">Nom correspond au destinataire enregistré</span>
+              <i *ngIf="nomCorrespond" class="ti ti-circle-check text-emerald-500 text-sm ml-auto"></i>
+            </label>
+            <label class="check-item flex items-center gap-3 text-[12px] cursor-pointer p-2 rounded-lg hover:bg-slate-50 transition-colors">
+              <input type="checkbox" [(ngModel)]="otpVerifie" class="w-4 h-4 rounded border-slate-300 text-navy focus:ring-navy accent-[#1A2E4A]">
+              <span class="text-slate-600">Code de retrait SMS vérifié <span class="text-slate-400">(optionnel)</span></span>
+              <i *ngIf="otpVerifie" class="ti ti-circle-check text-emerald-500 text-sm ml-auto"></i>
+            </label>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-lg p-2.5 flex items-start gap-2">
+            <i class="ti ti-shield-check text-amber-600 text-sm mt-0.5 shrink-0"></i>
+            <p class="text-[11px] text-amber-700 leading-relaxed">Ne remettez jamais un colis sans vérification d'identité. En cas de doute, contactez le hub.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="flex flex-col gap-4">
+        <!-- Signature -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <h3 class="text-[11px] font-medium text-slate-500 mb-2 flex items-center gap-1.5"><i class="ti ti-pencil text-sm"></i> Signature numérique du destinataire</h3>
+          <p class="text-[11px] text-slate-400 mb-3">Demandez au destinataire de signer dans la zone ci-dessous :</p>
+          <div class="bg-surface border-[1.5px] border-dashed border-slate-300 rounded-xl h-[120px] flex items-center justify-center relative cursor-crosshair mb-2 hover:border-navy hover:bg-emerald-50/30 transition-colors">
+            <span class="text-[12px] text-slate-400 flex items-center gap-2"><i class="ti ti-writing-sign text-lg"></i> Zone de signature</span>
+            <div class="absolute bottom-3 left-4 right-4 h-[0.5px] bg-slate-200"></div>
+          </div>
+          <div class="flex justify-end">
+            <button class="border border-slate-200 bg-white text-slate-500 text-[11px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 hover:bg-slate-50 transition-colors"><i class="ti ti-eraser text-xs"></i> Effacer</button>
+          </div>
+        </div>
+
+        <!-- Photo preuve -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <h3 class="text-[11px] font-medium text-slate-500 mb-3 flex items-center gap-1.5"><i class="ti ti-camera text-sm"></i> Photo preuve <span class="text-slate-400 font-normal">(optionnel)</span></h3>
+          <div class="bg-surface border-[1.5px] border-dashed border-slate-300 rounded-xl h-[80px] flex items-center justify-center gap-2 cursor-pointer hover:bg-emerald-50/30 hover:border-navy transition-colors">
+            <i class="ti ti-camera-plus text-xl text-slate-400"></i>
+            <span class="text-[12px] text-slate-400">Prendre une photo de la remise</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <button (click)="confirmerRemise()"
+          [disabled]="!peutRemettre || isLoading"
+          [class]="'w-full text-white text-[13px] font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm ' + (!peutRemettre ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-navy hover:bg-navy-light shadow-emerald-500/10')">
+          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin text-lg' : 'ti ti-circle-check text-lg'"></i>
+          {{ isLoading ? 'Confirmation...' : 'Confirmer la remise définitive' }}
+        </button>
+        <button class="w-full bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[12px] font-medium py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
+          <i class="ti ti-alert-triangle text-sm"></i> Problème · Signaler un litige
+        </button>
+      </div>
+    </div>
+  </main>
+</app-relais-layout>
