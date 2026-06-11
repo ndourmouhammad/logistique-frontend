@@ -1,0 +1,100 @@
+<app-admin-layout active="dispatch">
+
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-40">
+    <div class="flex-1"><h1 class="text-sm font-semibold text-slate-800">Dispatch & Litiges</h1><p class="text-xs text-slate-400 mt-0.5">{{ expeditionsNonAssignees.length }} courses non attribuées · {{ litiges.length }} litiges ouverts</p></div>
+    <span class="bg-red-50 text-red-700 text-xs font-medium px-3 py-1.5 rounded-full inline-flex items-center gap-1"><i class="ti ti-alert-triangle text-xs"></i> 2 litiges urgents</span>
+  </header>
+
+  <main class="flex-1 p-6">
+    
+    <!-- Onglets -->
+    <div class="flex gap-2 mb-6">
+      <button (click)="ongletActif = 'dispatch'" [class]="ongletActif === 'dispatch' ? 'bg-navy text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm' : 'bg-white border border-slate-200 text-slate-600 text-xs font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors'">
+        <i class="ti ti-arrows-shuffle text-sm mr-1.5"></i>Dispatch ({{ expeditionsNonAssignees.length }})
+      </button>
+      <button (click)="ongletActif = 'litiges'" [class]="ongletActif === 'litiges' ? 'bg-navy text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm' : 'bg-white border border-slate-200 text-slate-600 text-xs font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors'">
+        <i class="ti ti-message-report text-sm mr-1.5"></i>Litiges ({{ litiges.length }})
+      </button>
+    </div>
+
+    <!-- Dispatch Tab -->
+    <div *ngIf="ongletActif === 'dispatch'">
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Courses en attente</div>
+          <div class="text-2xl font-bold text-navy">{{ expeditionsNonAssignees.length }}</div>
+          <div class="text-[11px] text-orange-500 font-medium mt-1 flex items-center gap-1"><i class="ti ti-clock text-[10px]"></i> 1 délai dépassé</div>
+        </div>
+        <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Litiges ouverts</div>
+          <div class="text-2xl font-bold text-red-600">{{ litiges.length }}</div>
+          <div class="text-[11px] text-red-600 font-medium flex items-center gap-1 mt-1"><i class="ti ti-alert-triangle text-[10px]"></i> 2 critiques</div>
+        </div>
+        <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Litiges résolus (auj.)</div>
+          <div class="text-2xl font-bold text-emerald-600">12</div>
+          <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-1"><i class="ti ti-trending-up text-[10px]"></i> +3 vs hier</div>
+        </div>
+        <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Temps de résolution</div>
+          <div class="text-2xl font-bold text-navy">4h<span class="text-sm font-medium text-slate-400">20</span></div>
+          <div class="text-[11px] text-slate-500 font-medium mt-1">Moyenne sur 7 jours</div>
+        </div>
+      </div>
+
+      <!-- Dispatch cards -->
+      <div class="space-y-3">
+        <div *ngFor="let e of expeditionsNonAssignees" class="dispatch-card bg-white border border-slate-200 rounded-xl p-4" [class.border-red-200]="e.priorite === 'HAUTE'" [class.bg-red-50/50]="e.priorite === 'HAUTE'">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" [class]="e.priorite === 'HAUTE' ? 'bg-red-100' : 'bg-indigo-100'">
+              <i [class]="e.priorite === 'HAUTE' ? 'ti ti-alert-triangle text-red-700 text-sm' : 'ti ti-package text-indigo-700 text-sm'"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-bold text-slate-800">{{ e.code }}</div>
+              <div class="text-[11px] text-slate-400">En attente depuis {{ e.depuis }}</div>
+            </div>
+            <span [class]="e.priorite === 'HAUTE' ? 'bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-full' : 'bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full'">{{ e.priorite }}</span>
+          </div>
+          <p class="text-xs text-slate-600 mb-3">Destination: {{ e.destination }} · {{ e.poids }} kg</p>
+          <div class="flex gap-2">
+            <button class="bg-navy hover:bg-navy-light text-white text-[11px] font-medium px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors flex-1"><i class="ti ti-user-plus text-xs"></i> Attribuer</button>
+            <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-[11px] font-medium px-3 py-1.5 rounded-lg flex items-center justify-center transition-colors"><i class="ti ti-info-circle text-xs"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Litiges Tab -->
+    <div *ngIf="ongletActif === 'litiges'">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead><tr class="bg-slate-50 text-left border-b border-slate-200">
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Code</th>
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Motif</th>
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Client</th>
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Date</th>
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Montant</th>
+              <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Statut</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr *ngFor="let l of litiges" class="table-row hover:bg-slate-50 cursor-pointer">
+                <td class="px-4 py-3"><div class="font-mono font-bold text-navy">{{ l.code }}</div></td>
+                <td class="px-4 py-3"><div class="text-slate-700 font-medium">{{ getLitigeTypeLabel(l.type) }}</div></td>
+                <td class="px-4 py-3 text-slate-600">{{ l.client }}</td>
+                <td class="px-4 py-3 text-slate-400">{{ l.date }}</td>
+                <td class="px-4 py-3 font-medium text-slate-700">{{ l.montant | number }} FCFA</td>
+                <td class="px-4 py-3">
+                  <span [class]="l.statut === 'OUVERT' ? 'bg-red-50 text-red-700 text-[10px] font-semibold px-2 py-0.5 rounded-full' : l.statut === 'EN_COURS' ? 'bg-amber-50 text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full' : 'bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full'">
+                    {{ l.statut === 'OUVERT' ? 'Ouvert' : l.statut === 'EN_COURS' ? 'En cours' : 'Résolu' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</app-admin-layout>

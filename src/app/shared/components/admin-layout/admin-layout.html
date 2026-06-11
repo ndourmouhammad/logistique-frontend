@@ -1,0 +1,105 @@
+<div class="flex min-h-screen">
+  <!-- Sidebar Admin -->
+  <aside class="w-[200px] shrink-0 bg-navy flex flex-col fixed top-0 left-0 h-full z-50">
+
+    <!-- Logo -->
+    <div class="px-4 py-3.5 border-b border-white/[.08] flex items-center gap-2.5">
+      <a routerLink="/accueil" class="flex items-center gap-2.5">
+        <div class="w-7 h-7 bg-tt-orange rounded-lg flex items-center justify-center text-white text-[10px] font-bold">TT</div>
+        <div>
+          <div class="text-[13px] font-semibold text-white tracking-wide">Tiak-Tiak</div>
+          <div class="text-[10px] text-white/40">Administration</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Section Principal -->
+    <div class="px-3 pt-4 pb-1 text-[9px] font-medium tracking-widest uppercase text-white/30">Principal</div>
+
+    <!-- Menu -->
+    <nav class="flex-1 px-2 space-y-0.5">
+
+      <a routerLink="/admin/dashboard"
+        [class]="active === 'dashboard'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'dashboard' ? 'ti ti-layout-dashboard text-white text-base' : 'ti ti-layout-dashboard text-white/45 text-base'"></i>
+        <span [class]="active === 'dashboard' ? 'text-xs text-white' : 'text-xs text-white/55'">Tableau de bord</span>
+      </a>
+
+      <a routerLink="/admin/utilisateurs"
+        [class]="active === 'utilisateurs'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'utilisateurs' ? 'ti ti-users text-white text-base' : 'ti ti-users text-white/45 text-base'"></i>
+        <span [class]="active === 'utilisateurs' ? 'text-xs text-white' : 'text-xs text-white/55'">Utilisateurs</span>
+      </a>
+
+      <a routerLink="/admin/flotte"
+        [class]="active === 'flotte'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'flotte' ? 'ti ti-truck text-white text-base' : 'ti ti-truck text-white/45 text-base'"></i>
+        <span [class]="active === 'flotte' ? 'text-xs text-white' : 'text-xs text-white/55'">Flotte</span>
+      </a>
+
+      <a routerLink="/admin/dispatch-litiges"
+        [class]="active === 'dispatch'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'dispatch' ? 'ti ti-arrows-shuffle text-white text-base' : 'ti ti-arrows-shuffle text-white/45 text-base'"></i>
+        <span [class]="active === 'dispatch' ? 'text-xs text-white flex-1' : 'text-xs text-white/55 flex-1'">Dispatch / Litiges</span>
+        <span *ngIf="badgeDispatch > 0" class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeDispatch }}</span>
+      </a>
+
+      <a routerLink="/admin/rapports"
+        [class]="active === 'rapports'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'rapports' ? 'ti ti-chart-bar text-white text-base' : 'ti ti-chart-bar text-white/45 text-base'"></i>
+        <span [class]="active === 'rapports' ? 'text-xs text-white' : 'text-xs text-white/55'">Rapports</span>
+      </a>
+
+      <!-- Section Système -->
+      <div class="px-3 pt-4 pb-1 text-[9px] font-medium tracking-widest uppercase text-white/30">Système</div>
+
+      <a routerLink="/admin/parametres"
+        [class]="active === 'parametres'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'parametres' ? 'ti ti-settings text-white text-base' : 'ti ti-settings text-white/45 text-base'"></i>
+        <span [class]="active === 'parametres' ? 'text-xs text-white' : 'text-xs text-white/55'">Paramètres</span>
+      </a>
+
+      <a routerLink="/admin/incidents"
+        [class]="active === 'incidents'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'incidents' ? 'ti ti-alert-circle text-white text-base' : 'ti ti-alert-circle text-red-400/70 text-base'"></i>
+        <span [class]="active === 'incidents' ? 'text-xs text-white flex-1' : 'text-xs text-red-400/70 flex-1'">Incidents</span>
+        <span *ngIf="badgeIncidents > 0" class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeIncidents }}</span>
+      </a>
+
+    </nav>
+
+    <!-- Profil -->
+    <div class="border-t border-white/[.08] px-3 py-3 flex items-center gap-2.5">
+      <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center text-tt-orange text-[10px] font-medium">
+        {{ userInitiales }}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-[11px] font-medium text-white/70 truncate">{{ userNom }}</div>
+        <div class="text-[9px] text-white/30">{{ userRole }}</div>
+      </div>
+      <a routerLink="/connexion" class="text-white/40 hover:text-white transition">
+        <i class="ti ti-logout text-sm"></i>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- Contenu principal -->
+  <div class="flex-1 ml-[200px] flex flex-col min-w-0">
+    <ng-content></ng-content>
+  </div>
+</div>

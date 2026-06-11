@@ -46,5 +46,14 @@ export const routes: Routes = [
 { path: 'hub/validation-depart', loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
 { path: 'hub/remise-guichet', loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },
 
+// Admin
+{ path: 'admin/dashboard', loadComponent: () => import('./features/admin/dashboard-admin/dashboard-admin').then(m => m.DashboardAdmin) },
+{ path: 'admin/utilisateurs', loadComponent: () => import('./features/admin/utilisateurs/utilisateurs').then(m => m.Utilisateurs) },
+{ path: 'admin/flotte', loadComponent: () => import('./features/admin/flotte/flotte').then(m => m.Flotte) },
+{ path: 'admin/dispatch-litiges', loadComponent: () => import('./features/admin/dispatch-litiges/dispatch-litiges').then(m => m.DispatchLitiges) },
+{ path: 'admin/incidents', loadComponent: () => import('./features/admin/incidents/incidents').then(m => m.Incidents) },
+{ path: 'admin/rapports', loadComponent: () => import('./features/admin/rapports/rapports').then(m => m.Rapports) },
+{ path: 'admin/parametres', loadComponent: () => import('./features/admin/parametres/parametres').then(m => m.Parametres) },
+
   { path: '**', redirectTo: 'accueil' }
 ];

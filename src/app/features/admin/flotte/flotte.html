@@ -1,0 +1,256 @@
+<app-admin-layout active="flotte">
+
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-40">
+    <div class="flex-1">
+      <h1 class="text-sm font-semibold text-slate-800">Gestion de la flotte</h1>
+      <p class="text-xs text-slate-400 mt-0.5">{{ vehicules.length }} véhicules · 34 en service · 2 en panne</p>
+    </div>
+    <button (click)="isModalOpen = true" class="bg-tt-orange hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm shadow-orange-500/20"><i class="ti ti-plus text-sm"></i> Ajouter un véhicule</button>
+  </header>
+
+  <main class="flex-1 p-6">
+    
+    <!-- KPIs -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Flotte globale</span>
+          <div class="w-6 h-6 bg-slate-50 rounded-md flex items-center justify-center"><i class="ti ti-steering-wheel text-slate-400 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-navy">{{ vehicules.length }}</div>
+        <div class="text-[11px] text-slate-500 font-medium mt-1">28 motos · 14 camions</div>
+      </div>
+      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">En service</span>
+          <div class="w-6 h-6 bg-emerald-50 rounded-md flex items-center justify-center"><i class="ti ti-circle-check text-emerald-500 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-emerald-600">34</div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1"><i class="ti ti-trending-up text-[10px]"></i> 81% flotte active</div>
+      </div>
+      <div class="kpi-card bg-white rounded-xl border border-red-200 shadow-sm p-4 bg-red-50/10">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-red-400 uppercase tracking-wider">En panne</span>
+          <div class="w-6 h-6 bg-red-100 rounded-md flex items-center justify-center"><i class="ti ti-alert-triangle text-red-600 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-red-600">2</div>
+        <div class="text-[11px] text-red-600 font-medium mt-1">Intervention requise</div>
+      </div>
+      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">En maintenance</span>
+          <div class="w-6 h-6 bg-amber-50 rounded-md flex items-center justify-center"><i class="ti ti-tool text-amber-500 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-amber-600">6</div>
+        <div class="text-[11px] text-amber-600 font-medium mt-1">Maintenance préventive</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Table -->
+      <div class="lg:col-span-2 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm font-semibold text-slate-800">Inventaire véhicules</span>
+          <div class="flex gap-1.5">
+            <button (click)="filtreType = 'tous'" [class]="filtreType === 'tous' ? 'bg-navy text-white text-[10px] font-medium px-3 py-1.5 rounded-full shadow-sm shadow-navy/20' : 'text-[10px] font-medium px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:bg-slate-50'">Tous</button>
+            <button (click)="filtreType = 'MOTOCYCLE'" [class]="filtreType === 'MOTOCYCLE' ? 'bg-navy text-white text-[10px] font-medium px-3 py-1.5 rounded-full shadow-sm shadow-navy/20' : 'text-[10px] font-medium px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:bg-slate-50'">Motos</button>
+            <button (click)="filtreType = 'CAMION'" [class]="filtreType === 'CAMION' ? 'bg-navy text-white text-[10px] font-medium px-3 py-1.5 rounded-full shadow-sm shadow-navy/20' : 'text-[10px] font-medium px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:bg-slate-50'">Camions</button>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+            <div class="relative w-64">
+              <i class="ti ti-search text-slate-400 text-xs absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" placeholder="Rechercher par immatriculation…" class="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/20">
+            </div>
+            <button class="text-xs text-slate-500 hover:text-navy flex items-center gap-1 font-medium"><i class="ti ti-filter"></i> Filtres avancés</button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-xs">
+              <thead><tr class="bg-slate-50 text-left border-b border-slate-200">
+                <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Véhicule</th>
+                <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Capacité</th>
+                <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Affectation</th>
+                <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Statut</th>
+                <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px] text-right">Actions</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr *ngFor="let v of vehiculesFiltres" class="table-row" [class.bg-red-50]="v.statut === 'EN_PANNE'">
+                  <td class="px-4 py-3">
+                    <div class="font-mono font-bold text-navy tracking-wide">{{ v.immat }}</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5"><i [class]="v.type === 'MOTOCYCLE' ? 'ti ti-motorbike mr-0.5' : 'ti ti-truck mr-0.5'"></i> {{ v.type }}</div>
+                  </td>
+                  <td class="px-4 py-3 text-slate-600 font-medium">{{ v.charge }} / {{ v.type === 'MOTOCYCLE' ? '50 kg' : '2.0 t' }}</td>
+                  <td class="px-4 py-3">
+                    <div class="text-slate-800 font-medium">{{ v.chauffeur }}</div>
+                    <div class="text-[10px] text-slate-400">Hub Dakar</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span [class]="getStatutClass(v.statut) + ' text-[10px] font-semibold px-2 py-0.5 rounded-full border inline-flex items-center gap-1'">
+                      {{ v.statut }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex justify-end gap-1.5">
+                      <button class="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-navy hover:border-navy hover:bg-slate-50 flex items-center justify-center transition-colors shadow-sm" title="Localiser"><i class="ti ti-map-pin text-[13px]"></i></button>
+                      <button class="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-navy hover:border-navy hover:bg-slate-50 flex items-center justify-center transition-colors shadow-sm" title="Éditer"><i class="ti ti-edit text-[13px]"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="px-4 py-3 border-t border-slate-100 flex items-center justify-between bg-white">
+            <span class="text-[11px] text-slate-500">Affichage <span class="font-semibold text-slate-700">1–{{ vehiculesFiltres.length }}</span> sur <span class="font-semibold text-slate-700">{{ vehicules.length }}</span> véhicules</span>
+            <div class="flex gap-1">
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-400 text-xs hover:bg-slate-50 disabled:opacity-50" disabled><i class="ti ti-chevron-left"></i></button>
+              <button class="w-7 h-7 rounded-md bg-navy text-white flex items-center justify-center text-xs font-medium shadow-sm">1</button>
+              <button class="w-7 h-7 rounded-md border border-slate-200 flex items-center justify-center text-slate-600 text-xs hover:bg-slate-50"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="space-y-4 flex flex-col">
+        
+        <div class="flex items-center justify-between mb-4 mt-1">
+          <span class="text-sm font-semibold text-slate-800">Supervision</span>
+          <button class="text-xs text-navy font-medium flex items-center gap-1 hover:underline"><i class="ti ti-maximize"></i> Agrandir carte</button>
+        </div>
+
+        <!-- Enhanced Map -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+             <div class="flex items-center gap-2"><i class="ti ti-map text-slate-500 text-sm"></i><span class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Positions temps réel</span></div>
+             <span class="flex items-center gap-1 text-[10px] text-slate-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 marker-pulse"></span> En direct</span>
+          </div>
+          <div class="p-1 border-b border-slate-100">
+            <div class="rounded-lg overflow-hidden map-container relative" style="height:220px;">
+              <!-- Simulated complex map SVG -->
+              <svg width="100%" height="100%" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <path d="M0 65 Q 150 40 300 80" fill="none" stroke="#244163" stroke-width="4" />
+                <path d="M0 125 Q 100 160 300 130" fill="none" stroke="#244163" stroke-width="3" />
+                <path d="M80 0 L 100 220" fill="none" stroke="#244163" stroke-width="4" />
+                <path d="M210 0 L 190 220" fill="none" stroke="#244163" stroke-width="2" />
+                
+                <!-- Hub Areas -->
+                <rect x="90" y="25" width="45" height="35" rx="4" fill="#1A2E4A" fill-opacity="0.8" stroke="#315582" stroke-width="1"/>
+                <text x="112" y="45" font-size="7" fill="#6488B2" font-weight="bold" text-anchor="middle">HUB DAK</text>
+                
+                <rect x="200" y="140" width="40" height="30" rx="4" fill="#1A2E4A" fill-opacity="0.8" stroke="#315582" stroke-width="1"/>
+                <text x="220" y="157" font-size="7" fill="#6488B2" font-weight="bold" text-anchor="middle">HUB THS</text>
+                
+                <!-- Markers with pulsing effects -->
+                <!-- IB Marker (Moving) -->
+                <circle cx="110" cy="85" r="14" fill="#F97316" fill-opacity="0.2" class="marker-pulse"/>
+                <circle cx="110" cy="85" r="6" fill="#F97316" stroke="white" stroke-width="1.5"/>
+                <text x="120" y="88" font-size="8" fill="white" font-weight="bold">IB</text>
+                
+                <!-- AS Marker (Available) -->
+                <circle cx="210" cy="55" r="6" fill="#10B981" stroke="white" stroke-width="1.5"/>
+                <text x="220" y="58" font-size="8" fill="white" font-weight="bold">AS</text>
+                
+                <!-- Broken Vehicle -->
+                <circle cx="60" cy="150" r="14" fill="#EF4444" fill-opacity="0.2" class="marker-pulse"/>
+                <circle cx="60" cy="150" r="6" fill="#EF4444" stroke="white" stroke-width="1.5"/>
+                <text x="70" y="153" font-size="8" fill="white" font-weight="bold">OD</text>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="p-3 bg-slate-50">
+            <div class="flex gap-4 flex-wrap justify-center">
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-600 font-medium"><div class="w-2 h-2 rounded-full bg-tt-orange marker-pulse shadow-[0_0_4px_#F97316]"></div>En route (14)</div>
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-600 font-medium"><div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_2px_#10B981]"></div>Dispo (20)</div>
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-600 font-medium"><div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_2px_#EF4444]"></div>Incident (2)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breakdown Alert (Enhanced) -->
+        <div class="bg-white rounded-xl border border-red-200 shadow-[0_4px_20px_rgba(239,68,68,0.1)] overflow-hidden relative">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+          <div class="px-4 py-3 border-b border-red-100 flex items-center justify-between bg-red-50/50">
+            <div class="flex items-center gap-2"><i class="ti ti-alert-triangle text-red-600 text-sm"></i><span class="text-xs font-bold text-red-800 uppercase tracking-wider">Panne Signalée</span></div>
+            <span class="text-[10px] font-bold text-red-500 animate-pulse">NOUVEAU</span>
+          </div>
+          <div class="p-4">
+            <div class="flex items-start gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600 flex-shrink-0"><i class="ti ti-truck text-lg"></i></div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-800 mb-1">Camion <span class="font-mono text-navy tracking-wide">DK-4821-A</span></h4>
+                <p class="text-[11px] text-slate-600 leading-relaxed">Signalé en panne par <span class="font-medium">Omar Diallo</span> à 09h12 sur la Route Nationale 1. Chargement : 1.2t (Inter-hub).</p>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-4">
+              <button class="flex-1 bg-red-600 text-white hover:bg-red-700 text-[11px] font-medium py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-tool text-xs"></i> Dépanneuse</button>
+              <button class="flex-1 border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-[11px] font-medium py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-phone text-xs"></i> Appeler Chauffeur</button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL OVERLAY -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black/45 z-50 flex items-center justify-center md:p-4">
+    <div class="w-full h-full md:w-[640px] md:h-auto md:max-h-[90vh] bg-white md:rounded-[14px] flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden">
+      
+      <header class="bg-white border-b border-border px-4 md:px-6 py-3.5 md:py-4 flex items-center justify-between sticky top-0 z-20">
+        <div class="flex items-center gap-3 md:gap-4">
+          <button (click)="isModalOpen = false" class="md:hidden w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-600"><i class="ti ti-arrow-left text-lg"></i></button>
+          <div class="hidden md:flex w-9 h-9 rounded-[9px] bg-[#EEF2FF] text-navy items-center justify-center shrink-0"><i class="ti ti-truck text-xl"></i></div>
+          <div>
+            <h2 class="font-display font-medium text-[16px] text-slate-800 leading-tight">Ajouter un véhicule</h2>
+            <p class="text-[11px] text-slate-500 mt-0.5 hidden md:block">Renseigner les informations du nouveau véhicule</p>
+          </div>
+        </div>
+        <button (click)="isModalOpen = false" class="hidden md:flex w-7 h-7 rounded-[7px] bg-[#F8F9FC] border border-border items-center justify-center text-slate-400 hover:bg-[#FEF2F2] hover:text-danger hover:border-red-200 transition-colors"><i class="ti ti-x text-sm"></i></button>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-4 md:p-[20px_24px] flex flex-col gap-5">
+        <!-- Section 1 : Identification -->
+        <section class="bg-surface border border-border rounded-[10px] p-4">
+          <h3 class="flex items-center gap-1.5 text-[12px] font-medium text-slate-500 mb-3"><i class="ti ti-id text-sm"></i> Identification</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="md:col-span-2">
+              <label class="form-label">Type de véhicule <span class="text-danger">*</span></label>
+              <div class="flex flex-col md:flex-row gap-3">
+                <div class="card-radio flex-1 bg-[#FFF7ED] border-[2px] border-tt-orange shadow-sm">
+                  <i class="ti ti-circle-check-filled absolute top-2 right-2 text-tt-orange text-sm"></i>
+                  <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#9A3412] shrink-0 shadow-sm border border-orange-100"><i class="ti ti-motorbike text-xl"></i></div>
+                  <div><h4 class="text-[13px] font-semibold text-slate-800 leading-tight">Moto</h4><p class="text-[11px] text-slate-500 mt-0.5">Livraisons urbaines</p></div>
+                </div>
+                <div class="card-radio flex-1 bg-[#EEF2FF] border-[0.5px] border-[#C7D2FE]">
+                  <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#3730A3] shrink-0 shadow-sm border border-indigo-50"><i class="ti ti-truck text-xl"></i></div>
+                  <div><h4 class="text-[13px] font-semibold text-slate-800 leading-tight">Camion</h4><p class="text-[11px] text-slate-500 mt-0.5">Transport inter-hub</p></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Immatriculation <span class="text-danger">*</span></label>
+              <div class="relative"><input type="text" placeholder="Ex : DK-3214-B" class="form-input font-mono uppercase valid pr-8" value="DK-3214-B"><i class="ti ti-circle-check absolute right-2.5 top-1/2 -translate-y-1/2 text-emerald-500"></i></div>
+              <p class="text-[10px] text-slate-400 mt-1">Format sénégalais : XX-XXXX-X</p>
+            </div>
+            <div><label class="form-label">Marque</label><input type="text" placeholder="Ex : Yamaha, Honda, Mercedes…" class="form-input"></div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="bg-white border-t border-border px-4 md:px-6 py-3 md:py-[14px] flex flex-col md:flex-row items-center justify-between gap-3 sticky bottom-0 z-20">
+        <span class="text-[11px] text-slate-500 order-2 md:order-1">★ Champs obligatoires</span>
+        <div class="flex gap-2 w-full md:w-auto order-1 md:order-2">
+          <button (click)="isModalOpen = false" class="flex-1 md:flex-none bg-transparent border border-slate-300 text-slate-600 hover:bg-slate-50 text-[13px] font-medium px-4 py-2 rounded-[8px] flex items-center justify-center gap-1.5 transition-colors"><i class="ti ti-x text-sm"></i> Annuler</button>
+          <button (click)="isModalOpen = false" class="flex-1 md:flex-none bg-navy hover:bg-navy-light text-white text-[13px] font-medium px-4 py-2 rounded-[8px] flex items-center justify-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-check text-sm"></i> Enregistrer</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</app-admin-layout>
