@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +20,7 @@ export class Historique implements OnInit{
 
   private expeditionService = inject(ExpeditionService);
   private authService = inject(Auth);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.chargerHistorique();
@@ -30,13 +31,17 @@ export class Historique implements OnInit{
     if (!clientId) return;
 
     this.isLoading = true;
+    this.cdr.detectChanges(); // Forcer la vue du chargement
+
     this.expeditionService.getHistoriqueClient(clientId).subscribe({
       next: (data) => {
         this.isLoading  = false;
         this.expeditions = data;
+        this.cdr.detectChanges(); // Forcer la mise à jour UI
       },
       error: () => {
         this.isLoading = false;
+        this.cdr.detectChanges(); // Forcer la mise à jour UI
       }
     });
   }

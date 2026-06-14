@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,7 @@ export class Tracking implements OnInit{
 
   private expeditionService = inject(ExpeditionService);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     // Si code passé en query param → tracker directement
@@ -40,15 +41,26 @@ export class Tracking implements OnInit{
     this.isLoading = true;
     this.erreur    = '';
     this.tracking  = null;
+    this.cdr.detectChanges(); // Forcer la mise à jour UI vers l'état de chargement
 
     this.expeditionService.trackerExpedition(this.codeRecherche.trim()).subscribe({
       next: (data) => {
+        console.log('Tracking reçu :', data); // ← debug
         this.isLoading = false;
         this.tracking  = data;
+        this.cdr.detectChanges(); // Forcer la détection
       },
-      error: () => {
+      error: (err) => {
+        console.error('Erreur tracking :', err); // ← debug
         this.isLoading = false;
-        this.erreur = 'Aucune expédition trouvée pour ce code.';
+        this.erreur = err.status === 404
+          ? 'Aucune expédition trouvée pour ce code.'
+          : 'Erreur serveur. Réessayez.';
+        this.cdr.detectChanges(); // Forcer la détection
+      },
+      complete: () => {
+        this.isLoading = false; // ← sécurité
+        this.cdr.detectChanges(); // Forcer la détection
       }
     });
   }

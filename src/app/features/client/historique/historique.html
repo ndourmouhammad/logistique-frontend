@@ -54,7 +54,7 @@
     <div class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
       <!-- Mobile View (Cards) -->
       <div class="block lg:hidden divide-y divide-slate-100">
-        @for (exp of expeditionsFiltrees; track exp.id) {
+        @for (exp of expeditionsFiltrees; track $index) {
         <div class="p-4 transition hover:bg-slate-50">
           <div class="flex justify-between items-start mb-3">
             <div>
@@ -96,7 +96,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (exp of expeditionsFiltrees; track exp.id) {
+            @for (exp of expeditionsFiltrees; track $index) {
             <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition group">
               <td class="px-6 py-4"><span class="font-bold text-xs text-navy font-mono">{{ exp.codeTracking }}</span></td>
               <td class="px-6 py-4 text-xs font-medium text-slate-600 flex items-center gap-2">Dakar <i class="ti ti-arrow-right text-slate-300"></i> {{ exp.villeDestinataire }}</td>
