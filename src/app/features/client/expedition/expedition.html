@@ -39,7 +39,7 @@
             <div class="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville</label>
-                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" [(ngModel)]="villeDepart">
+                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" formControlName="villeDepart">
                   @for (v of villes; track v) {
                   <option [value]="v">{{v}}</option>
                   }
@@ -47,12 +47,12 @@
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Quartier / Zone</label>
-                <input type="text" [(ngModel)]="quartierDepart" placeholder="Ex : Almadies, Plateau..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="quartierDepart" placeholder="Ex : Almadies, Plateau..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div>
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Adresse complète</label>
-              <input type="text" [(ngModel)]="adresseDepart" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+              <input type="text" formControlName="adresseDepart" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
             </div>
           </div>
           
@@ -68,7 +68,7 @@
             <div class="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville</label>
-                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" [(ngModel)]="ville">
+                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" formControlName="ville">
                   @for (v of villes; track v) {
                   <option [value]="v">{{v}}</option>
                   }
@@ -76,12 +76,12 @@
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Quartier / Zone</label>
-                <input type="text" [(ngModel)]="quartierArrivee" placeholder="Ex : Sor, Hydrobase..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="quartierArrivee" placeholder="Ex : Sor, Hydrobase..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div>
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Adresse complète</label>
-              <input type="text" [(ngModel)]="rue" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+              <input type="text" formControlName="rue" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
             </div>
           </div>
         </div>
@@ -92,16 +92,16 @@
             <div class="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Poids (kg)</label>
-                <input type="number" [(ngModel)]="poids" (ngModelChange)="onOptionsChange()" placeholder="2.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="number" formControlName="poids"  placeholder="2.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Volume estimé (m³)</label>
-                <input type="number" [(ngModel)]="volume" (ngModelChange)="onOptionsChange()" placeholder="0.02" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="number" formControlName="volume"  placeholder="0.02" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div>
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Description du contenu</label>
-              <input type="text" [(ngModel)]="descriptionContenu" placeholder="Ex : vêtements, documents..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+              <input type="text" formControlName="descriptionContenu" placeholder="Ex : vêtements, documents..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
             </div>
           </div>
         </div>
@@ -113,21 +113,21 @@
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Nom complet expéditeur</label>
-                <input type="text" [(ngModel)]="nomExpediteur" placeholder="Diallo Alpha" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="nomExpediteur" placeholder="Diallo Alpha" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Téléphone</label>
-                <input type="text" [(ngModel)]="telExpediteur" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="telExpediteur" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Nom complet destinataire</label>
-                <input type="text" [(ngModel)]="nomDestinataire" placeholder="Diallo Fatou" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="nomDestinataire" placeholder="Diallo Fatou" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Téléphone</label>
-                <input type="text" [(ngModel)]="telDestinataire" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" formControlName="telDestinataire" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
           </div>
@@ -146,7 +146,7 @@
                 </div>
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" [(ngModel)]="avecRamassage" (ngModelChange)="onOptionsChange()" class="sr-only peer">
+                <input type="checkbox" formControlName="avecRamassage"  class="sr-only peer">
                 <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
@@ -160,7 +160,7 @@
                   </div>
                 </div>
                 <div class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" [(ngModel)]="assurance" (ngModelChange)="onOptionsChange()" class="sr-only peer">
+                  <input type="checkbox" formControlName="assurance"  class="sr-only peer">
                   <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
                 </div>
               </label>
@@ -169,7 +169,7 @@
                 <label class="text-xs font-semibold text-slate-600 mb-1.5 block">
                   Valeur déclarée (FCFA)
                 </label>
-                <input type="number" [(ngModel)]="valeurDeclaree" (ngModelChange)="onOptionsChange()" placeholder="Ex: 50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="number" formControlName="valeurDeclaree"  placeholder="Ex: 50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
               }
             </div>
@@ -182,7 +182,7 @@
                 </div>
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" [(ngModel)]="estExpress" (ngModelChange)="onOptionsChange()" class="sr-only peer">
+                <input type="checkbox" formControlName="estExpress"  class="sr-only peer">
                 <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
@@ -191,7 +191,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="space-y-6">
+      <form [formGroup]="expeditionForm" class="space-y-6">
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 lg:sticky lg:top-20">
           <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6">
             <i class="ti ti-receipt text-lg text-slate-400"></i> Estimation du coût
@@ -232,7 +232,7 @@
           }
 
           <!-- Bouton suivant/soumettre -->
-          <button (click)="soumettre()" [disabled]="isLoading || isEstimating"
+          <button type="submit" (click)="soumettre()" [disabled]="isLoading || isEstimating"
             class="btn-navy w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold hover:bg-navy/90 shadow-md shadow-navy/20 transition disabled:opacity-70 disabled:cursor-not-allowed">
             <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-arrow-right'"></i>
             {{ isLoading ? 'Création...' : 'Suivant (Récapitulatif)' }}
@@ -247,3 +247,4 @@
     </div>
   </div>
 </app-client-layout>
+

@@ -1,27 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { RegisterRequest } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'app-inscription',
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './inscription.html',
   styleUrl: './inscription.scss',
 })
-export class Inscription {
-  nomComplet     = '';
-  email          = '';
-  telephone      = '';
-  motDePasse     = '';
-  role           = 'ROLE_CLIENT';
+export class Inscription implements OnInit {
+  inscriptionForm!: FormGroup;
   showPassword   = false;
   isLoading      = false;
-  accepteCGU     = false;
   etape          = 1;
-
-  // Erreurs
-  errors: { [key: string]: string } = {};
   submitted      = false;
 
   roles = [
@@ -32,70 +25,48 @@ export class Inscription {
     { value: 'ROLE_GERANT_RELAIS',   label: 'Gérant Relais',    icon: 'ti-building-store' },
   ];
 
-  constructor(private router: Router) {}
+  passwordStrength = 0;
+  passwordColor    = '#e2e8f0';
+
+  constructor(private fb: FormBuilder, private router: Router) {}
+
+  ngOnInit() {
+    this.inscriptionForm = this.fb.group({
+      nomComplet: ['', [Validators.required, Validators.minLength(3)]],
+      telephone: ['', [Validators.required, Validators.pattern('^\\d{9}$')]],
+      email: ['', [Validators.required, Validators.email]],
+      motDePasse: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        this.passwordStrengthValidator
+      ]],
+      role: ['ROLE_CLIENT', Validators.required]
+    });
+
+    this.inscriptionForm.get('motDePasse')?.valueChanges.subscribe(value => {
+      this.checkPassword(value);
+    });
+  }
+
+  passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    if (!/[A-Z]/.test(value)) return { requiresUppercase: true };
+    if (!/[0-9]/.test(value)) return { requiresDigit: true };
+    return null;
+  }
+
+  get f() { return this.inscriptionForm.controls; }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
-  // ── Validation étape 1 ──────────────────────────────────────
-  validateStep1(): boolean {
-    this.errors = {};
-
-    if (!this.nomComplet.trim()) {
-      this.errors['nomComplet'] = 'Le nom complet est requis.';
-    } else if (this.nomComplet.trim().length < 3) {
-      this.errors['nomComplet'] = 'Le nom doit contenir au moins 3 caractères.';
+  checkPassword(v: string) {
+    if (!v) {
+      this.passwordStrength = 0;
+      this.passwordColor = '#e2e8f0';
+      return;
     }
-
-    if (!this.telephone.trim()) {
-      this.errors['telephone'] = 'Le numéro de téléphone est requis.';
-    } else if (!/^\d{9}$/.test(this.telephone.replace(/\s/g, ''))) {
-      this.errors['telephone'] = 'Le numéro doit contenir 9 chiffres (ex: 77 123 45 67).';
-    }
-
-    if (!this.email.trim()) {
-      this.errors['email'] = "L'adresse email est requise.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
-      this.errors['email'] = "L'adresse email n'est pas valide.";
-    }
-
-    if (!this.motDePasse) {
-      this.errors['motDePasse'] = 'Le mot de passe est requis.';
-    } else if (this.motDePasse.length < 8) {
-      this.errors['motDePasse'] = 'Le mot de passe doit contenir au moins 8 caractères.';
-    } else if (!/[A-Z]/.test(this.motDePasse)) {
-      this.errors['motDePasse'] = 'Le mot de passe doit contenir au moins 1 majuscule.';
-    } else if (!/[0-9]/.test(this.motDePasse)) {
-      this.errors['motDePasse'] = 'Le mot de passe doit contenir au moins 1 chiffre.';
-    }
-
-    return Object.keys(this.errors).length === 0;
-  }
-
-  goToStep2() {
-    this.submitted = true;
-    if (this.validateStep1()) {
-      this.submitted = false;
-      this.etape = 2;
-    }
-  }
-
-  doRegister() {
-    this.isLoading = true;
-    // TODO : appel API Spring Boot /api/auth/register
-    setTimeout(() => {
-      this.isLoading = false;
-      this.router.navigate(['/connexion']);
-    }, 1500);
-  }
-
-  // ── Force du mot de passe ───────────────────────────────────
-  passwordStrength = 0;
-  passwordColor    = '#e2e8f0';
-
-  checkPassword() {
-    const v = this.motDePasse;
     const s = v.length >= 8 ? 1 : 0;
     const u = /[A-Z]/.test(v) ? 1 : 0;
     const d = /[0-9]/.test(v) ? 1 : 0;
@@ -104,19 +75,23 @@ export class Inscription {
     this.passwordColor = this.passwordStrength > 0
       ? colors[this.passwordStrength - 1]
       : '#e2e8f0';
+  }
 
-    // Effacer l'erreur mot de passe en temps réel si corrigée
-    if (this.submitted && this.motDePasse) {
-      if (this.motDePasse.length >= 8 && /[A-Z]/.test(this.motDePasse) && /[0-9]/.test(this.motDePasse)) {
-        delete this.errors['motDePasse'];
-      }
+  goToStep2() {
+    this.submitted = true;
+    if (this.f['nomComplet'].valid && this.f['telephone'].valid && this.f['email'].valid && this.f['motDePasse'].valid) {
+      this.submitted = false;
+      this.etape = 2;
     }
   }
 
-  // Effacer une erreur quand l'utilisateur commence à saisir
-  clearError(field: string) {
-    if (this.errors[field]) {
-      delete this.errors[field];
-    }
+  doRegister() {
+    this.isLoading = true;
+    const request: RegisterRequest = this.inscriptionForm.value;
+    // TODO : appel API Spring Boot /api/auth/register avec request
+    setTimeout(() => {
+      this.isLoading = false;
+      this.router.navigate(['/connexion']);
+    }, 1500);
   }
 }

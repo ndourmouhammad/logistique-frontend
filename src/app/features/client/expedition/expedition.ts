@@ -1,42 +1,20 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
-import { EstimationResponse, ExpeditionService } from '../../../core/services/expedition';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ExpeditionService } from '../../../core/services/expedition';
 import { Auth } from '../../../core/services/auth';
+import { EstimationResponse, ExpeditionFormData } from '../../../core/models/expedition.model';
 import { debounceTime, Subject, switchMap } from 'rxjs';
-
 
 @Component({
   selector: 'app-expedition',
-  imports: [CommonModule, RouterModule, FormsModule, ClientLayout],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './expedition.html',
   styleUrl: './expedition.scss',
 })
-export class Expedition {
-  // Formulaire
-  adresseDepart      = '';
-  quartierDepart     = '';
-  villeDepart        = 'Dakar';
-  nomExpediteur      = '';
-  telExpediteur      = '';
-  nomDestinataire    = '';
-  telDestinataire    = '';
-  rue                = '';
-  quartierArrivee    = '';
-  ville              = 'Thiès';
-  region             = '';
-  codePostal         = '';
-  pays               = 'Sénégal';
-  descriptionContenu = '';
-  poids              = 0;
-  volume             = 0;
-  estExpress         = false;
-  avecRamassage      = false;
-  assurance          = false;
-  valeurDeclaree     = 0;
-  methodePaiement    = 'WAVE';
+export class Expedition implements OnInit {
+  expeditionForm!: FormGroup;
 
   // Estimation depuis le backend
   estimation: EstimationResponse = {
@@ -55,42 +33,51 @@ export class Expedition {
   // Subject pour le debounce
   private estimationTrigger$ = new Subject<void>();
 
-
   private expeditionService = inject(ExpeditionService);
   private authService = inject(Auth);
   private router = inject(Router);
+  private fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.expeditionForm = this.fb.group({
+      adresseDepart:      ['', Validators.required],
+      quartierDepart:     [''],
+      villeDepart:        ['Dakar', Validators.required],
+      nomExpediteur:      [''],
+      telExpediteur:      [''],
+      nomDestinataire:    ['', Validators.required],
+      telDestinataire:    ['', Validators.required],
+      rue:                [''],
+      quartierArrivee:    [''],
+      ville:              ['Thiès', Validators.required],
+      region:             [''],
+      codePostal:         [''],
+      pays:               ['Sénégal', Validators.required],
+      descriptionContenu: [''],
+      poids:              [0, [Validators.required, Validators.min(0.1)]],
+      volume:             [0],
+      estExpress:         [false],
+      avecRamassage:      [false],
+      assurance:          [false],
+      valeurDeclaree:     [0],
+      methodePaiement:    ['WAVE']
+    });
+
     // Restaurer le formulaire s'il existe dans le sessionStorage
     const savedForm = sessionStorage.getItem('formulaireExpedition');
     if (savedForm) {
       try {
-        const data = JSON.parse(savedForm);
-        this.adresseDepart = data.adresseDepart || '';
-        this.quartierDepart = data.quartierDepart || '';
-        this.villeDepart = data.villeDepart || 'Dakar';
-        this.nomExpediteur = data.nomExpediteur || '';
-        this.telExpediteur = data.telExpediteur || '';
-        this.nomDestinataire = data.nomDestinataire || '';
-        this.telDestinataire = data.telDestinataire || '';
-        this.rue = data.rue || '';
-        this.quartierArrivee = data.quartierArrivee || '';
-        this.ville = data.ville || 'Thiès';
-        this.region = data.region || '';
-        this.codePostal = data.codePostal || '';
-        this.pays = data.pays || 'Sénégal';
-        this.descriptionContenu = data.descriptionContenu || '';
-        this.poids = data.poids || 0;
-        this.volume = data.volume || 0;
-        this.estExpress = data.estExpress || false;
-        this.avecRamassage = data.avecRamassage || false;
-        this.assurance = data.assurance || false;
-        this.valeurDeclaree = data.valeurDeclaree || 0;
-        this.methodePaiement = data.methodePaiement || 'WAVE';
+        const data: ExpeditionFormData = JSON.parse(savedForm);
+        this.expeditionForm.patchValue(data);
       } catch (e) {
         console.error('Erreur lors de la restauration du formulaire', e);
       }
     }
+
+    // Abonnement aux changements pour l'estimation
+    this.expeditionForm.valueChanges.subscribe(() => {
+      this.onOptionsChange();
+    });
 
     // Appel API avec debounce 400ms
     this.estimationTrigger$
@@ -98,13 +85,14 @@ export class Expedition {
         debounceTime(400),
         switchMap(() => {
           this.isEstimating = true;
+          const formValue = this.expeditionForm.value;
           return this.expeditionService.estimerTarif({
-            poids:          this.poids          || 0,
-            volume:         this.volume         || 0,
-            estExpress:     this.estExpress,
-            avecRamassage:  this.avecRamassage,
-            assurance:      this.assurance,
-            valeurDeclaree: this.valeurDeclaree || 0,
+            poids:          formValue.poids          || 0,
+            volume:         formValue.volume         || 0,
+            estExpress:     formValue.estExpress,
+            avecRamassage:  formValue.avecRamassage,
+            assurance:      formValue.assurance,
+            valeurDeclaree: formValue.valeurDeclaree || 0,
           });
         })
       )
@@ -128,33 +116,17 @@ export class Expedition {
   }
 
   soumettre() {
+    if (this.expeditionForm.invalid) {
+      this.erreurMessage = 'Veuillez remplir tous les champs obligatoires.';
+      this.expeditionForm.markAllAsTouched();
+      return;
+    }
+
     this.isLoading     = true;
     this.erreurMessage = '';
 
-    // Sauvegarder le formulaire pour la restauration en cas de retour en arrière
-    const formData = {
-      adresseDepart: this.adresseDepart,
-      quartierDepart: this.quartierDepart,
-      villeDepart: this.villeDepart,
-      nomExpediteur: this.nomExpediteur,
-      telExpediteur: this.telExpediteur,
-      nomDestinataire: this.nomDestinataire,
-      telDestinataire: this.telDestinataire,
-      rue: this.rue,
-      quartierArrivee: this.quartierArrivee,
-      ville: this.ville,
-      region: this.region,
-      codePostal: this.codePostal,
-      pays: this.pays,
-      descriptionContenu: this.descriptionContenu,
-      poids: this.poids,
-      volume: this.volume,
-      estExpress: this.estExpress,
-      avecRamassage: this.avecRamassage,
-      assurance: this.assurance,
-      valeurDeclaree: this.valeurDeclaree,
-      methodePaiement: this.methodePaiement
-    };
+    const formData: ExpeditionFormData = this.expeditionForm.value;
+    
     sessionStorage.setItem('formulaireExpedition', JSON.stringify(formData));
     sessionStorage.setItem('estimationExpedition', JSON.stringify(this.estimation));
 

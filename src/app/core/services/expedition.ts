@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ExpeditionRequest, ExpeditionResponse, EstimationResponse } from '../models/expedition.model';
 
 export interface EstimationRequest {
   poids:          number;
@@ -9,50 +10,6 @@ export interface EstimationRequest {
   avecRamassage:  boolean;
   assurance:      boolean;
   valeurDeclaree: number;
-}
-
-export interface EstimationResponse {
-  fraisTransport: number;
-  fraisRamassage: number;
-  fraisAssurance: number;
-  total:          number;
-}
-
-export interface ExpeditionRequest {
-  clientId:             number;
-  nomDestinataire:      string;
-  telephoneDestinataire:string;
-  adresseDepart:        string;
-  villeDepart?:         string;
-  rue:                  string;
-  ville:                string;
-  region:               string;
-  codePostal:           string;
-  pays:                 string;
-  descriptionContenu:   string;
-  poids:                number;
-  volume?:              number;
-  estExpress:           boolean;
-  avecRamassage?:       boolean;
-  assurance?:           boolean;
-  valeurDeclaree?:      number;
-  methodePaiement:      string;
-}
-
-export interface ExpeditionResponse {
-  id:                   number;
-  codeTracking:         string;
-  otpLivraison:         string;
-  statut:               string;
-  fraisLivraison:       number;
-  nomDestinataire:      string;
-  telephoneDestinataire:string;
-  villeDestinataire:    string;
-  adresseDepart:        string;
-  poids:                number;
-  estExpress:           boolean;
-  dateCreation:         string;
-  descriptionContenu?:  string;
 }
 
 export interface TrackingResponse {

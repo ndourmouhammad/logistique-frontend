@@ -2,18 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-
-export interface LoginRequest {
-  email: string;
-  motDePasse: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  role: string;
-  nomComplet: string;
-  userId: number;
-}
+import { LoginRequest, AuthResponse } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class Auth {

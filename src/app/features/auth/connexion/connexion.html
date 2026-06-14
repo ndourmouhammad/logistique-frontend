@@ -14,7 +14,7 @@
   </div>
 
   <!-- Form Mobile -->
-  <div class="flex-1 px-6 py-6 -mt-3 bg-white rounded-t-3xl relative z-10">
+  <form [formGroup]="connexionForm" (ngSubmit)="doLogin()" class="flex-1 px-6 py-6 -mt-3 bg-white rounded-t-3xl relative z-10">
     <div class="space-y-4 mb-5 fade-up">
 
       <!-- Email -->
@@ -24,7 +24,7 @@
           <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
           <input
             type="text"
-            [(ngModel)]="email"
+            formControlName="email"
             placeholder="+221 77 XXX XX XX"
             class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none">
         </div>
@@ -40,7 +40,7 @@
           <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
           <input
             [type]="showPassword ? 'text' : 'password'"
-            [(ngModel)]="motDePasse"
+            formControlName="motDePasse"
             placeholder="••••••••"
             class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
           <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
@@ -52,7 +52,7 @@
 
     <!-- Rester connecté -->
     <div class="flex items-center gap-2.5 mb-5 fade-up">
-      <input type="checkbox" [(ngModel)]="resterConnecte" class="accent-navy w-4 h-4 rounded">
+      <input type="checkbox" formControlName="resterConnecte" class="accent-navy w-4 h-4 rounded">
       <label class="text-sm text-slate-500">Rester connecté</label>
     </div>
 
@@ -63,8 +63,7 @@
         {{ erreurMessage }}
       </div>
     }
-    <button
-      (click)="doLogin()"
+    <button type="submit"
       [disabled]="isLoading"
       class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 mb-4 fade-up">
       <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
@@ -92,10 +91,7 @@
       Pas de compte ?
       <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a>
     </p>
-  </div>
-</div>
-
-<!-- ==================== DESKTOP VIEW ==================== -->
+  </form></div><!-- ==================== DESKTOP VIEW ==================== -->
 <div class="hidden lg:grid lg:grid-cols-2 min-h-screen">
   <!-- Left Panel Navy -->
   <div class="bg-navy p-12 flex flex-col justify-between relative overflow-hidden">
@@ -131,8 +127,7 @@
 
   <!-- Right Panel -->
   <div class="flex items-center justify-center p-12 bg-white">
-    <div class="w-full max-w-md">
-      <h2 class="text-2xl font-bold text-slate-800 mb-1 fade-up">Connexion</h2>
+    <form [formGroup]="connexionForm" (ngSubmit)="doLogin()" class="w-full max-w-md"><h2 class="text-2xl font-bold text-slate-800 mb-1 fade-up">Connexion</h2>
       <p class="text-sm text-slate-400 mb-8 fade-up">Entrez vos identifiants pour accéder à votre espace</p>
 
       <div class="space-y-5 mb-5 fade-up">
@@ -140,7 +135,7 @@
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email ou numéro de téléphone</label>
           <div class="relative">
             <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" [(ngModel)]="email" placeholder="email@exemple.sn"
+            <input type="text" formControlName="email" placeholder="email@exemple.sn"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none">
           </div>
         </div>
@@ -153,7 +148,7 @@
             <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input
               [type]="showPassword ? 'text' : 'password'"
-              [(ngModel)]="motDePasse"
+              formControlName="motDePasse"
               placeholder="••••••••"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
             <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
@@ -164,7 +159,7 @@
       </div>
 
       <div class="flex items-center gap-2.5 mb-6 fade-up">
-        <input type="checkbox" [(ngModel)]="resterConnecte" class="accent-navy w-4 h-4 rounded">
+        <input type="checkbox" formControlName="resterConnecte" class="accent-navy w-4 h-4 rounded">
         <label class="text-sm text-slate-500">Rester connecté</label>
       </div>
 
@@ -174,7 +169,7 @@
           {{ erreurMessage }}
         </div>
       }
-      <button (click)="doLogin()" [disabled]="isLoading"
+      <button type="submit" [disabled]="isLoading"
         class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-navy-dark transition shadow-lg shadow-navy/20 mb-4 fade-up">
         <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
         {{ isLoading ? 'Connexion…' : 'Se connecter' }}
@@ -197,8 +192,4 @@
 
       <p class="text-center text-sm text-slate-400">
         Pas encore de compte ?
-        <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a>
-      </p>
-    </div>
-  </div>
-</div>
+        <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a></p></form></div></div>

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
-import { ExpeditionResponse, ExpeditionService } from '../../../core/services/expedition';
+import { ExpeditionService } from '../../../core/services/expedition';
+import { ExpeditionResponse } from '../../../core/models/expedition.model';
 import { Auth } from '../../../core/services/auth';
 
 @Component({

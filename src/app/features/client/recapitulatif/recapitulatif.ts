@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
 import { Auth } from '../../../core/services/auth';
+import { ExpeditionFormData, EstimationResponse } from '../../../core/models/expedition.model';
 
 @Component({
   selector: 'app-recapitulatif',
@@ -11,9 +12,9 @@ import { Auth } from '../../../core/services/auth';
   templateUrl: './recapitulatif.html',
   styleUrl: './recapitulatif.scss',
 })
-export class Recapitulatif implements OnInit{
-  formulaire: any = null;
-  estimation: any = null;
+export class Recapitulatif implements OnInit {
+  formulaire: ExpeditionFormData | null = null;
+  estimation: EstimationResponse | null = null;
   isLoading = false;
   erreurMessage = '';
 
@@ -39,6 +40,12 @@ export class Recapitulatif implements OnInit{
     const clientId = this.authService.getUserId();
     if (!clientId) {
       this.router.navigate(['/connexion']);
+      return;
+    }
+
+    if (!this.formulaire) {
+      this.erreurMessage = 'Données de formulaire introuvables.';
+      this.isLoading = false;
       return;
     }
 

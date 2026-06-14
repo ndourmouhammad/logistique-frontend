@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
-import { ExpeditionResponse } from '../../../core/services/expedition';
+import { ExpeditionResponse } from '../../../core/models/expedition.model';
 
 @Component({
   selector: 'app-confirmation',
