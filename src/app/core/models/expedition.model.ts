@@ -65,3 +65,26 @@ export interface ExpeditionFormData {
   valeurDeclaree: number;
   methodePaiement: string;
 }
+
+export interface EstimationRequest {
+  poids:          number;
+  volume:         number;
+  estExpress:     boolean;
+  avecRamassage:  boolean;
+  assurance:      boolean;
+  valeurDeclaree: number;
+}
+
+export interface TrackingResponse {
+  codeTracking:   string;
+  statutGlobal:   string;
+  nomDestinataire:string;
+  villeArrivee:   string;
+  fraisLivraison: number;
+  etapes: {
+    statutEnregistre: string;
+    dateHeure:        string;
+    localisation:     string;
+    commentaire:      string;
+  }[];
+}

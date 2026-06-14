@@ -18,11 +18,14 @@ export class Auth {
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
-        tap(response => {
+        tap((response: any) => {
           localStorage.setItem('token',      response.token);
           localStorage.setItem('role',       response.role);
           localStorage.setItem('nomComplet', response.nomComplet);
-          localStorage.setItem('userId',     response.userId.toString());
+          const uid = response.userId || response.id;
+          if (uid) {
+            localStorage.setItem('userId', uid.toString());
+          }
         })
       );
   }

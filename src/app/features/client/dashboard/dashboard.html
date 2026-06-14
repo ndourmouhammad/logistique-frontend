@@ -18,6 +18,12 @@
     </div>
 
     <!-- KPIs -->
+    @if (erreurDashboard) {
+    <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl mb-6 flex items-center gap-3">
+      <i class="ti ti-alert-triangle text-xl"></i>
+      <p class="font-medium text-sm">{{ erreurDashboard }}</p>
+    </div>
+    }
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
         <div class="flex items-center gap-3 mb-4">
@@ -25,7 +31,7 @@
           <div class="text-xs font-medium text-slate-400">Ce mois</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">12</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ totalMois }}</div>
           <div class="text-xs font-medium text-emerald-500 flex items-center gap-1"><i class="ti ti-trending-up text-sm"></i> +3 vs mois dernier</div>
         </div>
       </div>
@@ -35,7 +41,7 @@
           <div class="text-xs font-medium text-slate-400">En cours</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">3</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ enCours }}</div>
           <div class="text-xs font-medium text-slate-400">2 à Dakar, 1 Thiès</div>
         </div>
       </div>
@@ -45,7 +51,7 @@
           <div class="text-xs font-medium text-slate-400">Livrées</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">8</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ livrees }}</div>
           <div class="text-xs font-medium text-emerald-500">Taux 94%</div>
         </div>
       </div>
@@ -55,7 +61,7 @@
           <div class="text-xs font-medium text-slate-400">Dépenses</div>
         </div>
         <div>
-          <div class="text-2xl font-bold text-navy mb-1.5">41 500 <span class="text-sm font-semibold text-slate-300">FCFA</span></div>
+          <div class="text-2xl font-bold text-navy mb-1.5">{{ depensesMois | number }} <span class="text-sm font-semibold text-slate-300">FCFA</span></div>
           <div class="text-xs font-medium text-slate-400">ce mois-ci</div>
         </div>
       </div>
@@ -81,10 +87,10 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-50">
-                <tr *ngFor="let exp of expeditions" class="hover:bg-slate-50/50 transition">
-                  <td class="px-5 py-4 font-mono text-xs font-semibold text-navy">{{ exp.code }}</td>
-                  <td class="px-5 py-4 font-medium text-slate-600">{{ exp.destination }}</td>
-                  <td class="px-5 py-4 text-slate-400 text-xs">{{ exp.date }}</td>
+                <tr *ngFor="let exp of expeditionsPaginees" class="hover:bg-slate-50/50 transition">
+                  <td class="px-5 py-4 font-mono text-xs font-semibold text-navy">{{ exp.codeTracking }}</td>
+                  <td class="px-5 py-4 font-medium text-slate-600">{{ exp.villeDestinataire }}</td>
+                  <td class="px-5 py-4 text-slate-400 text-xs">{{ exp.dateCreation | date:'dd MMM' }}</td>
                   <td class="px-5 py-4">
                     <span [class]="getStatutClass(exp.statut) + ' text-xs px-3 py-1 rounded-full font-semibold inline-flex items-center gap-1.5'">
                       <i class="ti text-sm" [ngClass]="getStatutIcon(exp.statut)"></i> {{ getStatutLabel(exp.statut) }}
@@ -99,44 +105,56 @@
               </tbody>
             </table>
           </div>
+          <!-- Pagination -->
+          @if (expeditions.length > itemsParPage) {
+          <div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+            <span>{{ (pageCourante - 1) * itemsParPage + 1 }}-{{ finPageCourante }} sur {{ expeditions.length }}</span>
+            <div class="flex gap-2">
+              <button (click)="pagePrecedente()" [disabled]="pageCourante === 1" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-left text-sm"></i></button>
+              <button class="w-8 h-8 bg-navy text-white rounded-lg flex items-center justify-center font-bold shadow-sm">{{ pageCourante }}</button>
+              <button (click)="pageSuivante()" [disabled]="pageCourante === totalPages" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-right text-sm"></i></button>
+            </div>
+          </div>
+          }
         </div>
       </div>
 
       <!-- Sidebar -->
       <div class="space-y-6">
+        @if (activeExpedition) {
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-8 h-8 rounded-full border border-orange-100 flex items-center justify-center text-tt-orange"><i class="ti ti-map-pin"></i></div>
             <h3 class="text-sm font-bold text-navy">Expédition active</h3>
           </div>
-          <div class="font-mono text-sm font-bold text-navy mb-1">TT-DKR-4839</div>
-          <div class="text-xs text-slate-400 flex items-center gap-1 mb-8">Dakar <i class="ti ti-arrow-right text-[10px]"></i> Saint-Louis - Express</div>
+          <div class="font-mono text-sm font-bold text-navy mb-1">{{ activeExpedition.codeTracking }}</div>
+          <div class="text-xs text-slate-400 flex items-center gap-1 mb-8">{{ activeExpedition.adresseDepart }} <i class="ti ti-arrow-right text-[10px]"></i> {{ activeExpedition.villeDestinataire }}</div>
           
           <div class="space-y-0 relative before:absolute before:inset-y-2 before:left-[7px] before:w-[2px] before:bg-slate-100">
             <div class="flex items-start gap-4 relative mb-6">
               <div class="w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white z-10 mt-0.5"></div>
               <div>
-                <div class="text-sm font-bold text-navy mb-0.5 leading-none">Prise en charge hub</div>
-                <div class="text-[11px] text-slate-400 mt-1">Auj., 11:42</div>
+                <div class="text-sm font-bold text-navy mb-0.5 leading-none">Créée</div>
+                <div class="text-[11px] text-slate-400 mt-1">{{ activeExpedition.dateCreation | date:'short' }}</div>
               </div>
             </div>
             <div class="flex items-start gap-4 relative mb-6">
               <div class="w-4 h-4 rounded-full bg-tt-orange ring-4 ring-orange-50 z-10 mt-0.5 shadow-sm shadow-orange-200"></div>
               <div>
-                <div class="text-sm font-bold text-tt-orange mb-0.5 leading-none">En cours de livraison</div>
-                <div class="text-[11px] text-slate-400 mt-1">Auj., 14:07</div>
-              </div>
-            </div>
-            <div class="flex items-start gap-4 relative">
-              <div class="w-4 h-4 rounded-full bg-slate-200 ring-4 ring-white z-10 mt-0.5"></div>
-              <div>
-                <div class="text-sm font-medium text-slate-400 mb-0.5 leading-none mt-0.5">Livré au destinataire</div>
+                <div class="text-sm font-bold text-tt-orange mb-0.5 leading-none">{{ getStatutLabel(activeExpedition.statut) }}</div>
               </div>
             </div>
           </div>
           
-          <a routerLink="/client/tracking" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center hover:bg-navy-light transition mt-8 shadow-md shadow-navy/10">Voir sur la carte</a>
+          <a [routerLink]="['/client/tracking']" [queryParams]="{code: activeExpedition.codeTracking}" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center hover:bg-navy-light transition mt-8 shadow-md shadow-navy/10">Suivre le colis</a>
         </div>
+        } @else {
+          <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-6 text-center text-slate-400">
+            <i class="ti ti-box text-3xl mb-2"></i>
+            <p class="text-sm font-medium">Aucune expédition en cours</p>
+            <a routerLink="/client/expedition" class="text-tt-orange text-xs font-semibold hover:underline mt-2 inline-block">Créer une expédition</a>
+          </div>
+        }
       </div>
     </div>
   </div>

@@ -1,30 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExpeditionRequest, ExpeditionResponse, EstimationResponse } from '../models/expedition.model';
-
-export interface EstimationRequest {
-  poids:          number;
-  volume:         number;
-  estExpress:     boolean;
-  avecRamassage:  boolean;
-  assurance:      boolean;
-  valeurDeclaree: number;
-}
-
-export interface TrackingResponse {
-  codeTracking:   string;
-  statutGlobal:   string;
-  nomDestinataire:string;
-  villeArrivee:   string;
-  fraisLivraison: number;
-  etapes: {
-    statutEnregistre: string;
-    dateHeure:        string;
-    localisation:     string;
-    commentaire:      string;
-  }[];
-}
+import { ExpeditionRequest, ExpeditionResponse, EstimationResponse, EstimationRequest, TrackingResponse } from '../models/expedition.model';
 
 @Injectable({ providedIn: 'root' })
 export class ExpeditionService {

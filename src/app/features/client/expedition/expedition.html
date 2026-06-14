@@ -20,7 +20,7 @@
   </div>
 
   <div class="max-w-5xl mx-auto px-4 pt-6 pb-28 lg:pb-8">
-    <div class="grid lg:grid-cols-3 gap-6">
+    <form [formGroup]="expeditionForm" (ngSubmit)="soumettre()" class="grid lg:grid-cols-3 gap-6">
       <!-- Form -->
       <div class="lg:col-span-2 space-y-8">
         <!-- Adresses -->
@@ -164,7 +164,7 @@
                   <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
                 </div>
               </label>
-              @if (assurance) {
+              @if (expeditionForm.get('assurance')?.value) {
               <div class="mt-3">
                 <label class="text-xs font-semibold text-slate-600 mb-1.5 block">
                   Valeur déclarée (FCFA)
@@ -191,7 +191,7 @@
       </div>
 
       <!-- Sidebar -->
-      <form [formGroup]="expeditionForm" class="space-y-6">
+      <div class="space-y-6">
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 lg:sticky lg:top-20">
           <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6">
             <i class="ti ti-receipt text-lg text-slate-400"></i> Estimation du coût
@@ -204,16 +204,16 @@
               <span class="text-slate-400">Frais de transport</span>
               <span class="font-bold text-navy">{{ estimation.fraisTransport | number }} FCFA</span>
             </div>
-            <div class="flex justify-between" [class.opacity-40]="!avecRamassage">
+            <div class="flex justify-between" [class.opacity-40]="!expeditionForm.get('avecRamassage')?.value">
               <span class="text-slate-400">Ramassage domicile</span>
               <span class="font-bold text-navy">
-                {{ avecRamassage ? (estimation.fraisRamassage | number) + ' FCFA' : '— non sélectionné' }}
+                {{ expeditionForm.get('avecRamassage')?.value ? (estimation.fraisRamassage | number) + ' FCFA' : '— non sélectionné' }}
               </span>
             </div>
-            <div class="flex justify-between" [class.opacity-40]="!assurance">
+            <div class="flex justify-between" [class.opacity-40]="!expeditionForm.get('assurance')?.value">
               <span class="text-slate-400">Assurance</span>
               <span class="font-bold text-navy">
-                {{ assurance ? (estimation.fraisAssurance | number) + ' FCFA' : '— non souscrite' }}
+                {{ expeditionForm.get('assurance')?.value ? (estimation.fraisAssurance | number) + ' FCFA' : '— non souscrite' }}
               </span>
             </div>
           </div>
@@ -232,7 +232,7 @@
           }
 
           <!-- Bouton suivant/soumettre -->
-          <button type="submit" (click)="soumettre()" [disabled]="isLoading || isEstimating"
+          <button type="submit" [disabled]="isLoading || isEstimating"
             class="btn-navy w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold hover:bg-navy/90 shadow-md shadow-navy/20 transition disabled:opacity-70 disabled:cursor-not-allowed">
             <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-arrow-right'"></i>
             {{ isLoading ? 'Création...' : 'Suivant (Récapitulatif)' }}
@@ -244,7 +244,7 @@
           <p class="text-xs text-slate-400 leading-relaxed">Le tarif définitif est calculé au moment de la pesée au hub. L'assurance est optionnelle mais recommandée pour les colis de valeur.</p>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </app-client-layout>
 

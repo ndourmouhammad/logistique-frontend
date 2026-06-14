@@ -2,14 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
 import { Auth } from '../../../core/services/auth';
-import { EstimationResponse, ExpeditionFormData } from '../../../core/models/expedition.model';
+import { EstimationResponse, ExpeditionFormData, EstimationRequest } from '../../../core/models/expedition.model';
 import { debounceTime, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-expedition',
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, ClientLayout],
   templateUrl: './expedition.html',
   styleUrl: './expedition.scss',
 })
@@ -86,14 +87,15 @@ export class Expedition implements OnInit {
         switchMap(() => {
           this.isEstimating = true;
           const formValue = this.expeditionForm.value;
-          return this.expeditionService.estimerTarif({
+          const payload: EstimationRequest = {
             poids:          formValue.poids          || 0,
             volume:         formValue.volume         || 0,
             estExpress:     formValue.estExpress,
             avecRamassage:  formValue.avecRamassage,
             assurance:      formValue.assurance,
             valeurDeclaree: formValue.valeurDeclaree || 0,
-          });
+          };
+          return this.expeditionService.estimerTarif(payload);
         })
       )
       .subscribe({

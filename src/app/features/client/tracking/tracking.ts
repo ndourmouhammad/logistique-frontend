@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
-import { TrackingResponse } from '../../../core/services/expedition';
+import { TrackingResponse } from '../../../core/models/expedition.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
