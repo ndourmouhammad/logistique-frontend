@@ -2,11 +2,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface EstimationRequest {
+  poids:          number;
+  volume:         number;
+  estExpress:     boolean;
+  avecRamassage:  boolean;
+  assurance:      boolean;
+  valeurDeclaree: number;
+}
+
+export interface EstimationResponse {
+  fraisTransport: number;
+  fraisRamassage: number;
+  fraisAssurance: number;
+  total:          number;
+}
+
 export interface ExpeditionRequest {
   clientId:             number;
   nomDestinataire:      string;
   telephoneDestinataire:string;
   adresseDepart:        string;
+  villeDepart?:         string;
   rue:                  string;
   ville:                string;
   region:               string;
@@ -16,6 +33,9 @@ export interface ExpeditionRequest {
   poids:                number;
   volume?:              number;
   estExpress:           boolean;
+  avecRamassage?:       boolean;
+  assurance?:           boolean;
+  valeurDeclaree?:      number;
   methodePaiement:      string;
 }
 
@@ -74,6 +94,12 @@ export class ExpeditionService {
   getHistoriqueClient(clientId: number): Observable<ExpeditionResponse[]> {
     return this.http.get<ExpeditionResponse[]>(
       `${this.apiUrl}/expeditions/client/${clientId}`
+    );
+  }
+
+  estimerTarif(request: EstimationRequest): Observable<EstimationResponse> {
+    return this.http.post<EstimationResponse>(
+      `${this.apiUrl}/estimations`, request
     );
   }
 }

@@ -121,13 +121,13 @@
     <div class="space-y-6 lg:mt-10">
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-package text-lg text-slate-400"></i> Récapitulatif</div>
-        <div class="space-y-4 text-xs text-slate-500 leading-relaxed">
-          <div class="flex gap-2"><span class="text-slate-400 w-10">De</span> <span class="font-bold text-navy">Dakar, Almadies</span></div>
-          <div class="flex gap-2"><span class="text-slate-400 w-10">À</span> <span class="font-bold text-navy">Saint-Louis, Sor</span></div>
-          <div class="flex gap-2"><span class="text-slate-400 w-10">Colis</span> <span class="font-bold text-navy">2,5 kg - Vêtements</span></div>
-          <div class="flex gap-2"><span class="text-slate-400 w-10">Service</span> <span class="font-bold text-navy">Express + ramassage</span></div>
+        <div class="space-y-4 text-xs text-slate-500 leading-relaxed" *ngIf="expedition">
+          <div class="flex gap-2"><span class="text-slate-400 w-10">De</span> <span class="font-bold text-navy">{{ expedition.adresseDepart }}</span></div>
+          <div class="flex gap-2"><span class="text-slate-400 w-10">À</span> <span class="font-bold text-navy">{{ expedition.villeDestinataire }}</span></div>
+          <div class="flex gap-2"><span class="text-slate-400 w-10">Colis</span> <span class="font-bold text-navy">{{ expedition.poids }} kg {{ expedition.descriptionContenu ? '- ' + expedition.descriptionContenu : '' }}</span></div>
+          <div class="flex gap-2"><span class="text-slate-400 w-10">Service</span> <span class="font-bold text-navy">{{ expedition.estExpress ? 'Express' : 'Standard' }}</span></div>
           <hr class="border-slate-100">
-          <div class="flex gap-2"><span class="text-slate-400 w-10">Pour</span> <span class="font-bold text-navy">Fatou Diallo</span></div>
+          <div class="flex gap-2"><span class="text-slate-400 w-10">Pour</span> <span class="font-bold text-navy">{{ expedition.nomDestinataire }}</span></div>
         </div>
       </div>
 
