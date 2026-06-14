@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
+import { ExpeditionResponse } from '../../../core/services/expedition';
 
 @Component({
   selector: 'app-confirmation',
@@ -9,8 +10,14 @@ import { ClientLayout } from '../../../shared/components/client-layout/client-la
   templateUrl: './confirmation.html',
   styleUrl: './confirmation.scss',
 })
-export class Confirmation {
-  codeTracking = 'TT-DKR-4839';
-  montant      = 3600;
-  modePaiement = 'Wave';
+export class Confirmation implements OnInit {
+  expedition: ExpeditionResponse | null = null;
+
+  ngOnInit() {
+    const data = sessionStorage.getItem('expeditionEnCours');
+    if (data) {
+      this.expedition = JSON.parse(data);
+      sessionStorage.removeItem('expeditionEnCours');
+    }
+  }
 }

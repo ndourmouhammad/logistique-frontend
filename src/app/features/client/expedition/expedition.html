@@ -40,7 +40,9 @@
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville</label>
                 <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" [(ngModel)]="villeDepart">
-                  <option *ngFor="let v of villes" [value]="v">{{v}}</option>
+                  @for (v of villes; track v) {
+                  <option [value]="v">{{v}}</option>
+                  }
                 </select>
               </div>
               <div>
@@ -66,8 +68,10 @@
             <div class="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Ville</label>
-                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" [(ngModel)]="villeArrivee">
-                  <option *ngFor="let v of villes" [value]="v">{{v}}</option>
+                <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy outline-none" [(ngModel)]="ville">
+                  @for (v of villes; track v) {
+                  <option [value]="v">{{v}}</option>
+                  }
                 </select>
               </div>
               <div>
@@ -77,7 +81,7 @@
             </div>
             <div>
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Adresse complète</label>
-              <input type="text" [(ngModel)]="adresseArrivee" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+              <input type="text" [(ngModel)]="rue" placeholder="Rue, numéro, repère visible" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
             </div>
           </div>
         </div>
@@ -96,12 +100,12 @@
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Valeur déclarée</label>
-                <input type="text" [(ngModel)]="valeurDeclaree" placeholder="Facultatif" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" placeholder="Facultatif" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div>
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Description du contenu</label>
-              <input type="text" [(ngModel)]="description" placeholder="Ex : vêtements, documents..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+              <input type="text" [(ngModel)]="descriptionContenu" placeholder="Ex : vêtements, documents..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
             </div>
           </div>
         </div>
@@ -113,11 +117,11 @@
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Nom complet expéditeur</label>
-                <input type="text" [(ngModel)]="nomExpediteur" placeholder="Diallo Alpha" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" placeholder="Diallo Alpha" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Téléphone</label>
-                <input type="text" [(ngModel)]="telExpediteur" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
+                <input type="text" placeholder="+221 77 845 12 34" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none">
               </div>
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
@@ -146,7 +150,7 @@
                 </div>
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" [(ngModel)]="avecRamassage" class="sr-only peer">
+                <input type="checkbox" #ramassage class="sr-only peer">
                 <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
@@ -159,7 +163,7 @@
                 </div>
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" [(ngModel)]="assurance" class="sr-only peer">
+                <input type="checkbox" #assur class="sr-only peer">
                 <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
@@ -186,16 +190,34 @@
           <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-receipt text-lg text-slate-400"></i> Estimation du coût</div>
           <div class="space-y-4 text-sm mb-6">
             <div class="flex justify-between"><span class="text-slate-400">Frais de transport</span><span class="font-bold text-navy">2 800 FCFA</span></div>
-            <div class="flex justify-between" *ngIf="avecRamassage"><span class="text-slate-400">Ramassage domicile</span><span class="font-bold text-navy">400 FCFA</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Assurance</span><span class="text-slate-300" [class.text-navy]="assurance" [class.font-bold]="assurance">{{ assurance ? 'Souscrite' : '— non souscrite' }}</span></div>
-            <div class="flex justify-between" *ngIf="estExpress"><span class="text-slate-400">Livraison Express</span><span class="font-bold text-navy">1 500 FCFA</span></div>
+            @if (ramassage.checked) {
+            <div class="flex justify-between"><span class="text-slate-400">Ramassage domicile</span><span class="font-bold text-navy">400 FCFA</span></div>
+            }
+            <div class="flex justify-between"><span class="text-slate-400">Assurance</span><span class="text-slate-300" [class.text-navy]="assur.checked" [class.font-bold]="assur.checked">{{ assur.checked ? 'Souscrite' : '— non souscrite' }}</span></div>
+            @if (estExpress) {
+            <div class="flex justify-between"><span class="text-slate-400">Livraison Express</span><span class="font-bold text-navy">1 500 FCFA</span></div>
+            }
           </div>
           <hr class="border-slate-100 mb-6">
           <div class="flex justify-between items-center mb-6">
             <span class="font-bold text-navy">Total estimé</span>
             <span class="text-xl font-bold text-tt-orange">3 200 FCFA</span>
           </div>
-          <button (click)="suivant()" class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center hover:bg-navy/90 shadow-md shadow-navy/20 transition">Continuer</button>
+          <!-- Message erreur -->
+          @if (erreurMessage) {
+          <div
+            class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
+            <i class="ti ti-alert-circle text-sm"></i>
+            {{ erreurMessage }}
+          </div>
+          }
+
+          <!-- Bouton suivant/soumettre -->
+          <button (click)="suivant()" [disabled]="isLoading"
+            class="btn-navy w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold hover:bg-navy/90 shadow-md shadow-navy/20 transition disabled:opacity-70 disabled:cursor-not-allowed">
+            <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-arrow-right'"></i>
+            {{ etape < 3 ? 'Suivant' : (isLoading ? 'Création...' : 'Créer l\'expédition') }}
+          </button>
         </div>
         
         <div class="p-4 pt-0">
