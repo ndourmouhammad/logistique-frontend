@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExpeditionResponse } from '../models/expedition.model';
+import { ExpeditionResponse, LivreurResponse } from '../models/expedition.model';
 
 
 export interface ExpeditionListItem {
@@ -60,4 +60,10 @@ export class HubService {
       `${this.apiUrl}/expeditions/${expeditionId}/remise-guichet?otpSaisi=${otpSaisi}`, {}
     );
   }
+
+  getLivreursDisponibles(zone: string): Observable<LivreurResponse[]> {
+  return this.http.get<LivreurResponse[]>(
+   `http://localhost:8080/api/livreur/disponibles?zone=${zone}`
+  );
+}
 }

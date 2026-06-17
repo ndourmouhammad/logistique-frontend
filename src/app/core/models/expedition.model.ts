@@ -41,6 +41,13 @@ export interface EstimationResponse {
   total:          number;
 }
 
+export interface LivreurResponse {
+  id:          number;
+  nomComplet:  string;
+  zoneAction:  string;
+  statutDispo: boolean;
+}
+
 // Interface for the frontend Reactive Form
 export interface ExpeditionFormData {
   adresseDepart: string;

@@ -11,30 +11,49 @@
       </div>
     }
 
-    <div class="space-y-3">
-      @for (l of livreurs; track l.id) {
-        <div (click)="selectionnerLivreur(l.id)"
-          [class]="livreurSelectionneId() === l.id
-            ? 'bg-indigo-50 border-2 border-navy rounded-xl p-4 cursor-pointer'
-            : 'bg-white border border-slate-200 rounded-xl p-4 cursor-pointer hover:border-slate-300'">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white text-sm font-bold">
-              {{ l.initiales }}
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (isLoadingLivreurs()) {
+      <div class="text-center py-10">
+        <i class="ti ti-loader-2 animate-spin text-3xl text-navy"></i>
+      </div>
+    } @else {
+      @if (livreurs().length === 0) {
+        <div class="text-center py-10 text-slate-400">
+          Aucun livreur disponible dans cette zone pour le moment.
+        </div>
+      } @else {
+        <div class="space-y-3">
+          @for (l of livreurs(); track l.id) {
+            <div (click)="selectionnerLivreur(l.id)"
+              [class]="livreurSelectionneId() === l.id
+                ? 'bg-indigo-50 border-2 border-navy rounded-xl p-4 cursor-pointer'
+                : 'bg-white border border-slate-200 rounded-xl p-4 cursor-pointer hover:border-slate-300'">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white text-sm font-bold">
+                  {{ l.nomComplet.charAt(0) }}
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-navy">{{ l.nomComplet }}</div>
+                  <div class="text-[11px] text-slate-500">Zone : {{ l.zoneAction }}</div>
+                </div>
+                @if (livreurSelectionneId() === l.id) {
+                  <i class="ti ti-check text-navy"></i>
+                }
+              </div>
             </div>
-            <div class="flex-1">
-              <div class="text-sm font-bold text-navy">{{ l.nom }}</div>
-              <div class="text-[11px] text-slate-500">{{ l.vehicule }} · {{ l.zone }} · ★ {{ l.note }}</div>
-            </div>
-            @if (livreurSelectionneId() === l.id) {
-              <i class="ti ti-check text-navy"></i>
-            }
-          </div>
+          }
         </div>
       }
-    </div>
+    }
 
-    <button (click)="confirmerAffectation()" [disabled]="isLoading()"
-      class="w-full mt-6 bg-tt-orange text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
+    <button (click)="confirmerAffectation()" [disabled]="isLoading() || livreurs().length === 0"
+      class="w-full mt-6 bg-tt-orange text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-40">
       <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
       {{ isLoading() ? 'Affectation...' : 'Confirmer l\'affectation & lancer' }}
     </button>

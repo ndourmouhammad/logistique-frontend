@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
 import { HubService } from '../../../core/services/hub';
+import { LivreurResponse } from '../../../core/models/expedition.model';
 
 @Component({
   selector: 'app-preparation-expedition',
@@ -12,15 +13,15 @@ import { HubService } from '../../../core/services/hub';
 })
 export class PreparationExpedition implements OnInit {
   colisSelectionnes = signal<number[]>([]);
+  livreurs          = signal<LivreurResponse[]>([]);
   livreurSelectionneId = signal<number | null>(null);
-  isLoading = signal(false);
-  erreurMessage = signal('');
+  isLoading         = signal(false);
+  isLoadingLivreurs = signal(false);
+  erreurMessage     = signal('');
+  successMessage    = signal('');
 
-  // ⚠️ À remplacer plus tard par un vrai GET /api/livreurs/disponibles
-  livreurs = [
-    { id: 2, initiales: 'IB', nom: 'Ibrahima Balde', vehicule: 'Moto', zone: 'Dakar', note: 4.8, statut: 'DISPONIBLE', distance: 1.2 },
-    { id: 3, initiales: 'AS', nom: 'Amadou Sow',      vehicule: 'Moto', zone: 'Dakar', note: 4.6, statut: 'DISPONIBLE', distance: 2.8 },
-  ];
+  // Zone utilisée pour filtrer les livreurs — correspond à la ville du hub connecté
+  zoneHub = 'Dakar';
 
   private hubService = inject(HubService);
   private router = inject(Router);
@@ -31,7 +32,24 @@ export class PreparationExpedition implements OnInit {
       this.colisSelectionnes.set(JSON.parse(data));
     } else {
       this.router.navigate(['/hub/tri']);
+      return;
     }
+
+    this.chargerLivreursDisponibles();
+  }
+
+  chargerLivreursDisponibles() {
+    this.isLoadingLivreurs.set(true);
+    this.hubService.getLivreursDisponibles(this.zoneHub).subscribe({
+      next: (data) => {
+        this.isLoadingLivreurs.set(false);
+        this.livreurs.set(data);
+      },
+      error: () => {
+        this.isLoadingLivreurs.set(false);
+        this.erreurMessage.set('Erreur lors du chargement des livreurs.');
+      }
+    });
   }
 
   selectionnerLivreur(id: number) {
@@ -39,20 +57,28 @@ export class PreparationExpedition implements OnInit {
   }
 
   confirmerAffectation() {
-    if (!this.livreurSelectionneId()) {
+    const livreurId = this.livreurSelectionneId();
+    if (!livreurId) {
       this.erreurMessage.set('Sélectionnez un livreur.');
       return;
     }
 
     this.isLoading.set(true);
+    this.erreurMessage.set('');
+
     this.hubService.dispatcher({
       expeditionIds: this.colisSelectionnes(),
-      livreurId: this.livreurSelectionneId()!
+      livreurId
     }).subscribe({
       next: () => {
         this.isLoading.set(false);
+        this.successMessage.set('Affectation confirmée ! Le livreur a été notifié.');
         sessionStorage.removeItem('colisSelectionnes');
-        this.router.navigate(['/hub/dashboard']);
+
+        // Laisser le message visible 1.5s avant de rediriger
+        setTimeout(() => {
+          this.router.navigate(['/hub/dashboard']);
+        }, 1500);
       },
       error: () => {
         this.isLoading.set(false);
@@ -60,4 +86,5 @@ export class PreparationExpedition implements OnInit {
       }
     });
   }
+
 }

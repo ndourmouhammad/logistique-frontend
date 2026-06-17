@@ -2,106 +2,90 @@
   <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-30">
     <div class="flex-1">
       <h1 class="text-sm font-semibold text-slate-800">Réception d'un colis</h1>
-      <p class="text-xs text-slate-400 mt-0.5">Scannez le QR Code ou saisissez le code de tracking</p>
+      <p class="text-xs text-slate-400 mt-0.5">Saisissez le code de tracking pour confirmer le dépôt</p>
     </div>
-    <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-[11px] font-semibold px-3 py-1 rounded-full">{{ colisAttendus.length }} colis attendus aujourd'hui</span>
+    <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-[11px] font-semibold px-3 py-1 rounded-full">
+      {{ colisAttendus().length }} colis attendus
+    </span>
   </header>
 
   <main class="flex-1 p-6">
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (erreurMessage()) {
+      <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm mb-4">
+        {{ erreurMessage() }}
+      </div>
+    }
+
     <div class="grid grid-cols-5 gap-5">
-
-      <!-- Left: Scan + Identified -->
-      <div class="col-span-2 flex flex-col gap-4">
-        <!-- Scanner -->
+      <div class="col-span-2">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-          <h3 class="text-[11px] font-medium text-slate-500 mb-3 flex items-center gap-1.5"><i class="ti ti-qrcode text-sm"></i> Scanner le colis entrant</h3>
-          <!-- Scan Zone -->
-          <div class="bg-[#0A1628] rounded-lg h-[90px] flex items-center justify-center relative overflow-hidden mb-3">
-            <div class="absolute top-3 left-5 right-5 bottom-3">
-              <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-tt-orange rounded-tl-sm"></div>
-              <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-tt-orange rounded-tr-sm"></div>
-              <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-tt-orange rounded-bl-sm"></div>
-              <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-tt-orange rounded-br-sm"></div>
-            </div>
-            <div class="scan-anim absolute left-5 right-5 h-[1.5px] bg-tt-orange opacity-80" style="animation: scanLine 2.5s ease-in-out infinite;"></div>
-            <style>@keyframes scanLine { 0%,100% { top: 20%; } 50% { top: 75%; } }</style>
-            <span class="text-[10px] text-white/25">Caméra active</span>
-          </div>
+          <h3 class="text-[11px] font-medium text-slate-500 mb-3">Saisir le code de tracking</h3>
           <div class="flex gap-2">
-            <input type="text" [(ngModel)]="codeSaisi" placeholder="TT-DKR-XXXX — saisie manuelle" class="flex-1 bg-surface border border-slate-200 rounded-lg px-3 py-2 text-[12px] text-slate-700 font-mono focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-relay transition-all">
-            <button (click)="rechercherColis()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-lg transition-colors"><i class="ti ti-search text-sm"></i></button>
-          </div>
-        </div>
-
-        <!-- Colis identifié -->
-        <div *ngIf="colisIdentifie" class="bg-[#EEF2FF] rounded-xl border border-emerald-200 shadow-sm p-4">
-          <div class="flex items-center gap-2 mb-3">
-            <i class="ti ti-circle-check text-navy text-lg"></i>
-            <span class="text-[12px] font-semibold text-navy">Colis identifié</span>
-          </div>
-          <div class="font-mono text-[16px] font-semibold text-navy mb-3">{{ colisIdentifie.code }}</div>
-          <div class="text-[12px] text-slate-600 space-y-1.5 leading-relaxed">
-            <div>Expéditeur : <strong class="text-slate-800">{{ colisIdentifie.expediteur }}</strong></div>
-            <div>Destinataire : <strong class="text-slate-800">{{ colisIdentifie.destinataire }}</strong></div>
-            <div>Contenu : {{ colisIdentifie.contenu }}</div>
-            <div>Service : <span class="bg-sky-50 text-sky-700 border border-sky-200 text-[10px] font-semibold px-2 py-0.5 rounded-full">{{ colisIdentifie.service }}</span></div>
-          </div>
-          <div class="bg-relay/5 border border-relay/10 rounded-lg p-2.5 mt-3 flex items-start gap-2">
-            <i class="ti ti-info-circle text-navy text-sm mt-0.5"></i>
-            <p class="text-[11px] text-navy leading-relaxed">Le destinataire sera notifié par SMS dès la confirmation de réception.</p>
-          </div>
-          <div class="flex gap-2 mt-3">
-            <select [(ngModel)]="emplacementChoisi" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-[12px] text-slate-700 focus:outline-none focus:ring-2 focus:ring-navy/20">
-              <option *ngFor="let e of emplacements" [value]="e">{{ e }}</option>
-            </select>
-            <button (click)="confirmerReception()" class="bg-navy hover:bg-navy-light text-white text-[12px] font-medium px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-check text-sm"></i> Confirmer</button>
+            <input type="text" [value]="codeSaisi()"
+              (input)="onCodeSaisiChange($any($event.target).value)"
+              placeholder="TT-2026-XXXXXX"
+              (keyup.enter)="receptionnerParCode()"
+              class="flex-1 bg-surface border border-slate-200 rounded-lg px-3 py-2 text-[12px] font-mono">
+            <button (click)="receptionnerParCode()"
+              class="bg-navy text-white px-3 py-2 rounded-lg">
+              <i class="ti ti-check text-sm"></i>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Right: Table + Rappel -->
-      <div class="col-span-3 flex flex-col gap-4">
+      <div class="col-span-3">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="px-4 py-3 border-b border-slate-100">
-            <h3 class="text-[13px] font-medium text-slate-800">Colis attendus aujourd'hui ({{ colisAttendus.length }})</h3>
+            <h3 class="text-[13px] font-medium text-slate-800">
+              Colis attendus ({{ colisAttendus().length }})
+            </h3>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs">
-              <thead><tr class="bg-slate-50 text-left border-b border-slate-200">
-                <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Code</th>
-                <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Expéditeur</th>
-                <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Contenu</th>
-                <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Service</th>
-                <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Statut</th>
-              </tr></thead>
-              <tbody class="divide-y divide-slate-100">
-                
-                <tr *ngFor="let c of colisAttendus" class="hover:bg-slate-50 transition-colors">
-                  <td class="px-4 py-3"><span class="font-mono text-[11px] font-semibold text-navy">{{ c.code }}</span></td>
-                  <td class="px-4 py-3 text-slate-700 font-medium">{{ c.expediteur }}</td>
-                  <td class="px-4 py-3 text-slate-600">{{ c.contenu }}</td>
-                  <td class="px-4 py-3"><span class="bg-sky-50 text-sky-700 border border-sky-200 text-[10px] font-semibold px-2 py-0.5 rounded-full">Relais</span></td>
-                  <td class="px-4 py-3">
-                    <span [class]="c.statut === 'EN_COURS_SCAN' ? 'bg-orange-50 text-orange-700 border border-orange-200 text-[10px] font-semibold px-2 py-0.5 rounded-full' : 'bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-semibold px-2 py-0.5 rounded-full'">
-                      {{ c.statut === 'EN_COURS_SCAN' ? 'En cours scan' : 'En transit' }}
-                    </span>
-                  </td>
-                </tr>
 
+          @if (isLoading()) {
+            <div class="p-6 text-center text-slate-400">
+              <i class="ti ti-loader-2 animate-spin text-2xl"></i>
+            </div>
+          } @else {
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-left border-b border-slate-200">
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Code</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Destinataire</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Poids</th>
+                  <th class="px-4 py-2.5"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @for (c of colisAttendus(); track c.id) {
+                  <tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 font-mono text-[11px] font-semibold text-navy">{{ c.codeTracking }}</td>
+                    <td class="px-4 py-3 text-slate-700">{{ c.nomDestinataire }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ c.poids }} kg</td>
+                    <td class="px-4 py-3 text-right">
+                      <button (click)="deposer(c.id)"
+                        class="bg-navy text-white text-[11px] px-3 py-1.5 rounded-lg">
+                        Réceptionner
+                      </button>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
-          </div>
-        </div>
 
-        <!-- Rappel Procédure -->
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <h3 class="text-[11px] font-medium text-amber-800 mb-2 flex items-center gap-1.5"><i class="ti ti-info-circle text-sm"></i> Rappel procédure</h3>
-          <ol class="text-[12px] text-amber-700 leading-[1.8] list-decimal list-inside space-y-0.5">
-            <li>Scannez le QR Code ou saisissez le code</li>
-            <li>Vérifiez que le contenu correspond à la fiche</li>
-            <li>Affectez un emplacement de stockage</li>
-            <li>Confirmez — le client reçoit une notification SMS</li>
-          </ol>
+            @if (colisAttendus().length === 0) {
+              <div class="p-6 text-center text-slate-400 text-sm">
+                Aucun colis en attente.
+              </div>
+            }
+          }
         </div>
       </div>
     </div>
