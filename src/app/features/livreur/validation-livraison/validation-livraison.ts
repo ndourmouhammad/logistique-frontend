@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,31 +10,35 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './validation-livraison.scss',
 })
 export class ValidationLivraison {
-  codeColis       = 'TT-DKR-4839';
-  nomDestinataire = 'Fatou Diallo';
-  telDestinataire = '+221 77 845 12 34';
-  otpSaisi        = ['', '', '', ''];
-  isLoading       = false;
-  modeHorsLigne   = false;
+  codeColis       = signal('TT-DKR-4839');
+  nomDestinataire = signal('Fatou Diallo');
+  telDestinataire = signal('+221 77 845 12 34');
+  otpSaisi        = signal(['', '', '', '']);
+  isLoading       = signal(false);
+  modeHorsLigne   = signal(false);
 
   constructor(private router: Router) {}
 
-  get otpComplet(): string {
-    return this.otpSaisi.join('');
+  otpComplet = computed(() => this.otpSaisi().join(''));
+
+  updateOtpValue(index: number, value: string) {
+    const arr = [...this.otpSaisi()];
+    arr[index] = value;
+    this.otpSaisi.set(arr);
   }
 
   focusNext(index: number) {
-    if (this.otpSaisi[index] && index < 3) {
+    if (this.otpSaisi()[index] && index < 3) {
       const next = document.getElementById(`otp-${index + 1}`);
       next?.focus();
     }
   }
 
   validerLivraison() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // TODO : appel API Spring Boot POST /api/livreur/expeditions/{id}/livrer
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/livreur/dashboard']);
     }, 1500);
   }
@@ -43,4 +47,3 @@ export class ValidationLivraison {
     this.router.navigate(['/livreur/echec-livraison']);
   }
 }
-

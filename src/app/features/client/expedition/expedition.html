@@ -195,47 +195,47 @@
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 lg:sticky lg:top-20">
           <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6">
             <i class="ti ti-receipt text-lg text-slate-400"></i> Estimation du coût
-            @if (isEstimating) {
+            @if (isEstimating()) {
             <i class="ti ti-loader-2 animate-spin text-slate-400 ml-auto text-base"></i>
             }
           </div>
           <div class="space-y-4 text-sm mb-6">
             <div class="flex justify-between">
               <span class="text-slate-400">Frais de transport</span>
-              <span class="font-bold text-navy">{{ estimation.fraisTransport | number }} FCFA</span>
+              <span class="font-bold text-navy">{{ estimation().fraisTransport | number }} FCFA</span>
             </div>
             <div class="flex justify-between" [class.opacity-40]="!expeditionForm.get('avecRamassage')?.value">
               <span class="text-slate-400">Ramassage domicile</span>
               <span class="font-bold text-navy">
-                {{ expeditionForm.get('avecRamassage')?.value ? (estimation.fraisRamassage | number) + ' FCFA' : '— non sélectionné' }}
+                {{ expeditionForm.get('avecRamassage')?.value ? (estimation().fraisRamassage | number) + ' FCFA' : '— non sélectionné' }}
               </span>
             </div>
             <div class="flex justify-between" [class.opacity-40]="!expeditionForm.get('assurance')?.value">
               <span class="text-slate-400">Assurance</span>
               <span class="font-bold text-navy">
-                {{ expeditionForm.get('assurance')?.value ? (estimation.fraisAssurance | number) + ' FCFA' : '— non souscrite' }}
+                {{ expeditionForm.get('assurance')?.value ? (estimation().fraisAssurance | number) + ' FCFA' : '— non souscrite' }}
               </span>
             </div>
           </div>
           <hr class="border-slate-100 mb-6">
           <div class="flex justify-between items-center mb-6">
             <span class="font-bold text-navy">Total estimé</span>
-            <span class="text-xl font-bold text-tt-orange">{{ estimation.total | number }} FCFA</span>
+            <span class="text-xl font-bold text-tt-orange">{{ estimation().total | number }} FCFA</span>
           </div>
           <!-- Message erreur -->
-          @if (erreurMessage) {
+          @if (erreurMessage()) {
           <div
             class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
             <i class="ti ti-alert-circle text-sm"></i>
-            {{ erreurMessage }}
+            {{ erreurMessage() }}
           </div>
           }
 
           <!-- Bouton suivant/soumettre -->
-          <button type="submit" [disabled]="isLoading || isEstimating"
+          <button type="submit" [disabled]="isLoading() || isEstimating()"
             class="btn-navy w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold hover:bg-navy/90 shadow-md shadow-navy/20 transition disabled:opacity-70 disabled:cursor-not-allowed">
-            <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-arrow-right'"></i>
-            {{ isLoading ? 'Création...' : 'Suivant (Récapitulatif)' }}
+            <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-arrow-right'"></i>
+            {{ isLoading() ? 'Création...' : 'Suivant (Récapitulatif)' }}
           </button>
         </div>
         

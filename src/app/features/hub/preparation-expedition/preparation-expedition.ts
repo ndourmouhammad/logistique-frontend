@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
@@ -11,10 +11,10 @@ import { HubService } from '../../../core/services/hub';
   styleUrl: './preparation-expedition.scss',
 })
 export class PreparationExpedition implements OnInit {
-  colisSelectionnes: number[] = [];
-  livreurSelectionneId: number | null = null;
-  isLoading = false;
-  erreurMessage = '';
+  colisSelectionnes = signal<number[]>([]);
+  livreurSelectionneId = signal<number | null>(null);
+  isLoading = signal(false);
+  erreurMessage = signal('');
 
   // ⚠️ À remplacer plus tard par un vrai GET /api/livreurs/disponibles
   livreurs = [
@@ -28,35 +28,35 @@ export class PreparationExpedition implements OnInit {
   ngOnInit() {
     const data = sessionStorage.getItem('colisSelectionnes');
     if (data) {
-      this.colisSelectionnes = JSON.parse(data);
+      this.colisSelectionnes.set(JSON.parse(data));
     } else {
       this.router.navigate(['/hub/tri']);
     }
   }
 
   selectionnerLivreur(id: number) {
-    this.livreurSelectionneId = id;
+    this.livreurSelectionneId.set(id);
   }
 
   confirmerAffectation() {
-    if (!this.livreurSelectionneId) {
-      this.erreurMessage = 'Sélectionnez un livreur.';
+    if (!this.livreurSelectionneId()) {
+      this.erreurMessage.set('Sélectionnez un livreur.');
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.hubService.dispatcher({
-      expeditionIds: this.colisSelectionnes,
-      livreurId: this.livreurSelectionneId
+      expeditionIds: this.colisSelectionnes(),
+      livreurId: this.livreurSelectionneId()!
     }).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         sessionStorage.removeItem('colisSelectionnes');
         this.router.navigate(['/hub/dashboard']);
       },
       error: () => {
-        this.isLoading = false;
-        this.erreurMessage = "Erreur lors de l'affectation.";
+        this.isLoading.set(false);
+        this.erreurMessage.set("Erreur lors de l'affectation.");
       }
     });
   }

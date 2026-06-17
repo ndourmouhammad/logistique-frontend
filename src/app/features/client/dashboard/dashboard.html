@@ -4,7 +4,7 @@
     <div class="mb-8 mt-4">
       <div class="flex items-start justify-between mb-6">
         <div>
-          <h1 class="text-2xl font-bold text-navy mb-1">Bonjour, {{ nomUtilisateur }}</h1>
+          <h1 class="text-2xl font-bold text-navy mb-1">Bonjour, {{ nomUtilisateur() }}</h1>
           <p class="text-sm text-slate-400">{{ dateAujourdhui | date:'fullDate' }}</p>
         </div>
         <a routerLink="/client/expedition" class="bg-tt-orange text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-orange-500/20 hover:bg-orange-600 transition">Nouvelle expédition</a>
@@ -18,10 +18,10 @@
     </div>
 
     <!-- KPIs -->
-    @if (erreurDashboard) {
+    @if (erreurDashboard()) {
     <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl mb-6 flex items-center gap-3">
       <i class="ti ti-alert-triangle text-xl"></i>
-      <p class="font-medium text-sm">{{ erreurDashboard }}</p>
+      <p class="font-medium text-sm">{{ erreurDashboard() }}</p>
     </div>
     }
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -31,7 +31,7 @@
           <div class="text-xs font-medium text-slate-400">Ce mois</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">{{ totalMois }}</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ totalMois() }}</div>
           <div class="text-xs font-medium text-emerald-500 flex items-center gap-1"><i class="ti ti-trending-up text-sm"></i> +3 vs mois dernier</div>
         </div>
       </div>
@@ -41,7 +41,7 @@
           <div class="text-xs font-medium text-slate-400">En cours</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">{{ enCours }}</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ enCours() }}</div>
           <div class="text-xs font-medium text-slate-400">2 à Dakar, 1 Thiès</div>
         </div>
       </div>
@@ -51,7 +51,7 @@
           <div class="text-xs font-medium text-slate-400">Livrées</div>
         </div>
         <div>
-          <div class="text-3xl font-bold text-navy mb-1.5">{{ livrees }}</div>
+          <div class="text-3xl font-bold text-navy mb-1.5">{{ livrees() }}</div>
           <div class="text-xs font-medium text-emerald-500">Taux 94%</div>
         </div>
       </div>
@@ -61,7 +61,7 @@
           <div class="text-xs font-medium text-slate-400">Dépenses</div>
         </div>
         <div>
-          <div class="text-2xl font-bold text-navy mb-1.5">{{ depensesMois | number }} <span class="text-sm font-semibold text-slate-300">FCFA</span></div>
+          <div class="text-2xl font-bold text-navy mb-1.5">{{ depensesMois() | number }} <span class="text-sm font-semibold text-slate-300">FCFA</span></div>
           <div class="text-xs font-medium text-slate-400">ce mois-ci</div>
         </div>
       </div>
@@ -87,7 +87,8 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-50">
-                <tr *ngFor="let exp of expeditionsPaginees" class="hover:bg-slate-50/50 transition">
+                @for (exp of expeditionsPaginees(); track exp.codeTracking) {
+                <tr class="hover:bg-slate-50/50 transition">
                   <td class="px-5 py-4 font-mono text-xs font-semibold text-navy">{{ exp.codeTracking }}</td>
                   <td class="px-5 py-4 font-medium text-slate-600">{{ exp.villeDestinataire }}</td>
                   <td class="px-5 py-4 text-slate-400 text-xs">{{ exp.dateCreation | date:'dd MMM' }}</td>
@@ -102,17 +103,18 @@
                     </a>
                   </td>
                 </tr>
+                }
               </tbody>
             </table>
           </div>
           <!-- Pagination -->
-          @if (expeditions.length > itemsParPage) {
+          @if (expeditions().length > itemsParPage) {
           <div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
-            <span>{{ (pageCourante - 1) * itemsParPage + 1 }}-{{ finPageCourante }} sur {{ expeditions.length }}</span>
+            <span>{{ (pageCourante() - 1) * itemsParPage + 1 }}-{{ finPageCourante() }} sur {{ expeditions().length }}</span>
             <div class="flex gap-2">
-              <button (click)="pagePrecedente()" [disabled]="pageCourante === 1" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-left text-sm"></i></button>
-              <button class="w-8 h-8 bg-navy text-white rounded-lg flex items-center justify-center font-bold shadow-sm">{{ pageCourante }}</button>
-              <button (click)="pageSuivante()" [disabled]="pageCourante === totalPages" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-right text-sm"></i></button>
+              <button (click)="pagePrecedente()" [disabled]="pageCourante() === 1" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-left text-sm"></i></button>
+              <button class="w-8 h-8 bg-navy text-white rounded-lg flex items-center justify-center font-bold shadow-sm">{{ pageCourante() }}</button>
+              <button (click)="pageSuivante()" [disabled]="pageCourante() === totalPages()" class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm"><i class="ti ti-chevron-right text-sm"></i></button>
             </div>
           </div>
           }
@@ -121,32 +123,32 @@
 
       <!-- Sidebar -->
       <div class="space-y-6">
-        @if (activeExpedition) {
+        @if (activeExpedition()) {
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-8 h-8 rounded-full border border-orange-100 flex items-center justify-center text-tt-orange"><i class="ti ti-map-pin"></i></div>
             <h3 class="text-sm font-bold text-navy">Expédition active</h3>
           </div>
-          <div class="font-mono text-sm font-bold text-navy mb-1">{{ activeExpedition.codeTracking }}</div>
-          <div class="text-xs text-slate-400 flex items-center gap-1 mb-8">{{ activeExpedition.adresseDepart }} <i class="ti ti-arrow-right text-[10px]"></i> {{ activeExpedition.villeDestinataire }}</div>
+          <div class="font-mono text-sm font-bold text-navy mb-1">{{ activeExpedition()!.codeTracking }}</div>
+          <div class="text-xs text-slate-400 flex items-center gap-1 mb-8">{{ activeExpedition()!.adresseDepart }} <i class="ti ti-arrow-right text-[10px]"></i> {{ activeExpedition()!.villeDestinataire }}</div>
           
           <div class="space-y-0 relative before:absolute before:inset-y-2 before:left-[7px] before:w-[2px] before:bg-slate-100">
             <div class="flex items-start gap-4 relative mb-6">
               <div class="w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white z-10 mt-0.5"></div>
               <div>
                 <div class="text-sm font-bold text-navy mb-0.5 leading-none">Créée</div>
-                <div class="text-[11px] text-slate-400 mt-1">{{ activeExpedition.dateCreation | date:'short' }}</div>
+                <div class="text-[11px] text-slate-400 mt-1">{{ activeExpedition()!.dateCreation | date:'short' }}</div>
               </div>
             </div>
             <div class="flex items-start gap-4 relative mb-6">
               <div class="w-4 h-4 rounded-full bg-tt-orange ring-4 ring-orange-50 z-10 mt-0.5 shadow-sm shadow-orange-200"></div>
               <div>
-                <div class="text-sm font-bold text-tt-orange mb-0.5 leading-none">{{ getStatutLabel(activeExpedition.statut) }}</div>
+                <div class="text-sm font-bold text-tt-orange mb-0.5 leading-none">{{ getStatutLabel(activeExpedition()!.statut) }}</div>
               </div>
             </div>
           </div>
           
-          <a [routerLink]="['/client/tracking']" [queryParams]="{code: activeExpedition.codeTracking}" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center hover:bg-navy-light transition mt-8 shadow-md shadow-navy/10">Suivre le colis</a>
+          <a [routerLink]="['/client/tracking']" [queryParams]="{code: activeExpedition()!.codeTracking}" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center hover:bg-navy-light transition mt-8 shadow-md shadow-navy/10">Suivre le colis</a>
         </div>
         } @else {
           <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-6 text-center text-slate-400">

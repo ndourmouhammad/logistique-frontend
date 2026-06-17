@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
@@ -13,109 +13,112 @@ import { ExpeditionResponse } from '../../../core/models/expedition.model';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
-  nomUtilisateur = '';
+  nomUtilisateur = signal('');
   dateAujourdhui = new Date();
 
-  expeditions: ExpeditionResponse[] = [];
-  isLoading = true;
+  expeditions = signal<ExpeditionResponse[]>([]);
+  isLoading = signal(true);
 
   // KPIs
-  totalMois = 0;
-  enCours = 0;
-  livrees = 0;
-  depensesMois = 0;
+  totalMois      = signal(0);
+  enCours        = signal(0);
+  livrees        = signal(0);
+  depensesMois   = signal(0);
 
-  activeExpedition: ExpeditionResponse | null = null;
-  erreurDashboard = '';
+  activeExpedition = signal<ExpeditionResponse | null>(null);
+  erreurDashboard  = signal('');
 
   // Pagination
-  pageCourante = 1;
-  itemsParPage = 4;
+  pageCourante  = signal(1);
+  itemsParPage  = 4;
 
-  get expeditionsPaginees(): ExpeditionResponse[] {
-    const start = (this.pageCourante - 1) * this.itemsParPage;
-    return this.expeditions.slice(start, start + this.itemsParPage);
-  }
+  expeditionsPaginees = computed<ExpeditionResponse[]>(() => {
+    const start = (this.pageCourante() - 1) * this.itemsParPage;
+    return this.expeditions().slice(start, start + this.itemsParPage);
+  });
 
-  get totalPages(): number {
-    return Math.ceil(this.expeditions.length / this.itemsParPage);
-  }
+  totalPages = computed<number>(() =>
+    Math.ceil(this.expeditions().length / this.itemsParPage)
+  );
 
-  get finPageCourante(): number {
-    return Math.min(this.pageCourante * this.itemsParPage, this.expeditions.length);
-  }
+  finPageCourante = computed<number>(() =>
+    Math.min(this.pageCourante() * this.itemsParPage, this.expeditions().length)
+  );
 
   pagePrecedente() {
-    if (this.pageCourante > 1) {
-      this.pageCourante--;
+    if (this.pageCourante() > 1) {
+      this.pageCourante.update(p => p - 1);
     }
   }
 
   pageSuivante() {
-    if (this.pageCourante < this.totalPages) {
-      this.pageCourante++;
+    if (this.pageCourante() < this.totalPages()) {
+      this.pageCourante.update(p => p + 1);
     }
   }
 
   private auth = inject(Auth);
   private expeditionService = inject(ExpeditionService);
-  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.nomUtilisateur = this.auth.getNomComplet()?.split(' ')[0] || 'Client';
+    this.nomUtilisateur.set(this.auth.getNomComplet()?.split(' ')[0] || 'Client');
     const userId = this.auth.getUserId();
     if (userId) {
       this.chargerDonnees(userId);
     } else {
-      this.erreurDashboard = "ID utilisateur introuvable. Veuillez vous reconnecter.";
-      this.isLoading = false;
-      this.cdr.detectChanges();
+      this.erreurDashboard.set("ID utilisateur introuvable. Veuillez vous reconnecter.");
+      this.isLoading.set(false);
     }
   }
 
   chargerDonnees(userId: number) {
     this.expeditionService.getHistoriqueClient(userId).subscribe({
       next: (data) => {
-        this.expeditions = data.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime());
+        this.expeditions.set(data.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()));
         this.calculerKPIs();
-        this.activeExpedition = this.expeditions.find(e => e.statut !== 'LIVRE' && e.statut !== 'RETOURNE' && e.statut !== 'EN_LITIGE') || null;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.activeExpedition.set(
+          this.expeditions().find(e => e.statut !== 'LIVRE' && e.statut !== 'RETOURNE' && e.statut !== 'EN_LITIGE') || null
+        );
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Erreur chargement dashboard', err);
-        this.erreurDashboard = "Impossible de joindre le serveur ou erreur API.";
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.erreurDashboard.set("Impossible de joindre le serveur ou erreur API.");
+        this.isLoading.set(false);
       }
     });
   }
 
   calculerKPIs() {
-    this.totalMois = 0;
-    this.enCours = 0;
-    this.livrees = 0;
-    this.depensesMois = 0;
+    let totalMois = 0;
+    let enCours = 0;
+    let livrees = 0;
+    let depensesMois = 0;
 
     const now = new Date();
     const moisCourant = now.getMonth();
     const anneeCourante = now.getFullYear();
 
-    this.expeditions.forEach(exp => {
+    this.expeditions().forEach(exp => {
       const dateExp = new Date(exp.dateCreation);
       const isCeMois = dateExp.getMonth() === moisCourant && dateExp.getFullYear() === anneeCourante;
 
       if (isCeMois) {
-        this.totalMois++;
-        this.depensesMois += exp.fraisLivraison || 0;
+        totalMois++;
+        depensesMois += exp.fraisLivraison || 0;
       }
 
       if (exp.statut === 'LIVRE') {
-        this.livrees++;
+        livrees++;
       } else if (exp.statut !== 'RETOURNE' && exp.statut !== 'EN_LITIGE') {
-        this.enCours++;
+        enCours++;
       }
     });
+
+    this.totalMois.set(totalMois);
+    this.enCours.set(enCours);
+    this.livrees.set(livrees);
+    this.depensesMois.set(depensesMois);
   }
 
   getStatutClass(statut: string): string {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -12,10 +12,10 @@ import { RegisterRequest } from '../../../core/models/auth.model';
 })
 export class Inscription implements OnInit {
   inscriptionForm!: FormGroup;
-  showPassword   = false;
-  isLoading      = false;
-  etape          = 1;
-  submitted      = false;
+  showPassword   = signal(false);
+  isLoading      = signal(false);
+  etape          = signal(1);
+  submitted      = signal(false);
 
   roles = [
     { value: 'ROLE_CLIENT',          label: 'Client',           icon: 'ti-user' },
@@ -25,8 +25,8 @@ export class Inscription implements OnInit {
     { value: 'ROLE_GERANT_RELAIS',   label: 'Gérant Relais',    icon: 'ti-building-store' },
   ];
 
-  passwordStrength = 0;
-  passwordColor    = '#e2e8f0';
+  passwordStrength = signal(0);
+  passwordColor    = signal('#e2e8f0');
 
   constructor(private fb: FormBuilder, private router: Router) {}
 
@@ -58,39 +58,39 @@ export class Inscription implements OnInit {
   get f() { return this.inscriptionForm.controls; }
 
   togglePassword() {
-    this.showPassword = !this.showPassword;
+    this.showPassword.update(v => !v);
   }
 
   checkPassword(v: string) {
     if (!v) {
-      this.passwordStrength = 0;
-      this.passwordColor = '#e2e8f0';
+      this.passwordStrength.set(0);
+      this.passwordColor.set('#e2e8f0');
       return;
     }
     const s = v.length >= 8 ? 1 : 0;
     const u = /[A-Z]/.test(v) ? 1 : 0;
     const d = /[0-9]/.test(v) ? 1 : 0;
-    this.passwordStrength = s + u + d;
+    this.passwordStrength.set(s + u + d);
     const colors = ['#ef4444', '#f59e0b', '#10b981'];
-    this.passwordColor = this.passwordStrength > 0
-      ? colors[this.passwordStrength - 1]
-      : '#e2e8f0';
+    this.passwordColor.set(this.passwordStrength() > 0
+      ? colors[this.passwordStrength() - 1]
+      : '#e2e8f0');
   }
 
   goToStep2() {
-    this.submitted = true;
+    this.submitted.set(true);
     if (this.f['nomComplet'].valid && this.f['telephone'].valid && this.f['email'].valid && this.f['motDePasse'].valid) {
-      this.submitted = false;
-      this.etape = 2;
+      this.submitted.set(false);
+      this.etape.set(2);
     }
   }
 
   doRegister() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     const request: RegisterRequest = this.inscriptionForm.value;
     // TODO : appel API Spring Boot /api/auth/register avec request
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/connexion']);
     }, 1500);
   }

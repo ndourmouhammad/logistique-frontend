@@ -15,7 +15,7 @@
   <div class="flex-1 px-5 py-6 overflow-y-auto">
 
     <!-- Étape 1 : Choix méthode -->
-    <div *ngIf="etape === 1" class="fade-up">
+    <div *ngIf="etape() === 1" class="fade-up">
       <div class="text-center mb-6">
         <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
           <i class="ti ti-lock-question text-3xl text-indigo-600"></i>
@@ -26,8 +26,8 @@
 
       <div class="space-y-3 mb-6">
         <label class="block cursor-pointer">
-          <input type="radio" name="method" value="sms" [(ngModel)]="methode" class="hidden">
-          <div [class]="methode === 'sms'
+          <input type="radio" name="method" value="sms" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
+          <div [class]="methode() === 'sms'
             ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
             : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 transition-all'">
             <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
@@ -37,17 +37,17 @@
               <div class="text-sm font-semibold text-slate-800">Par SMS</div>
               <div class="text-xs text-slate-400">Code envoyé au +221 77 *** ** 34</div>
             </div>
-            <div [class]="methode === 'sms'
+            <div [class]="methode() === 'sms'
               ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center'
               : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-              <div *ngIf="methode === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
+              <div *ngIf="methode() === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
             </div>
           </div>
         </label>
 
         <label class="block cursor-pointer">
-          <input type="radio" name="method" value="email" [(ngModel)]="methode" class="hidden">
-          <div [class]="methode === 'email'
+          <input type="radio" name="method" value="email" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
+          <div [class]="methode() === 'email'
             ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
             : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 transition-all'">
             <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
@@ -57,10 +57,10 @@
               <div class="text-sm font-semibold text-slate-800">Par Email</div>
               <div class="text-xs text-slate-400">Lien envoyé à f***&#64;exemple.sn</div>
             </div>
-            <div [class]="methode === 'email'
+            <div [class]="methode() === 'email'
               ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center'
               : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-              <div *ngIf="methode === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
+              <div *ngIf="methode() === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
             </div>
           </div>
         </label>
@@ -75,82 +75,80 @@
       </a>
     </div>
 
-      <div *ngIf="etape === 2" class="fade-up">
+      <div *ngIf="etape() === 2" class="fade-up">
         <div class="text-center mb-6">
           <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <i [class]="methode === 'sms' ? 'ti ti-phone text-3xl text-indigo-600' : 'ti ti-mail text-3xl text-indigo-600'"></i>
+            <i [class]="methode() === 'sms' ? 'ti ti-phone text-3xl text-indigo-600' : 'ti ti-mail text-3xl text-indigo-600'"></i>
           </div>
           <h1 class="text-lg font-bold text-slate-800 mb-1">Saisie de vos coordonnées</h1>
-          <p class="text-xs text-slate-400 leading-relaxed">Entrez votre {{ methode === 'sms' ? 'numéro de téléphone' : 'adresse email' }}.</p>
+          <p class="text-xs text-slate-400 leading-relaxed">Entrez votre {{ methode() === 'sms' ? 'numéro de téléphone' : 'adresse email' }}.</p>
         </div>
 
         <div class="space-y-4 mb-6">
-          <div *ngIf="methode === 'sms'">
+          <div *ngIf="methode() === 'sms'">
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
             <div class="flex gap-2">
               <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium"
-                   [class.border-red-500]="errors['telephone']">🇸🇳 +221</div>
-              <input type="tel" [(ngModel)]="telephone" placeholder="77 XXX XX XX"
-                (input)="clearError('telephone')"
-                [class.border-red-500]="errors['telephone']"
+                   [class.border-red-500]="errors()['telephone']">🇸🇳 +221</div>
+              <input type="tel" [value]="telephone()" (input)="telephone.set($any($event.target).value); clearError('telephone')" placeholder="77 XXX XX XX"
+                [class.border-red-500]="errors()['telephone']"
                 class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="errors['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors['telephone'] }}</span>
+            <span *ngIf="errors()['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['telephone'] }}</span>
           </div>
 
-          <div *ngIf="methode === 'email'">
+          <div *ngIf="methode() === 'email'">
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
             <div class="relative">
               <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="email" [(ngModel)]="email" placeholder="email@exemple.sn"
-                (input)="clearError('email')"
-                [class.border-red-500]="errors['email']"
+              <input type="email" [value]="email()" (input)="email.set($any($event.target).value); clearError('email')" placeholder="email@exemple.sn"
+                [class.border-red-500]="errors()['email']"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="errors['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors['email'] }}</span>
+            <span *ngIf="errors()['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['email'] }}</span>
           </div>
         </div>
 
-        <button (click)="envoyerOTP()" [disabled]="isLoading"
+        <button (click)="envoyerOTP()" [disabled]="isLoading()"
           class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading ? 'Envoi...' : 'Envoyer le code' }}
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
+          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
         </button>
-        <button (click)="etape = 1" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
+        <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
           <i class="ti ti-arrow-left text-xs"></i> Retour
         </button>
       </div>
-    <div *ngIf="etape === 3" class="fade-up">
+    <div *ngIf="etape() === 3" class="fade-up">
       <div class="text-center mb-6">
         <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <i class="ti ti-mail-check text-3xl text-emerald-600"></i>
         </div>
         <h2 class="text-lg font-bold text-slate-800 mb-1">Code envoyé !</h2>
-        <p class="text-xs text-slate-400">Entrez le code reçu par {{ methode === 'sms' ? 'SMS' : 'Email' }}</p>
+        <p class="text-xs text-slate-400">Entrez le code reçu par {{ methode() === 'sms' ? 'SMS' : 'Email' }}</p>
       </div>
       <div class="flex gap-3 justify-center mb-1">
         <input *ngFor="let i of [0,1,2,3]; let idx = index" type="text" maxlength="1"
-          [(ngModel)]="otpValues[idx]"
-          (input)="clearError('otp')"
-          [class.border-red-500]="errors['otp']"
+          [value]="otpValues()[idx]"
+          (input)="updateOtpValue(idx, $any($event.target).value); clearError('otp')"
+          [class.border-red-500]="errors()['otp']"
           class="w-14 h-14 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
       </div>
-      <span *ngIf="errors['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors['otp'] }}</span>
+      <span *ngIf="errors()['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors()['otp'] }}</span>
       <p class="text-center text-xs text-slate-400 mb-6">
         Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
       </p>
-      <button (click)="verifierOTP()" [disabled]="isLoading"
+      <button (click)="verifierOTP()" [disabled]="isLoading()"
         class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-        <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
-        {{ isLoading ? 'Vérification...' : 'Vérifier' }}
+        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
+        {{ isLoading() ? 'Vérification...' : 'Vérifier' }}
       </button>
-      <button (click)="etape = 1" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
+      <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
         <i class="ti ti-arrow-left text-xs"></i> Retour
       </button>
     </div>
 
     <!-- Étape 4 : Nouveau mot de passe -->
-    <div *ngIf="etape === 4" class="fade-up">
+    <div *ngIf="etape() === 4" class="fade-up">
       <div class="text-center mb-6">
         <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <i class="ti ti-lock-open text-3xl text-tt-orange"></i>
@@ -163,39 +161,37 @@
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Nouveau mot de passe</label>
           <div class="relative">
             <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="newPassword"
+            <input [type]="showPassword() ? 'text' : 'password'" [value]="newPassword()" (input)="newPassword.set($any($event.target).value); clearError('newPassword')"
               placeholder="Min. 8 caractères"
-              (input)="clearError('newPassword')"
-              [class.border-red-500]="errors['newPassword']"
+              [class.border-red-500]="errors()['newPassword']"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 text-sm outline-none">
             <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
-              <i [class]="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
+              <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
             </button>
           </div>
-          <span *ngIf="errors['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors['newPassword'] }}</span>
+          <span *ngIf="errors()['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['newPassword'] }}</span>
         </div>
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Confirmer</label>
           <div class="relative">
             <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="password" [(ngModel)]="confirmPassword"
+            <input type="password" [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value); clearError('confirmPassword')"
               placeholder="Retapez le mot de passe"
-              (input)="clearError('confirmPassword')"
-              [class.border-red-500]="errors['confirmPassword']"
+              [class.border-red-500]="errors()['confirmPassword']"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
           </div>
-          <span *ngIf="errors['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors['confirmPassword'] }}</span>
+          <span *ngIf="errors()['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['confirmPassword'] }}</span>
         </div>
       </div>
-      <button (click)="reinitialiser()" [disabled]="isLoading"
+      <button (click)="reinitialiser()" [disabled]="isLoading()"
         class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
-        <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
-        {{ isLoading ? 'Réinitialisation...' : 'Réinitialiser' }}
+        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
+        {{ isLoading() ? 'Réinitialisation...' : 'Réinitialiser' }}
       </button>
     </div>
 
     <!-- Étape 5 : Succès -->
-    <div *ngIf="etape === 5" class="fade-up text-center mt-10">
+    <div *ngIf="etape() === 5" class="fade-up text-center mt-10">
       <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
         <i class="ti ti-circle-check text-5xl text-emerald-500"></i>
       </div>
@@ -238,39 +234,39 @@
     <div class="w-full max-w-md">
 
       <!-- Étape 1 Desktop -->
-      <div *ngIf="etape === 1">
+      <div *ngIf="etape() === 1">
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Mot de passe oublié</h2>
         <p class="text-sm text-slate-400 mb-8">Choisissez votre méthode de récupération</p>
         <div class="space-y-3 mb-6">
           <label class="block cursor-pointer">
-            <input type="radio" name="dmethod" value="sms" [(ngModel)]="methode" class="hidden">
-            <div [class]="methode === 'sms'
+            <input type="radio" name="dmethod" value="sms" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
+            <div [class]="methode() === 'sms'
               ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
               : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-50 transition-all'">
               <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0"><i class="ti ti-message text-xl"></i></div>
               <div class="flex-1"><div class="text-sm font-semibold text-slate-800">Par SMS</div><div class="text-xs text-slate-400">+221 77 *** ** 34</div></div>
-              <div [class]="methode === 'sms' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-                <div *ngIf="methode === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
+              <div [class]="methode() === 'sms' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
+                <div *ngIf="methode() === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
           </label>
           <label class="block cursor-pointer">
-            <input type="radio" name="dmethod" value="email" [(ngModel)]="methode" class="hidden">
-            <div [class]="methode === 'email'
+            <input type="radio" name="dmethod" value="email" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
+            <div [class]="methode() === 'email'
               ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
               : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-50 transition-all'">
               <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0"><i class="ti ti-mail text-xl"></i></div>
               <div class="flex-1"><div class="text-sm font-semibold text-slate-800">Par Email</div><div class="text-xs text-slate-400">f***&#64;exemple.sn</div></div>
-              <div [class]="methode === 'email' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-                <div *ngIf="methode === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
+              <div [class]="methode() === 'email' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
+                <div *ngIf="methode() === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
           </label>
         </div>
-        <button (click)="envoyerOTP()" [disabled]="isLoading"
+        <button (click)="envoyerOTP()" [disabled]="isLoading()"
           class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading ? 'Envoi...' : 'Envoyer le code' }}
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
+          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
         </button>
         <a routerLink="/connexion" class="block text-center text-sm text-slate-400 mt-5">
           Retour à la <span class="text-navy font-semibold">connexion</span>
@@ -278,70 +274,68 @@
       </div>
 
       <!-- Étape 2 Desktop : Saisie Coordonnées -->
-      <div *ngIf="etape === 2">
+      <div *ngIf="etape() === 2">
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Saisie de vos coordonnées</h2>
-        <p class="text-sm text-slate-400 mb-8">Entrez votre {{ methode === 'sms' ? 'numéro de téléphone' : 'adresse email' }}</p>
+        <p class="text-sm text-slate-400 mb-8">Entrez votre {{ methode() === 'sms' ? 'numéro de téléphone' : 'adresse email' }}</p>
         
         <div class="space-y-4 mb-6">
-          <div *ngIf="methode === 'sms'">
+          <div *ngIf="methode() === 'sms'">
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
             <div class="flex gap-2">
               <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium"
-                   [class.border-red-500]="errors['telephone']">🇸🇳 +221</div>
-              <input type="tel" [(ngModel)]="telephone" placeholder="77 XXX XX XX"
-                (input)="clearError('telephone')"
-                [class.border-red-500]="errors['telephone']"
+                   [class.border-red-500]="errors()['telephone']">🇸🇳 +221</div>
+              <input type="tel" [value]="telephone()" (input)="telephone.set($any($event.target).value); clearError('telephone')" placeholder="77 XXX XX XX"
+                [class.border-red-500]="errors()['telephone']"
                 class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="errors['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors['telephone'] }}</span>
+            <span *ngIf="errors()['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['telephone'] }}</span>
           </div>
 
-          <div *ngIf="methode === 'email'">
+          <div *ngIf="methode() === 'email'">
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
             <div class="relative">
               <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="email" [(ngModel)]="email" placeholder="email@exemple.sn"
-                (input)="clearError('email')"
-                [class.border-red-500]="errors['email']"
+              <input type="email" [value]="email()" (input)="email.set($any($event.target).value); clearError('email')" placeholder="email@exemple.sn"
+                [class.border-red-500]="errors()['email']"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="errors['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors['email'] }}</span>
+            <span *ngIf="errors()['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['email'] }}</span>
           </div>
         </div>
 
-        <button (click)="envoyerOTP()" [disabled]="isLoading"
+        <button (click)="envoyerOTP()" [disabled]="isLoading()"
           class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading ? 'Envoi...' : 'Envoyer le code' }}
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
+          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
         </button>
-        <button (click)="etape = 1" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
+        <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
       </div>
 
       <!-- Étape 3 Desktop -->
-      <div *ngIf="etape === 3">
+      <div *ngIf="etape() === 3">
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Vérification</h2>
-        <p class="text-sm text-slate-400 mb-8">Code envoyé par {{ methode === 'sms' ? 'SMS' : 'Email' }}</p>
+        <p class="text-sm text-slate-400 mb-8">Code envoyé par {{ methode() === 'sms' ? 'SMS' : 'Email' }}</p>
         <div class="flex gap-3 justify-center mb-1">
           <input *ngFor="let i of [0,1,2,3]; let idx = index" type="text" maxlength="1"
-            [(ngModel)]="otpValues[idx]"
-            (input)="clearError('otp')"
-            [class.border-red-500]="errors['otp']"
+            [value]="otpValues()[idx]"
+            (input)="updateOtpValue(idx, $any($event.target).value); clearError('otp')"
+            [class.border-red-500]="errors()['otp']"
             class="w-16 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
         </div>
-        <span *ngIf="errors['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors['otp'] }}</span>
+        <span *ngIf="errors()['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors()['otp'] }}</span>
         <p class="text-center text-xs text-slate-400 mb-6">
           Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
         </p>
-        <button (click)="verifierOTP()" [disabled]="isLoading"
+        <button (click)="verifierOTP()" [disabled]="isLoading()"
           class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
-          {{ isLoading ? 'Vérification...' : 'Vérifier' }}
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
+          {{ isLoading() ? 'Vérification...' : 'Vérifier' }}
         </button>
-        <button (click)="etape = 2" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
+        <button (click)="etape.set(2)" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
       </div>
 
       <!-- Étape 4 Desktop -->
-      <div *ngIf="etape === 4">
+      <div *ngIf="etape() === 4">
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Nouveau mot de passe</h2>
         <p class="text-sm text-slate-400 mb-8">Choisissez un mot de passe sécurisé</p>
         <div class="space-y-4 mb-6">
@@ -349,39 +343,37 @@
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Nouveau mot de passe</label>
             <div class="relative">
               <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="newPassword"
+              <input [type]="showPassword() ? 'text' : 'password'" [value]="newPassword()" (input)="newPassword.set($any($event.target).value); clearError('newPassword')"
                 placeholder="Min. 8 caractères"
-                (input)="clearError('newPassword')"
-                [class.border-red-500]="errors['newPassword']"
+                [class.border-red-500]="errors()['newPassword']"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 text-sm outline-none">
               <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <i [class]="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
+                <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
             </div>
-            <span *ngIf="errors['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors['newPassword'] }}</span>
+            <span *ngIf="errors()['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['newPassword'] }}</span>
           </div>
           <div>
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Confirmer</label>
             <div class="relative">
               <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="password" [(ngModel)]="confirmPassword"
+              <input type="password" [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value); clearError('confirmPassword')"
                 placeholder="Retapez le mot de passe"
-                (input)="clearError('confirmPassword')"
-                [class.border-red-500]="errors['confirmPassword']"
+                [class.border-red-500]="errors()['confirmPassword']"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
             </div>
-            <span *ngIf="errors['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors['confirmPassword'] }}</span>
+            <span *ngIf="errors()['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['confirmPassword'] }}</span>
           </div>
         </div>
-        <button (click)="reinitialiser()" [disabled]="isLoading"
+        <button (click)="reinitialiser()" [disabled]="isLoading()"
           class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
-          {{ isLoading ? 'Réinitialisation...' : 'Réinitialiser' }}
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
+          {{ isLoading() ? 'Réinitialisation...' : 'Réinitialiser' }}
         </button>
       </div>
 
       <!-- Étape 5 Desktop -->
-      <div *ngIf="etape === 5" class="text-center">
+      <div *ngIf="etape() === 5" class="text-center">
         <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
           <i class="ti ti-circle-check text-5xl text-emerald-500"></i>
         </div>

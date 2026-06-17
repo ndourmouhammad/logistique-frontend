@@ -38,9 +38,9 @@
 
       <!-- Footer actions -->
       <div class="space-y-3">
-        <button (click)="confirmerReception()" [disabled]="isLoading" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 disabled:opacity-70 disabled:cursor-not-allowed transition cursor-pointer">
-          <i class="ti" [ngClass]="isLoading ? 'ti-loader animate-spin' : 'ti-check'"></i> 
-          {{ isLoading ? 'Validation...' : 'J\'ai reçu mon colis' }}
+        <button (click)="confirmerReception()" [disabled]="isLoading()" class="w-full bg-navy text-white py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 disabled:opacity-70 disabled:cursor-not-allowed transition cursor-pointer">
+          <i class="ti" [ngClass]="isLoading() ? 'ti-loader animate-spin' : 'ti-check'"></i> 
+          {{ isLoading() ? 'Validation...' : 'J\'ai reçu mon colis' }}
         </button>
         <button class="w-full bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 py-3 rounded-xl text-sm font-medium transition cursor-pointer">
           Signaler un problème

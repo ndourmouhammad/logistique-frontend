@@ -1,20 +1,20 @@
 <app-hub-layout active="tri">
   <header class="bg-white border-b border-slate-200 px-6 py-3">
     <h1 class="text-sm font-semibold text-slate-800">Affecter un livreur</h1>
-    <p class="text-xs text-slate-400 mt-0.5">{{ colisSelectionnes.length }} colis à dispatcher</p>
+    <p class="text-xs text-slate-400 mt-0.5">{{ colisSelectionnes().length }} colis à dispatcher</p>
   </header>
 
   <main class="p-6">
-    @if (erreurMessage) {
+    @if (erreurMessage()) {
       <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm mb-4">
-        {{ erreurMessage }}
+        {{ erreurMessage() }}
       </div>
     }
 
     <div class="space-y-3">
       @for (l of livreurs; track l.id) {
         <div (click)="selectionnerLivreur(l.id)"
-          [class]="livreurSelectionneId === l.id
+          [class]="livreurSelectionneId() === l.id
             ? 'bg-indigo-50 border-2 border-navy rounded-xl p-4 cursor-pointer'
             : 'bg-white border border-slate-200 rounded-xl p-4 cursor-pointer hover:border-slate-300'">
           <div class="flex items-center gap-3">
@@ -25,7 +25,7 @@
               <div class="text-sm font-bold text-navy">{{ l.nom }}</div>
               <div class="text-[11px] text-slate-500">{{ l.vehicule }} · {{ l.zone }} · ★ {{ l.note }}</div>
             </div>
-            @if (livreurSelectionneId === l.id) {
+            @if (livreurSelectionneId() === l.id) {
               <i class="ti ti-check text-navy"></i>
             }
           </div>
@@ -33,10 +33,10 @@
       }
     </div>
 
-    <button (click)="confirmerAffectation()" [disabled]="isLoading"
+    <button (click)="confirmerAffectation()" [disabled]="isLoading()"
       class="w-full mt-6 bg-tt-orange text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
-      <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
-      {{ isLoading ? 'Affectation...' : 'Confirmer l\'affectation & lancer' }}
+      <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
+      {{ isLoading() ? 'Affectation...' : 'Confirmer l\'affectation & lancer' }}
     </button>
   </main>
 </app-hub-layout>

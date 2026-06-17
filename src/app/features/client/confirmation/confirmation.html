@@ -1,9 +1,9 @@
 <app-client-layout activeTab="expeditions">
-  @if (expedition) {
+  @if (expedition()) {
   <div class="max-w-2xl mx-auto px-4 py-10 text-center">
     <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4"><i class="ti ti-circle-check text-emerald-500 text-3xl"></i></div>
     <h1 class="text-xl font-semibold text-slate-800 mb-2">Expédition créée avec succès !</h1>
-    <p class="text-sm text-slate-500 mb-8">Paiement de <strong>{{ montantPaye | number }} FCFA</strong> validé. Présentez le QR Code au livreur lors du ramassage.</p>
+    <p class="text-sm text-slate-500 mb-8">Paiement de <strong>{{ montantPaye() | number }} FCFA</strong> validé. Présentez le QR Code au livreur lors du ramassage.</p>
 
     <div class="grid sm:grid-cols-2 gap-4 text-left mb-6">
       <!-- QR Code & Tracking -->
@@ -15,14 +15,14 @@
         
         <!-- Code tracking -->
         <div class="font-mono text-lg font-semibold text-navy tracking-widest mb-4">
-          {{ expedition.codeTracking }}
+          {{ expedition()!.codeTracking }}
         </div>
 
         <!-- OTP -->
         <div class="mb-4">
           <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Code OTP Livraison</div>
           <div class="font-mono text-2xl font-bold text-navy">
-            {{ expedition.otpLivraison }}
+            {{ expedition()!.otpLivraison }}
           </div>
         </div>
 
@@ -34,15 +34,15 @@
       <div class="bg-white rounded-xl border border-slate-100 p-5">
         <div class="text-xs text-slate-400 flex items-center gap-1 mb-4"><i class="ti ti-file-check text-sm"></i> Détails</div>
         <div class="space-y-2 text-sm">
-          <div class="flex justify-between"><span class="text-slate-500">Destinataire</span><span class="font-medium">{{ expedition.nomDestinataire }}</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Ville</span><span class="font-medium">{{ expedition.villeDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Destinataire</span><span class="font-medium">{{ expedition()!.nomDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Ville</span><span class="font-medium">{{ expedition()!.villeDestinataire }}</span></div>
           <div class="flex justify-between"><span class="text-slate-500">Service</span><span class="font-medium">
-            @if (expedition.estExpress) { Express } @else { Standard }
+            @if (expedition()!.estExpress) { Express } @else { Standard }
           </span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Poids</span><span class="font-medium">{{ expedition.poids }} kg</span></div>
-          <div class="flex justify-between"><span class="text-slate-500">Montant</span><span class="font-medium text-tt-orange">{{ montantPaye | number }} FCFA</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Poids</span><span class="font-medium">{{ expedition()!.poids }} kg</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Montant</span><span class="font-medium text-tt-orange">{{ montantPaye() | number }} FCFA</span></div>
         </div>
-        <div class="bg-emerald-50 rounded-lg p-2 mt-3 flex gap-2 items-start"><i class="ti ti-message text-emerald-700 text-sm mt-0.5"></i><span class="text-xs text-emerald-700">SMS envoyé au {{ expedition.telephoneDestinataire }}</span></div>
+        <div class="bg-emerald-50 rounded-lg p-2 mt-3 flex gap-2 items-start"><i class="ti ti-message text-emerald-700 text-sm mt-0.5"></i><span class="text-xs text-emerald-700">SMS envoyé au {{ expedition()!.telephoneDestinataire }}</span></div>
       </div>
     </div>
 

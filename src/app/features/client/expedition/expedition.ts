@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,21 +17,21 @@ import { debounceTime, Subject, switchMap } from 'rxjs';
 export class Expedition implements OnInit {
   expeditionForm!: FormGroup;
 
-  // Estimation depuis le backend
-  estimation: EstimationResponse = {
+  // Estimation depuis le backend — signal (règle 9 : Subject RxJS conservé, résultat stocké en signal)
+  estimation = signal<EstimationResponse>({
     fraisTransport: 1500,
     fraisRamassage: 0,
     fraisAssurance: 0,
     total:          1500
-  };
+  });
 
-  isLoading    = false;
-  isEstimating = false;
-  erreurMessage = '';
+  isLoading    = signal(false);
+  isEstimating = signal(false);
+  erreurMessage = signal('');
 
   villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba', 'Bambey', 'Mbacke Baol'];
 
-  // Subject pour le debounce
+  // Subject pour le debounce (conservé tel quel — règle 9)
   private estimationTrigger$ = new Subject<void>();
 
   private expeditionService = inject(ExpeditionService);
@@ -80,12 +80,12 @@ export class Expedition implements OnInit {
       this.onOptionsChange();
     });
 
-    // Appel API avec debounce 400ms
+    // Appel API avec debounce 400ms — Subject conservé, résultat stocké en signal
     this.estimationTrigger$
       .pipe(
         debounceTime(400),
         switchMap(() => {
-          this.isEstimating = true;
+          this.isEstimating.set(true);
           const formValue = this.expeditionForm.value;
           const payload: EstimationRequest = {
             poids:          formValue.poids          || 0,
@@ -100,11 +100,11 @@ export class Expedition implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          this.estimation   = data;
-          this.isEstimating = false;
+          this.estimation.set(data);
+          this.isEstimating.set(false);
         },
         error: () => {
-          this.isEstimating = false;
+          this.isEstimating.set(false);
         }
       });
 
@@ -119,18 +119,18 @@ export class Expedition implements OnInit {
 
   soumettre() {
     if (this.expeditionForm.invalid) {
-      this.erreurMessage = 'Veuillez remplir tous les champs obligatoires.';
+      this.erreurMessage.set('Veuillez remplir tous les champs obligatoires.');
       this.expeditionForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading     = true;
-    this.erreurMessage = '';
+    this.isLoading.set(true);
+    this.erreurMessage.set('');
 
     const formData: ExpeditionFormData = this.expeditionForm.value;
-    
+
     sessionStorage.setItem('formulaireExpedition', JSON.stringify(formData));
-    sessionStorage.setItem('estimationExpedition', JSON.stringify(this.estimation));
+    sessionStorage.setItem('estimationExpedition', JSON.stringify(this.estimation()));
 
     const clientId = this.authService.getUserId();
     if (!clientId) {
@@ -139,7 +139,7 @@ export class Expedition implements OnInit {
     }
 
     // On ne crée pas l'expédition ici. On passe juste à l'étape récapitulatif.
-    this.isLoading = false;
+    this.isLoading.set(false);
     this.router.navigate(['/client/recapitulatif']);
   }
 }

@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  @if (formulaire && estimation) {
+  @if (formulaire() && estimation()) {
   <div class="max-w-5xl mx-auto px-4 py-6 grid lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">
       <div class="flex justify-between items-center mb-2">
@@ -32,17 +32,17 @@
         <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-route text-lg text-slate-400"></i> Itinéraire</div>
         <div class="flex items-center gap-6">
           <div class="flex-1">
-            <div class="font-bold text-navy text-lg">{{ formulaire.adresseDepart }}</div>
+            <div class="font-bold text-navy text-lg">{{ formulaire()!.adresseDepart }}</div>
           </div>
           <div class="flex-2 border-t-2 border-slate-100 relative">
-            @if (formulaire.estExpress) {
+            @if (formulaire()!.estExpress) {
             <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-[10px] font-medium text-slate-400 px-3 border border-slate-100 rounded-full whitespace-nowrap">Express · ~6h</span>
             } @else {
             <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-[10px] font-medium text-slate-400 px-3 border border-slate-100 rounded-full whitespace-nowrap">Standard</span>
             }
           </div>
           <div class="flex-1 text-right">
-            <div class="font-bold text-navy text-lg">{{ formulaire.ville }}</div>
+            <div class="font-bold text-navy text-lg">{{ formulaire()!.ville }}</div>
           </div>
         </div>
       </div>
@@ -51,19 +51,19 @@
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-package text-lg text-slate-400"></i> Détails du colis</div>
         <div class="space-y-4 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">Poids</span><span class="font-bold text-navy">{{ formulaire.poids }} kg</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Contenu</span><span class="font-bold text-navy">{{ formulaire.descriptionContenu || 'Non spécifié' }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Poids</span><span class="font-bold text-navy">{{ formulaire()!.poids }} kg</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Contenu</span><span class="font-bold text-navy">{{ formulaire()!.descriptionContenu || 'Non spécifié' }}</span></div>
           <div class="flex justify-between items-center mt-2 pt-2">
             <span class="text-slate-400">Options</span>
             <div class="flex flex-wrap gap-2 justify-end">
-              @if (formulaire.estExpress || formulaire.avecRamassage || formulaire.assurance) {
-                @if (formulaire.estExpress) {
+              @if (formulaire()!.estExpress || formulaire()!.avecRamassage || formulaire()!.assurance) {
+                @if (formulaire()!.estExpress) {
                 <span class="bg-orange-50 text-orange-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Express</span>
                 }
-                @if (formulaire.avecRamassage) {
+                @if (formulaire()!.avecRamassage) {
                 <span class="bg-blue-50 text-blue-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Ramassage</span>
                 }
-                @if (formulaire.assurance) {
+                @if (formulaire()!.assurance) {
                 <span class="bg-purple-50 text-purple-700 text-[10px] px-2.5 py-1 rounded-full font-bold">Assurance</span>
                 }
               } @else {
@@ -78,25 +78,25 @@
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-user text-lg text-slate-400"></i> Destinataire</div>
         <div class="space-y-4 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">Nom complet</span><span class="font-bold text-navy">{{ formulaire.nomDestinataire }}</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Téléphone</span><span class="font-bold text-navy">{{ formulaire.telDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Nom complet</span><span class="font-bold text-navy">{{ formulaire()!.nomDestinataire }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Téléphone</span><span class="font-bold text-navy">{{ formulaire()!.telDestinataire }}</span></div>
         </div>
       </div>
 
       <!-- Erreur globale -->
-      @if (erreurMessage) {
+      @if (erreurMessage()) {
       <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
         <i class="ti ti-alert-circle text-sm"></i>
-        {{ erreurMessage }}
+        {{ erreurMessage() }}
       </div>
       }
 
       <!-- Actions -->
       <div class="flex gap-4 pt-2">
-        <button (click)="modifier()" [disabled]="isLoading" class="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 px-6 py-3.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer disabled:opacity-50"><i class="ti ti-arrow-left"></i> Modifier</button>
-        <button (click)="confirmerEtPayer()" [disabled]="isLoading" class="flex-1 bg-tt-orange hover:bg-orange-600 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition cursor-pointer disabled:opacity-70">
-          <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : ''"></i>
-          {{ isLoading ? 'Création en cours...' : 'Confirmer & payer' }}
+        <button (click)="modifier()" [disabled]="isLoading()" class="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 px-6 py-3.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer disabled:opacity-50"><i class="ti ti-arrow-left"></i> Modifier</button>
+        <button (click)="confirmerEtPayer()" [disabled]="isLoading()" class="flex-1 bg-tt-orange hover:bg-orange-600 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition cursor-pointer disabled:opacity-70">
+          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : ''"></i>
+          {{ isLoading() ? 'Création en cours...' : 'Confirmer & payer' }}
         </button>
       </div>
     </div>
@@ -106,22 +106,22 @@
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div class="text-sm font-bold text-navy flex items-center gap-2 mb-6"><i class="ti ti-receipt text-lg text-slate-400"></i> Détail du tarif</div>
         <div class="space-y-4 text-sm mb-6">
-          <div class="flex justify-between"><span class="text-slate-400">Frais de transport</span><span class="font-bold text-navy">{{ estimation.fraisTransport | number }} FCFA</span></div>
-          @if (formulaire.avecRamassage) {
-          <div class="flex justify-between"><span class="text-slate-400">Ramassage domicile</span><span class="font-bold text-navy">{{ estimation.fraisRamassage | number }} FCFA</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Frais de transport</span><span class="font-bold text-navy">{{ estimation()!.fraisTransport | number }} FCFA</span></div>
+          @if (formulaire()!.avecRamassage) {
+          <div class="flex justify-between"><span class="text-slate-400">Ramassage domicile</span><span class="font-bold text-navy">{{ estimation()!.fraisRamassage | number }} FCFA</span></div>
           }
-          @if (formulaire.assurance) {
-          <div class="flex justify-between"><span class="text-slate-400">Assurance</span><span class="font-bold text-navy">{{ estimation.fraisAssurance | number }} FCFA</span></div>
+          @if (formulaire()!.assurance) {
+          <div class="flex justify-between"><span class="text-slate-400">Assurance</span><span class="font-bold text-navy">{{ estimation()!.fraisAssurance | number }} FCFA</span></div>
           }
         </div>
         <hr class="border-slate-100 mb-6">
         <div class="flex justify-between items-center">
           <span class="font-bold text-navy">Total</span>
-          <span class="text-xl font-bold text-tt-orange">{{ estimation.total | number }} FCFA</span>
+          <span class="text-xl font-bold text-tt-orange">{{ estimation()!.total | number }} FCFA</span>
         </div>
       </div>
 
-      @if (formulaire.estExpress) {
+      @if (formulaire()!.estExpress) {
       <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 flex gap-3 items-start shadow-sm">
         <i class="ti ti-circle-check text-emerald-600 text-xl mt-0.5"></i>
         <p class="text-xs text-emerald-700 leading-relaxed">Délai estimé : <strong>livraison sous 6h</strong> après paiement. Vous recevrez un SMS de suivi.</p>

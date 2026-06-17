@@ -1,34 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 
 @Component({
   selector: 'app-paiement',
-  imports: [CommonModule, RouterModule, FormsModule, ClientLayout],
+  imports: [CommonModule, RouterModule, ClientLayout],
   templateUrl: './paiement.html',
   styleUrl: './paiement.scss',
 })
 export class Paiement implements OnInit {
-  modePaiement = 'WAVE';
-  numeroPaiement = '';
-  isLoading = false;
-  montant = 0;
-  expedition: any = null;
+  modePaiement   = signal('WAVE');
+  numeroPaiement = signal('');
+  isLoading      = signal(false);
+  montant        = signal(0);
+  expedition     = signal<any>(null);
 
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   ngOnInit() {
     const data = sessionStorage.getItem('expeditionEnCours');
     const estData = sessionStorage.getItem('estimationExpedition');
     if (data) {
-      this.expedition = JSON.parse(data);
+      const exp = JSON.parse(data);
+      this.expedition.set(exp);
       if (estData) {
         const estimation = JSON.parse(estData);
-        this.montant = estimation.total || this.expedition.fraisLivraison || 0;
+        this.montant.set(estimation.total || exp.fraisLivraison || 0);
       } else {
-        this.montant = this.expedition.fraisLivraison || 0;
+        this.montant.set(exp.fraisLivraison || 0);
       }
     } else {
       this.router.navigate(['/client/dashboard']);
@@ -36,10 +36,10 @@ export class Paiement implements OnInit {
   }
 
   payer() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // TODO : appel API
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/client/confirmation']);
     }, 2000);
   }

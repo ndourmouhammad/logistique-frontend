@@ -1,7 +1,6 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
 import { ExpeditionResponse } from '../../../core/models/expedition.model';
@@ -9,19 +8,18 @@ import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-historique',
-  imports: [CommonModule, RouterModule, FormsModule, ClientLayout],
+  imports: [CommonModule, RouterModule, ClientLayout],
   templateUrl: './historique.html',
   styleUrl: './historique.scss',
 })
 export class Historique implements OnInit{
-  expeditions: ExpeditionResponse[] = [];
-  isLoading    = false;
-  recherche    = '';
-  filtreStatut = 'tous';
+  expeditions = signal<ExpeditionResponse[]>([]);
+  isLoading    = signal(false);
+  recherche    = signal('');
+  filtreStatut = signal('tous');
 
   private expeditionService = inject(ExpeditionService);
   private authService = inject(Auth);
-  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.chargerHistorique();
@@ -31,33 +29,30 @@ export class Historique implements OnInit{
     const clientId = this.authService.getUserId();
     if (!clientId) return;
 
-    this.isLoading = true;
-    this.cdr.detectChanges(); // Forcer la vue du chargement
+    this.isLoading.set(true);
 
     this.expeditionService.getHistoriqueClient(clientId).subscribe({
       next: (data) => {
-        this.isLoading  = false;
-        this.expeditions = data;
-        this.cdr.detectChanges(); // Forcer la mise à jour UI
+        this.isLoading.set(false);
+        this.expeditions.set(data);
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges(); // Forcer la mise à jour UI
+        this.isLoading.set(false);
       }
     });
   }
 
-  get expeditionsFiltrees() {
-    return this.expeditions.filter(e => {
+  expeditionsFiltrees = computed(() => {
+    return this.expeditions().filter(e => {
       const matchRecherche = e.codeTracking.toLowerCase()
-        .includes(this.recherche.toLowerCase())
+        .includes(this.recherche().toLowerCase())
         || e.villeDestinataire?.toLowerCase()
-        .includes(this.recherche.toLowerCase());
-      const matchStatut = this.filtreStatut === 'tous'
-        || e.statut === this.filtreStatut;
+        .includes(this.recherche().toLowerCase());
+      const matchStatut = this.filtreStatut() === 'tous'
+        || e.statut === this.filtreStatut();
       return matchRecherche && matchStatut;
     });
-  }
+  });
 
   getStatutClass(statut: string): string {
     const map: Record<string, string> = {

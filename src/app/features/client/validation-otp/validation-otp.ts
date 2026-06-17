@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
@@ -13,14 +13,14 @@ export class ValidationOtp {
   otpCode      = '8439';
   codeTracking = 'TT-DKR-4839';
   nomLivreur   = 'Ibrahima Balde';
-  isLoading    = false;
+  isLoading    = signal(false);
 
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   confirmerReception() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/client/dashboard']);
     }, 1500);
   }

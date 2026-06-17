@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ChauffeurLayout } from '../../../shared/components/chauffeur-layout/chauffeur-layout';
@@ -10,25 +10,25 @@ import { ChauffeurLayout } from '../../../shared/components/chauffeur-layout/cha
   styleUrl: './validation-transfert.scss',
 })
 export class ValidationTransfert {
-  hubDestination = 'Hub Thiès';
-  heureArrivee   = '09h18';
-  isLoading      = false;
+  hubDestination = signal('Hub Thiès');
+  heureArrivee   = signal('09h18');
+  isLoading      = signal(false);
 
-  trajet = {
+  trajet = signal({
     depart:       'Hub Dakar · 07h00',
     arrivee:      'Hub Thiès · 09h18',
     duree:        '2h18 · 185 km',
     colisDeposes: 12,
     colisTotal:   12
-  };
+  });
 
   constructor(private router: Router) {}
 
   confirmerDechargement() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // TODO : appel API PUT /api/chauffeur/expeditions/{id}/depart
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/chauffeur/historique-tournees']);
     }, 1500);
   }

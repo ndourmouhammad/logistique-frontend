@@ -4,7 +4,7 @@
   <div class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-0">
     <!-- Etape 1 -->
     <div class="flex items-center gap-3 flex-1 cursor-pointer" routerLink="/hub/tri">
-      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
         <i class="ti ti-check text-white text-xs"></i>
       </div>
       <div>
@@ -15,7 +15,7 @@
     <div class="w-px h-8 bg-slate-200 mx-4"></div>
     <!-- Etape 2 -->
     <div class="flex items-center gap-3 flex-1 cursor-pointer" routerLink="/hub/preparation">
-      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
         <i class="ti ti-check text-white text-xs"></i>
       </div>
       <div>
@@ -26,7 +26,7 @@
     <div class="w-px h-8 bg-slate-200 mx-4"></div>
     <!-- Etape 3 -->
     <div class="flex items-center gap-3 flex-1">
-      <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
+      <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center shrink-0">
         <span class="text-white text-xs font-bold">3</span>
       </div>
       <div>
@@ -186,9 +186,9 @@
                 </div>
               </div>
 
-              <button (click)="validerDepart()" [disabled]="isLoading" class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white text-sm font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]">
-                <i [class]="isLoading ? 'ti ti-loader-2 animate-spin text-lg' : 'ti ti-check text-lg'"></i>
-                {{ isLoading ? 'Validation en cours...' : 'Valider le départ' }}
+              <button (click)="validerDepart()" [disabled]="isLoading()" class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white text-sm font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]">
+                <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin text-lg' : 'ti ti-check text-lg'"></i>
+                {{ isLoading() ? 'Validation en cours...' : 'Valider le départ' }}
               </button>
             </div>
             <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 text-[10px] text-slate-500 text-center">

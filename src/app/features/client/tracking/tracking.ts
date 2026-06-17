@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,54 +13,47 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './tracking.html',
   styleUrl: './tracking.scss',
 })
-export class Tracking implements OnInit{
-  codeRecherche = '';
-  tracking: TrackingResponse | null = null;
-  isLoading     = false;
-  erreur        = '';
-
-
+export class Tracking implements OnInit {
+  codeRecherche = signal('');
+  tracking      = signal<TrackingResponse | null>(null);
+  isLoading     = signal(false);
+  erreur        = signal('');
 
   private expeditionService = inject(ExpeditionService);
   private route = inject(ActivatedRoute);
-  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     // Si code passé en query param → tracker directement
     this.route.queryParams.subscribe(params => {
       if (params['code']) {
-        this.codeRecherche = params['code'];
+        this.codeRecherche.set(params['code']);
         this.rechercher();
       }
     });
   }
 
   rechercher() {
-    if (!this.codeRecherche.trim()) return;
+    if (!this.codeRecherche().trim()) return;
 
-    this.isLoading = true;
-    this.erreur    = '';
-    this.tracking  = null;
-    this.cdr.detectChanges(); // Forcer la mise à jour UI vers l'état de chargement
+    this.isLoading.set(true);
+    this.erreur.set('');
+    this.tracking.set(null);
 
-    this.expeditionService.trackerExpedition(this.codeRecherche.trim()).subscribe({
+    this.expeditionService.trackerExpedition(this.codeRecherche().trim()).subscribe({
       next: (data) => {
         console.log('Tracking reçu :', data); // ← debug
-        this.isLoading = false;
-        this.tracking  = data;
-        this.cdr.detectChanges(); // Forcer la détection
+        this.isLoading.set(false);
+        this.tracking.set(data);
       },
       error: (err) => {
         console.error('Erreur tracking :', err); // ← debug
-        this.isLoading = false;
-        this.erreur = err.status === 404
+        this.isLoading.set(false);
+        this.erreur.set(err.status === 404
           ? 'Aucune expédition trouvée pour ce code.'
-          : 'Erreur serveur. Réessayez.';
-        this.cdr.detectChanges(); // Forcer la détection
+          : 'Erreur serveur. Réessayez.');
       },
       complete: () => {
-        this.isLoading = false; // ← sécurité
-        this.cdr.detectChanges(); // Forcer la détection
+        this.isLoading.set(false); // ← sécurité
       }
     });
   }

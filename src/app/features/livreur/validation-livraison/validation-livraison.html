@@ -9,7 +9,7 @@
       <div class="font-semibold">Validation livraison</div>
     </div>
     <!-- Mode Hors-Ligne (PWA) -->
-    <div *ngIf="modeHorsLigne" class="bg-slate-500/30 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded flex items-center gap-1 border border-slate-400/50">
+    <div *ngIf="modeHorsLigne()" class="bg-slate-500/30 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded flex items-center gap-1 border border-slate-400/50">
       <i class="ti ti-wifi-off"></i> Hors-Ligne
     </div>
   </div>
@@ -20,15 +20,15 @@
         <i class="ti ti-package-export text-3xl"></i>
       </div>
       <h2 class="text-lg font-semibold text-slate-800">Remise du colis</h2>
-      <p class="text-sm text-slate-500 font-mono mt-1">#{{ codeColis }}</p>
+      <p class="text-sm text-slate-500 font-mono mt-1">#{{ codeColis() }}</p>
     </div>
 
     <!-- Destinataire -->
     <div class="bg-white rounded-2xl border border-slate-100 p-4 mb-6">
       <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-2">Destinataire</div>
       <div class="flex justify-between items-center">
-        <div class="font-medium text-slate-800">{{ nomDestinataire }}</div>
-        <div class="text-sm text-slate-500">{{ telDestinataire }}</div>
+        <div class="font-medium text-slate-800">{{ nomDestinataire() }}</div>
+        <div class="text-sm text-slate-500">{{ telDestinataire() }}</div>
       </div>
     </div>
 
@@ -43,13 +43,13 @@
       </div>
 
       <div class="flex justify-center gap-3 mb-4">
-        <input *ngFor="let digit of otpSaisi; let i = index"
+        <input *ngFor="let digit of otpSaisi(); let i = index"
                type="text" maxlength="1"
                [id]="'otp-' + i"
-               [(ngModel)]="otpSaisi[i]"
+               [value]="otpSaisi()[i]"
+               (input)="updateOtpValue(i, $any($event.target).value); focusNext(i)"
                class="w-12 h-14 text-center text-xl font-bold bg-slate-50 border rounded-xl outline-none transition"
-               [ngClass]="otpSaisi[i] ? 'border-navy border-2' : 'border-slate-200'"
-               (input)="focusNext(i)">
+               [ngClass]="otpSaisi()[i] ? 'border-navy border-2' : 'border-slate-200'">
       </div>
       <button class="w-full text-xs text-navy font-medium underline text-center">Renvoyer le SMS au client</button>
     </div>
@@ -70,10 +70,10 @@
 
   <!-- Bottom actions -->
   <div class="bg-white border-t border-slate-200 p-4">
-    <button (click)="validerLivraison()" [disabled]="isLoading || otpComplet.length < 4"
+    <button (click)="validerLivraison()" [disabled]="isLoading() || otpComplet().length < 4"
             class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
-      <i class="ti" [ngClass]="isLoading ? 'ti-loader animate-spin' : 'ti-check'"></i>
-      {{ isLoading ? 'Validation...' : 'Valider la livraison' }}
+      <i class="ti" [ngClass]="isLoading() ? 'ti-loader animate-spin' : 'ti-check'"></i>
+      {{ isLoading() ? 'Validation...' : 'Valider la livraison' }}
     </button>
     <button (click)="signalerEchec()" class="w-full py-3 text-sm font-medium text-red-500 mt-2 flex items-center justify-center gap-1.5 cursor-pointer hover:text-red-600 transition">
       <i class="ti ti-alert-triangle text-xs"></i> Signaler un échec de livraison

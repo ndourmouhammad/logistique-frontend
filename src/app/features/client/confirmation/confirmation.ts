@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
@@ -11,19 +11,20 @@ import { ExpeditionResponse } from '../../../core/models/expedition.model';
   styleUrl: './confirmation.scss',
 })
 export class Confirmation implements OnInit {
-  expedition: ExpeditionResponse | null = null;
-  montantPaye = 0;
+  expedition  = signal<ExpeditionResponse | null>(null);
+  montantPaye = signal(0);
 
   ngOnInit() {
-    const data = sessionStorage.getItem('expeditionEnCours');
+    const data    = sessionStorage.getItem('expeditionEnCours');
     const estData = sessionStorage.getItem('estimationExpedition');
     if (data) {
-      this.expedition = JSON.parse(data);
+      const exp: ExpeditionResponse = JSON.parse(data);
+      this.expedition.set(exp);
       if (estData) {
         const estimation = JSON.parse(estData);
-        this.montantPaye = estimation.total || this.expedition!.fraisLivraison;
+        this.montantPaye.set(estimation.total || exp.fraisLivraison);
       } else {
-        this.montantPaye = this.expedition!.fraisLivraison;
+        this.montantPaye.set(exp.fraisLivraison);
       }
       sessionStorage.removeItem('expeditionEnCours');
       sessionStorage.removeItem('formulaireExpedition');

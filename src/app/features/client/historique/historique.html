@@ -4,24 +4,24 @@
     <div class="flex flex-wrap items-center gap-4 mb-6">
       <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2 flex-1 max-w-sm shadow-sm">
         <i class="ti ti-search text-slate-400"></i>
-        <input type="text" [(ngModel)]="recherche" placeholder="Rechercher par code, destination..." class="bg-transparent text-sm outline-none flex-1 placeholder:text-slate-400 font-medium">
+        <input type="text" [value]="recherche()" (input)="recherche.set($any($event.target).value)" placeholder="Rechercher par code, destination..." class="bg-transparent text-sm outline-none flex-1 placeholder:text-slate-400 font-medium">
       </div>
       <div class="flex gap-2">
         <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
-                [ngClass]="filtreStatut === 'tous' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                (click)="filtreStatut = 'tous'">Toutes</button>
+                [ngClass]="filtreStatut() === 'tous' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut.set('tous')">Toutes</button>
         <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
-                [ngClass]="filtreStatut === 'EN_TRANSIT' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                (click)="filtreStatut = 'EN_TRANSIT'">En transit</button>
+                [ngClass]="filtreStatut() === 'EN_TRANSIT' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut.set('EN_TRANSIT')">En transit</button>
         <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition"
-                [ngClass]="filtreStatut === 'LIVRE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                (click)="filtreStatut = 'LIVRE'">Livrées</button>
+                [ngClass]="filtreStatut() === 'LIVRE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut.set('LIVRE')">Livrées</button>
         <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition hidden sm:block"
-                [ngClass]="filtreStatut === 'CREE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                (click)="filtreStatut = 'CREE'">Créées</button>
+                [ngClass]="filtreStatut() === 'CREE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut.set('CREE')">Créées</button>
         <button class="text-[11px] px-4 py-2 rounded-full font-bold shadow-sm transition hidden sm:block"
-                [ngClass]="filtreStatut === 'RETOURNE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                (click)="filtreStatut = 'RETOURNE'">Retournées</button>
+                [ngClass]="filtreStatut() === 'RETOURNE' ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                (click)="filtreStatut.set('RETOURNE')">Retournées</button>
       </div>
       <div class="ml-auto flex gap-3">
         <button class="bg-white border border-slate-200 text-slate-500 text-[11px] px-4 py-2 rounded-xl flex items-center gap-1.5 font-bold hover:bg-slate-50 transition shadow-sm"><i class="ti ti-calendar text-sm"></i> Période</button>
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    @if (isLoading) {
+    @if (isLoading()) {
     <!-- Loading -->
     <div class="text-center py-20">
       <i class="ti ti-loader-2 animate-spin text-4xl text-navy"></i>
@@ -38,7 +38,7 @@
     </div>
     }
 
-    @if (!isLoading && expeditionsFiltrees.length === 0) {
+    @if (!isLoading() && expeditionsFiltrees().length === 0) {
     <!-- Liste vide -->
     <div class="text-center py-20 bg-white border border-slate-100 rounded-2xl shadow-sm">
       <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -49,12 +49,12 @@
     </div>
     }
 
-    @if (!isLoading && expeditionsFiltrees.length > 0) {
+    @if (!isLoading() && expeditionsFiltrees().length > 0) {
     <!-- Table -->
     <div class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
       <!-- Mobile View (Cards) -->
       <div class="block lg:hidden divide-y divide-slate-100">
-        @for (exp of expeditionsFiltrees; track $index) {
+        @for (exp of expeditionsFiltrees(); track $index) {
         <div class="p-4 transition hover:bg-slate-50">
           <div class="flex justify-between items-start mb-3">
             <div>
@@ -96,7 +96,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (exp of expeditionsFiltrees; track $index) {
+            @for (exp of expeditionsFiltrees(); track $index) {
             <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition group">
               <td class="px-6 py-4"><span class="font-bold text-xs text-navy font-mono">{{ exp.codeTracking }}</span></td>
               <td class="px-6 py-4 text-xs font-medium text-slate-600 flex items-center gap-2">Dakar <i class="ti ti-arrow-right text-slate-300"></i> {{ exp.villeDestinataire }}</td>
@@ -126,7 +126,7 @@
     
     <!-- Pagination (Placeholder) -->
     <div class="flex items-center justify-between mt-6 text-xs text-slate-400 font-medium px-1">
-      <span>1-{{ expeditionsFiltrees.length }} sur {{ expeditionsFiltrees.length }}</span>
+      <span>1-{{ expeditionsFiltrees().length }} sur {{ expeditionsFiltrees().length }}</span>
       <div class="flex gap-2">
         <button class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition shadow-sm"><i class="ti ti-chevron-left text-sm"></i></button>
         <button class="w-8 h-8 bg-navy text-white rounded-lg flex items-center justify-center font-bold shadow-sm">1</button>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
@@ -10,7 +10,7 @@ import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
   styleUrl: './validation-depart.scss',
 })
 export class ValidationDepart {
-  isLoading    = false;
+  isLoading    = signal(false);
   nomLivreur   = 'Ibrahima Balde';
   nbColis      = 4;
   zonelivraison = 'Dakar centre & périphérie nord';
@@ -22,13 +22,13 @@ export class ValidationDepart {
     { code: 'TT-DKR-4698', destination: 'HLM',      type: 'Standard' },
   ];
 
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   validerDepart() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // TODO : appel API
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.router.navigate(['/hub/dashboard']);
     }, 1500);
   }

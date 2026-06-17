@@ -39,12 +39,12 @@
         <div class="relative">
           <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
           <input
-            [type]="showPassword ? 'text' : 'password'"
+            [type]="showPassword() ? 'text' : 'password'"
             formControlName="motDePasse"
             placeholder="••••••••"
             class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
           <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
-            <i [class]="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
+            <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
           </button>
         </div>
       </div>
@@ -57,17 +57,17 @@
     </div>
 
     <!-- Bouton connexion -->
-    @if (erreurMessage) {
+    @if (erreurMessage()) {
       <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
         <i class="ti ti-alert-circle text-sm"></i>
-        {{ erreurMessage }}
+        {{ erreurMessage() }}
       </div>
     }
     <button type="submit"
-      [disabled]="isLoading"
+      [disabled]="isLoading()"
       class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 mb-4 fade-up">
-      <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
-      {{ isLoading ? 'Connexion…' : 'Se connecter' }}
+      <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
+      {{ isLoading() ? 'Connexion…' : 'Se connecter' }}
     </button>
 
     <!-- Séparateur -->
@@ -147,12 +147,12 @@
           <div class="relative">
             <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input
-              [type]="showPassword ? 'text' : 'password'"
+              [type]="showPassword() ? 'text' : 'password'"
               formControlName="motDePasse"
               placeholder="••••••••"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
             <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
-              <i [class]="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
+              <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
             </button>
           </div>
         </div>
@@ -163,16 +163,16 @@
         <label class="text-sm text-slate-500">Rester connecté</label>
       </div>
 
-      @if (erreurMessage) {
+      @if (erreurMessage()) {
         <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
           <i class="ti ti-alert-circle text-sm"></i>
-          {{ erreurMessage }}
+          {{ erreurMessage() }}
         </div>
       }
-      <button type="submit" [disabled]="isLoading"
+      <button type="submit" [disabled]="isLoading()"
         class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-navy-dark transition shadow-lg shadow-navy/20 mb-4 fade-up">
-        <i [class]="isLoading ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
-        {{ isLoading ? 'Connexion…' : 'Se connecter' }}
+        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
+        {{ isLoading() ? 'Connexion…' : 'Se connecter' }}
       </button>
 
       <div class="flex items-center gap-3 my-5">

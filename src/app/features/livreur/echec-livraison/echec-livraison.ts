@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,15 +10,15 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './echec-livraison.scss',
 })
 export class EchecLivraison {
-  codeColis       = 'TT-DKR-4839';
-  nomDestinataire = 'Fatou Diallo';
-  telDestinataire = '+221 77 845 12 34';
-  adresse         = 'Almadies, Zone 12 — Dakar';
-  raisonEchec     = 'ABSENT';
-  commentaire     = '';
-  nbTentatives    = 2;
-  isLoading       = false;
-  showModal       = false;
+  codeColis       = signal('TT-DKR-4839');
+  nomDestinataire = signal('Fatou Diallo');
+  telDestinataire = signal('+221 77 845 12 34');
+  adresse         = signal('Almadies, Zone 12 — Dakar');
+  raisonEchec     = signal('ABSENT');
+  commentaire     = signal('');
+  nbTentatives    = signal(2);
+  isLoading       = signal(false);
+  showModal       = signal(false);
 
   raisons = [
     { value: 'ABSENT',    label: 'Client absent',         sousTitre: 'Personne ne répond à l\'adresse indiquée',  icon: 'ti-user-off' },
@@ -29,9 +29,9 @@ export class EchecLivraison {
     { value: 'AUTRE',     label: 'Autre motif',           sousTitre: 'Préciser dans le commentaire ci-dessous',   icon: 'ti-dots-circle-horizontal' },
   ];
 
-  get raisonLabel(): string {
-    return this.raisons.find(r => r.value === this.raisonEchec)?.label ?? 'Non spécifié';
-  }
+  raisonLabel = computed(() => {
+    return this.raisons.find(r => r.value === this.raisonEchec())?.label ?? 'Non spécifié';
+  });
 
   get heureActuelle(): string {
     const now = new Date();
@@ -39,22 +39,22 @@ export class EchecLivraison {
   }
 
   incrementerTentatives(delta: number) {
-    const v = this.nbTentatives + delta;
-    if (v >= 0 && v <= 10) this.nbTentatives = v;
+    const v = this.nbTentatives() + delta;
+    if (v >= 0 && v <= 10) this.nbTentatives.set(v);
   }
 
   insertQuick(text: string) {
-    this.commentaire = text;
+    this.commentaire.set(text);
   }
 
   constructor(private router: Router) {}
 
   signalerEchec() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     // TODO : appel API Spring Boot POST /api/livreur/expeditions/{id}/echec
     setTimeout(() => {
-      this.isLoading = false;
-      this.showModal = true;
+      this.isLoading.set(false);
+      this.showModal.set(true);
     }, 1500);
   }
 
