@@ -1,109 +1,49 @@
 <app-hub-layout active="tri">
+  <header class="bg-white border-b border-slate-200 px-6 py-3">
+    <h1 class="text-sm font-semibold text-slate-800">Tri & sélection des colis</h1>
+    <p class="text-xs text-slate-400 mt-0.5">Sélectionnez les colis à préparer pour livraison</p>
+  </header>
 
-  <!-- Step Bar -->
-  <div class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-0">
-    <!-- Etape 1 -->
-    <div class="flex items-center gap-3 flex-1">
-      <div class="w-6 h-6 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
-        <span class="text-white text-xs font-bold">1</span>
+  <main class="p-6">
+    @if (isLoading()) {
+      <div class="text-center py-10">
+        <i class="ti ti-loader-2 animate-spin text-3xl text-navy"></i>
       </div>
-      <div>
-        <div class="text-[11px] font-bold text-navy uppercase tracking-wider">Tri & Sélection</div>
-        <div class="text-[10px] text-slate-400">Sélectionnez les colis</div>
-      </div>
-    </div>
-    <div class="w-px h-8 bg-slate-200 mx-4"></div>
-    <!-- Etape 2 -->
-    <div class="flex items-center gap-3 flex-1 opacity-40">
-      <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
-        <span class="text-slate-400 text-xs font-bold">2</span>
-      </div>
-      <div>
-        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Préparation</div>
-        <div class="text-[10px] text-slate-400">Affectation livreur</div>
-      </div>
-    </div>
-    <div class="w-px h-8 bg-slate-200 mx-4"></div>
-    <!-- Etape 3 -->
-    <div class="flex items-center gap-3 flex-1 opacity-40">
-      <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
-        <span class="text-slate-400 text-xs font-bold">3</span>
-      </div>
-      <div>
-        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Validation</div>
-        <div class="text-[10px] text-slate-400">Départ hub</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Content Area -->
-  <main class="flex-1 p-6 flex flex-col h-[calc(100vh-65px)]">
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-full overflow-hidden">
-      <!-- Toolbar -->
-      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-        <div class="flex items-center gap-4">
-          <div class="relative">
-            <i class="ti ti-search text-slate-400 text-sm absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" placeholder="Scanner code colis..." class="pl-9 pr-4 py-2 text-sm border border-navy/20 rounded-lg focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy w-64 font-mono uppercase shadow-sm">
-          </div>
-          <div class="flex items-center gap-2">
-            <select [(ngModel)]="filtreDestination" class="text-xs font-medium border border-slate-200 rounded-lg px-3 py-2 text-slate-600 focus:outline-none shadow-sm">
-              <option value="tous">Toutes zones</option>
-              <option value="Dakar Nord">Dakar Nord</option>
-              <option value="Dakar Centre">Dakar Centre</option>
-              <option value="Dakar Sud">Dakar Sud</option>
-              <option value="Inter-Hub">Inter-Hub</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <span class="text-sm text-slate-500"><strong class="text-navy font-bold">{{ colisSelectionnes.length }}</strong> sélectionnés</span>
-          <button (click)="suivant()" [disabled]="colisSelectionnes.length === 0" class="bg-tt-orange hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-5 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm">
-            Suivant <i class="ti ti-arrow-right"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Table -->
-      <div class="flex-1 overflow-auto">
-        <table class="w-full text-left text-sm">
-          <thead class="sticky top-0 bg-white z-10 shadow-sm">
-            <tr>
-              <th class="px-5 py-3 border-b border-slate-100 w-12"></th>
-              <th class="px-5 py-3 border-b border-slate-100 font-semibold text-slate-500 text-xs uppercase tracking-wider">Code Tracking</th>
-              <th class="px-5 py-3 border-b border-slate-100 font-semibold text-slate-500 text-xs uppercase tracking-wider">Destination</th>
-              <th class="px-5 py-3 border-b border-slate-100 font-semibold text-slate-500 text-xs uppercase tracking-wider">Zone</th>
-              <th class="px-5 py-3 border-b border-slate-100 font-semibold text-slate-500 text-xs uppercase tracking-wider">Type</th>
-              <th class="px-5 py-3 border-b border-slate-100 font-semibold text-slate-500 text-xs uppercase tracking-wider">Poids</th>
+    } @else {
+      <table class="w-full bg-white rounded-xl border border-slate-200 text-sm">
+        <thead>
+          <tr class="bg-slate-50 text-left border-b border-slate-200">
+            <th class="px-4 py-3"></th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Code</th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Destination</th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Poids</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (c of colis(); track c.id) {
+            <tr (click)="toggleSelection(c.id)"
+              [class]="estSelectionne(c.id) ? 'bg-indigo-50 cursor-pointer' : 'cursor-pointer hover:bg-slate-50'">
+              <td class="px-4 py-3">
+                <i [class]="estSelectionne(c.id) ? 'ti ti-square-check text-navy' : 'ti ti-square text-slate-300'"></i>
+              </td>
+              <td class="px-4 py-3 font-mono font-semibold text-navy">{{ c.codeTracking }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ c.villeDestinataire }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ c.poids }} kg</td>
             </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr *ngFor="let c of colis"
-                class="cursor-pointer transition-colors group"
-                [ngClass]="estSelectionne(c.code) ? 'bg-indigo-50/60 hover:bg-indigo-50 border-l-4 border-l-navy' : 'hover:bg-slate-50 border-l-4 border-l-transparent'"
-                (click)="toggleSelection(c.code)">
-              <td class="px-5 py-3">
-                <input type="checkbox" [checked]="estSelectionne(c.code)" class="w-4 h-4 rounded border-slate-300 text-navy focus:ring-navy pointer-events-none" />
-              </td>
-              <td class="px-5 py-3"><span class="font-mono font-bold text-navy">{{ c.code }}</span></td>
-              <td class="px-5 py-3 font-medium text-slate-700">{{ c.destination }}</td>
-              <td class="px-5 py-3">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-600 group-hover:bg-white transition-colors">
-                  <i class="ti ti-map-pin text-[10px]"></i> {{ c.zone }}
-                </span>
-              </td>
-              <td class="px-5 py-3">
-                <span [ngClass]="c.type === 'Express' ? 'bg-orange-50 text-orange-700' : 'bg-slate-100 text-slate-600'" class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  {{ c.type }}
-                </span>
-              </td>
-              <td class="px-5 py-3 text-slate-500">{{ c.poids }} kg</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+          }
+        </tbody>
+      </table>
+
+      @if (colis().length === 0) {
+        <div class="text-center py-10 text-slate-400">
+          Aucune expédition à trier pour le moment.
+        </div>
+      }
+    }
+
+    <button (click)="suivant()" [disabled]="colisSelectionnes().length === 0"
+      class="mt-6 bg-tt-orange text-white px-6 py-3 rounded-xl font-semibold disabled:opacity-40">
+      Suivant ({{ colisSelectionnes().length }} colis sélectionnés)
+    </button>
   </main>
-
 </app-hub-layout>

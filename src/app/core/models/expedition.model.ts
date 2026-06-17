@@ -76,6 +76,7 @@ export interface EstimationRequest {
 }
 
 export interface TrackingResponse {
+  id: number;
   codeTracking:   string;
   statutGlobal:   string;
   nomDestinataire:string;

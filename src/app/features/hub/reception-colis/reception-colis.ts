@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
+import { ExpeditionListItem, HubService } from '../../../core/services/hub';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-reception-colis',
@@ -10,30 +12,80 @@ import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
   templateUrl: './reception-colis.html',
   styleUrl: './reception-colis.scss',
 })
-export class ReceptionColis {
-  recherche    = '';
-  filtreType   = 'tous';
-  scanReussi   = false;
-  codeSaisi    = '';
+export class ReceptionColis implements OnInit {
+  recherche = signal('');
+  codeSaisi = signal('');
+  colisEnAttente = signal<ExpeditionListItem[]>([]);
+  isLoading = signal(false);
+  erreurMessage = signal('');
+  successMessage = signal('');
 
-  colisEnAttente = [
-    { code: 'TT-DKR-4839', expediteur: 'Moussa D.',  destination: 'Almadies',  poids: 2.5, type: 'LIVREUR',  heure: '14:32' },
-    { code: 'TT-DKR-4840', expediteur: 'Fatou N.',   destination: 'Yoff',      poids: 1.2, type: 'LIVREUR',  heure: '15:10' },
-    { code: 'TT-DKR-4841', expediteur: 'Camion DK',  destination: 'Thiès',     poids: 8.0, type: 'CAMION',   heure: '09:00' },
-    { code: 'TT-DKR-4842', expediteur: 'Omar B.',    destination: 'Plateau',   poids: 0.8, type: 'LIVREUR',  heure: '16:05' },
-  ];
+  hubId = 1;
 
-  get colisFiltres() {
-    return this.colisEnAttente.filter(c => {
-      const matchRecherche = c.code.toLowerCase().includes(this.recherche.toLowerCase())
-        || c.destination.toLowerCase().includes(this.recherche.toLowerCase());
-      const matchType = this.filtreType === 'tous' || c.type === this.filtreType;
-      return matchRecherche && matchType;
+  private hubService = inject(HubService);
+
+  ngOnInit() {
+    this.chargerColisAttendus();
+  }
+
+  chargerColisAttendus() {
+    this.isLoading.set(true);
+    this.hubService.getColisAttendus(this.hubId).subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
+        this.colisEnAttente.set(data);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.erreurMessage.set('Erreur lors du chargement des colis.');
+      },
     });
   }
 
-  receptionnerColis(code: string) {
-    console.log('Réceptionner', code);
-    // TODO : appel API PUT /api/hub/expeditions/{id}/reception
+  colisFiltres(): ExpeditionListItem[] {
+    const recherche = this.recherche().toLowerCase();
+    return this.colisEnAttente().filter(
+      (c) =>
+        c.codeTracking.toLowerCase().includes(recherche) ||
+        c.villeDestinataire?.toLowerCase().includes(recherche),
+    );
+  }
+
+  onRechercheChange(value: string) {
+    this.recherche.set(value);
+  }
+
+  onCodeSaisiChange(value: string) {
+    this.codeSaisi.set(value);
+  }
+
+  receptionnerParCode() {
+    const code = this.codeSaisi().trim().toUpperCase();
+    const colis = this.colisEnAttente().find((c) => c.codeTracking === code);
+
+    if (!colis) {
+      this.erreurMessage.set('Aucun colis attendu trouvé avec ce code.');
+      setTimeout(() => this.erreurMessage.set(''), 3000);
+      return;
+    }
+    this.receptionner(colis.id);
+  }
+
+  receptionner(expeditionId: number) {
+    this.erreurMessage.set('');
+    this.successMessage.set('');
+
+    this.hubService.recevoirColis(expeditionId, this.hubId).subscribe({
+      next: (expedition) => {
+        this.successMessage.set(`Colis ${expedition.codeTracking} réceptionné avec succès.`);
+        this.codeSaisi.set('');
+        this.chargerColisAttendus();
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: () => {
+        this.erreurMessage.set('Erreur lors de la réception du colis.');
+        setTimeout(() => this.erreurMessage.set(''), 3000);
+      },
+    });
   }
 }

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
+import { ExpeditionListItem, HubService } from '../../../core/services/hub';
 
 @Component({
   selector: 'app-tri-selection',
@@ -10,31 +11,51 @@ import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
   templateUrl: './tri-selection.html',
   styleUrl: './tri-selection.scss',
 })
-export class TriSelection {
-  filtreDestination = 'tous';
-  colisSelectionnes: string[] = [];
+export class TriSelection implements OnInit {
+  hubId = 1;
 
-  colis = [
-    { code: 'TT-DKR-4839', destination: 'Almadies',  zone: 'Dakar Nord',   type: 'Express',  poids: 2.5 },
-    { code: 'TT-DKR-4901', destination: 'Point E',   zone: 'Dakar Centre', type: 'Express',  poids: 1.0 },
-    { code: 'TT-DKR-4720', destination: 'Médina',    zone: 'Dakar Centre', type: 'Standard', poids: 3.2 },
-    { code: 'TT-DKR-4698', destination: 'HLM',       zone: 'Dakar Sud',    type: 'Standard', poids: 0.8 },
-    { code: 'TT-DKR-4512', destination: 'Thiès',     zone: 'Inter-Hub',    type: 'Standard', poids: 5.0 },
-  ];
+  // ── Signals au lieu de propriétés classiques ─────────────────────────────
+  colis = signal<ExpeditionListItem[]>([]);
+  colisSelectionnes = signal<number[]>([]);
+  isLoading = signal(false);
 
-  constructor(private router: Router) {}
+  private hubService = inject(HubService);
+  private router = inject(Router);
 
-  toggleSelection(code: string) {
-    const idx = this.colisSelectionnes.indexOf(code);
-    if (idx === -1) this.colisSelectionnes.push(code);
-    else this.colisSelectionnes.splice(idx, 1);
+  ngOnInit() {
+    this.chargerExpeditions();
   }
 
-  estSelectionne(code: string): boolean {
-    return this.colisSelectionnes.includes(code);
+  chargerExpeditions() {
+    this.isLoading.set(true);
+    this.hubService.getExpeditionsATrier(this.hubId).subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
+        this.colis.set(data);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  toggleSelection(id: number) {
+    const current = this.colisSelectionnes();
+    const idx = current.indexOf(id);
+    if (idx === -1) {
+      this.colisSelectionnes.set([...current, id]);
+    } else {
+      this.colisSelectionnes.set(current.filter((c) => c !== id));
+    }
+  }
+
+  estSelectionne(id: number): boolean {
+    return this.colisSelectionnes().includes(id);
   }
 
   suivant() {
+    if (this.colisSelectionnes().length === 0) return;
+    sessionStorage.setItem('colisSelectionnes', JSON.stringify(this.colisSelectionnes()));
     this.router.navigate(['/hub/preparation']);
   }
 }

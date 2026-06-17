@@ -1,128 +1,94 @@
 <app-hub-layout active="reception">
-
-  <!-- Top Bar -->
-  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-40">
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-30">
     <div class="flex-1">
-      <h1 class="text-sm font-semibold text-slate-800">Réception Colis</h1>
-      <p class="text-xs text-slate-400 mt-0.5">Scan et enregistrement des colis entrants au hub</p>
+      <h1 class="text-sm font-semibold text-slate-800">Réception d'un colis</h1>
+      <p class="text-xs text-slate-400 mt-0.5">Scannez le QR Code ou saisissez le code de tracking</p>
     </div>
-    <span class="bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-1.5 rounded-full inline-flex items-center gap-1">
-      <i class="ti ti-activity text-xs"></i> Mode actif
+    <span class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-[11px] font-semibold px-3 py-1 rounded-full">
+      {{ colisEnAttente().length }} colis attendus
     </span>
-    <div class="w-8 h-8 bg-navy rounded-full flex items-center justify-center text-white text-xs font-medium">GH</div>
   </header>
 
-  <!-- Content Area -->
   <main class="flex-1 p-6">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Toast succès -->
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
 
-      <!-- Left Column - Scanner & Stats -->
-      <div class="space-y-4">
-        <!-- Main Scanner Area -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-center p-8 relative">
-          <div *ngIf="scanReussi" class="absolute inset-0 bg-emerald-50/90 z-10 flex flex-col items-center justify-center fade-in">
-            <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-3">
-              <i class="ti ti-check text-emerald-600 text-3xl"></i>
-            </div>
-            <h3 class="text-emerald-800 font-bold text-lg">Colis réceptionné</h3>
-            <p class="text-emerald-600 font-mono text-sm mt-1 tracking-wider">{{ codeSaisi }}</p>
-            <p class="text-emerald-700 text-xs mt-3">Affectation : <strong class="bg-emerald-100 px-2 py-0.5 rounded">Zone A - Allée 2</strong></p>
-          </div>
+    @if (erreurMessage()) {
+      <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm mb-4">
+        {{ erreurMessage() }}
+      </div>
+    }
 
-          <div class="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100 shadow-inner">
-            <i class="ti ti-barcode text-navy text-4xl"></i>
-          </div>
-          <h2 class="text-slate-800 font-semibold mb-1">Scanner le bordereau</h2>
-          <p class="text-slate-500 text-xs mb-6">Utilisez la douchette ou saisissez le code</p>
-
-          <div class="relative max-w-xs mx-auto">
-            <i class="ti ti-keyboard text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" placeholder="Ex: TT-DKR-4839"
-                   [(ngModel)]="codeSaisi"
-                   (keyup.enter)="receptionnerColis(codeSaisi)"
-                   class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-mono text-center focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy transition-all uppercase placeholder:normal-case">
-          </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Reçus ce matin</div>
-            <div class="text-xl font-bold text-navy">124</div>
-            <div class="text-[10px] text-emerald-600 flex items-center gap-0.5 mt-1">
-              <i class="ti ti-arrow-up-right"></i> +12% vs hier
-            </div>
-          </div>
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Anomalies</div>
-            <div class="text-xl font-bold text-orange-600">3</div>
-            <div class="text-[10px] text-slate-500 mt-1">Étiquette illisible</div>
+    <div class="grid grid-cols-5 gap-5">
+      <div class="col-span-2 flex flex-col gap-4">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <h3 class="text-[11px] font-medium text-slate-500 mb-3">Saisir le code de tracking</h3>
+          <div class="flex gap-2">
+            <input type="text" [value]="codeSaisi()"
+              (input)="onCodeSaisiChange($any($event.target).value)"
+              placeholder="TT-2026-XXXXXX"
+              (keyup.enter)="receptionnerParCode()"
+              class="flex-1 bg-surface border border-slate-200 rounded-lg px-3 py-2 text-[12px] font-mono">
+            <button (click)="receptionnerParCode()"
+              class="bg-navy text-white px-3 py-2 rounded-lg">
+              <i class="ti ti-check text-sm"></i>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Right Column - Expected List -->
-      <div class="lg:col-span-2">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
-          <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i class="ti ti-clipboard-list text-slate-500 text-sm"></i>
-              <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Colis en attente de réception</span>
-            </div>
-            <div class="flex gap-2">
-              <div class="relative">
-                <i class="ti ti-search text-slate-400 text-xs absolute left-2.5 top-1/2 -translate-y-1/2"></i>
-                <input type="text" placeholder="Rechercher..."
-                       [(ngModel)]="recherche"
-                       class="pl-7 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-navy w-40">
-              </div>
-              <select [(ngModel)]="filtreType" class="text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none">
-                <option value="tous">Tous les types</option>
-                <option value="LIVREUR">Retours livreurs</option>
-                <option value="CAMION">Arrivages inter-hub</option>
-              </select>
-            </div>
+      <div class="col-span-3">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-slate-100">
+            <h3 class="text-[13px] font-medium text-slate-800">
+              Colis attendus ({{ colisFiltres().length }})
+            </h3>
           </div>
 
-          <div class="flex-1 overflow-x-auto">
+          @if (isLoading()) {
+            <div class="p-6 text-center text-slate-400">
+              <i class="ti ti-loader-2 animate-spin text-2xl"></i>
+            </div>
+          } @else {
             <table class="w-full text-xs">
               <thead>
-                <tr class="bg-slate-50 text-left border-b border-slate-100">
-                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Code</th>
-                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Provenances</th>
-                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Destination</th>
-                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px]">Poids</th>
-                  <th class="px-4 py-3 font-semibold text-slate-400 uppercase tracking-wider text-[10px] text-right">Action</th>
+                <tr class="bg-slate-50 text-left border-b border-slate-200">
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Code</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Destination</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase text-[10px]">Poids</th>
+                  <th class="px-4 py-2.5"></th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-50">
-                <tr *ngFor="let c of colisFiltres" class="table-row">
-                  <td class="px-4 py-3"><span class="font-mono font-semibold text-navy">{{ c.code }}</span></td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center gap-1.5">
-                      <i [class]="c.type === 'LIVREUR' ? 'ti ti-scooter text-slate-400' : 'ti ti-truck text-slate-400'"></i>
-                      <span class="text-slate-600 font-medium">{{ c.expediteur }}</span>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-slate-500">{{ c.destination }}</td>
-                  <td class="px-4 py-3 text-slate-500">{{ c.poids }} kg</td>
-                  <td class="px-4 py-3 text-right">
-                    <button (click)="receptionnerColis(c.code)" class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-[10px] font-semibold px-3 py-1.5 rounded-lg transition-colors">
-                      Réceptionner
-                    </button>
-                  </td>
-                </tr>
-                <tr *ngIf="colisFiltres.length === 0">
-                  <td colspan="5" class="px-4 py-8 text-center text-slate-400">
-                    Aucun colis en attente correspondant à la recherche.
-                  </td>
-                </tr>
+              <tbody class="divide-y divide-slate-100">
+                @for (c of colisFiltres(); track c.id) {
+                  <tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 font-mono text-[11px] font-semibold text-navy">{{ c.codeTracking }}</td>
+                    <td class="px-4 py-3 text-slate-700">{{ c.villeDestinataire }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ c.poids }} kg</td>
+                    <td class="px-4 py-3 text-right">
+                      <button (click)="receptionner(c.id)"
+                        class="bg-navy text-white text-[11px] px-3 py-1.5 rounded-lg">
+                        Réceptionner
+                      </button>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
-          </div>
+
+            @if (colisFiltres().length === 0) {
+              <div class="p-6 text-center text-slate-400 text-sm">
+                Aucun colis en attente.
+              </div>
+            }
+          }
         </div>
       </div>
     </div>
   </main>
-
 </app-hub-layout>
