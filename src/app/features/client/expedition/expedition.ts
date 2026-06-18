@@ -1,12 +1,14 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
+import { RelaisService} from '../../../core/services/relais';
 import { Auth } from '../../../core/services/auth';
-import { EstimationResponse, ExpeditionFormData, EstimationRequest } from '../../../core/models/expedition.model';
+import { EstimationResponse, ExpeditionFormData, EstimationRequest, ModeLivraison } from '../../../core/models/expedition.model';
 import { debounceTime, Subject, switchMap } from 'rxjs';
+import { PointRelaisListItem } from '../../../core/models/relais.model';
 
 @Component({
   selector: 'app-expedition',
@@ -17,7 +19,6 @@ import { debounceTime, Subject, switchMap } from 'rxjs';
 export class Expedition implements OnInit {
   expeditionForm!: FormGroup;
 
-  // Estimation depuis le backend — signal (règle 9 : Subject RxJS conservé, résultat stocké en signal)
   estimation = signal<EstimationResponse>({
     fraisTransport: 1500,
     fraisRamassage: 0,
@@ -31,10 +32,14 @@ export class Expedition implements OnInit {
 
   villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba', 'Bambey', 'Mbacke Baol'];
 
-  // Subject pour le debounce (conservé tel quel — règle 9)
+  // ── AJOUT : points relais disponibles pour la ville de destination ───────
+  pointsRelaisDisponibles = signal<PointRelaisListItem[]>([]);
+  isLoadingPointsRelais    = signal(false);
+
   private estimationTrigger$ = new Subject<void>();
 
   private expeditionService = inject(ExpeditionService);
+  private relaisService = inject(RelaisService);
   private authService = inject(Auth);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -61,10 +66,12 @@ export class Expedition implements OnInit {
       avecRamassage:      [false],
       assurance:          [false],
       valeurDeclaree:     [0],
-      methodePaiement:    ['WAVE']
+      methodePaiement:    ['WAVE'],
+      // ── AJOUT ──────────────────────────────────────────────────────────
+      modeLivraison:            ['RETRAIT_HUB', Validators.required],
+      pointRelaisDestinationId: [null]
     });
 
-    // Restaurer le formulaire s'il existe dans le sessionStorage
     const savedForm = sessionStorage.getItem('formulaireExpedition');
     if (savedForm) {
       try {
@@ -75,12 +82,25 @@ export class Expedition implements OnInit {
       }
     }
 
-    // Abonnement aux changements pour l'estimation
     this.expeditionForm.valueChanges.subscribe(() => {
       this.onOptionsChange();
     });
 
-    // Appel API avec debounce 400ms — Subject conservé, résultat stocké en signal
+    // ── AJOUT : recharger les points relais quand la ville ou le mode change ─
+    this.expeditionForm.get('ville')?.valueChanges.subscribe(() => {
+      if (this.expeditionForm.get('modeLivraison')?.value === 'RETRAIT_RELAIS') {
+        this.chargerPointsRelais();
+      }
+    });
+
+    this.expeditionForm.get('modeLivraison')?.valueChanges.subscribe((mode: ModeLivraison) => {
+      if (mode === 'RETRAIT_RELAIS') {
+        this.chargerPointsRelais();
+      } else {
+        this.expeditionForm.patchValue({ pointRelaisDestinationId: null }, { emitEvent: false });
+      }
+    });
+
     this.estimationTrigger$
       .pipe(
         debounceTime(400),
@@ -94,6 +114,7 @@ export class Expedition implements OnInit {
             avecRamassage:  formValue.avecRamassage,
             assurance:      formValue.assurance,
             valeurDeclaree: formValue.valeurDeclaree || 0,
+            modeLivraison:  formValue.modeLivraison,        // ← AJOUT
           };
           return this.expeditionService.estimerTarif(payload);
         })
@@ -108,11 +129,32 @@ export class Expedition implements OnInit {
         }
       });
 
-    // Charger l'estimation initiale au chargement
     this.onOptionsChange();
+
+    // Charger les points relais si le formulaire restauré est déjà sur RETRAIT_RELAIS
+    if (this.expeditionForm.get('modeLivraison')?.value === 'RETRAIT_RELAIS') {
+      this.chargerPointsRelais();
+    }
   }
 
-  // Déclencher l'estimation à chaque changement
+  // ── AJOUT : charger les points relais selon la ville sélectionnée ────────
+  chargerPointsRelais() {
+    const ville = this.expeditionForm.get('ville')?.value;
+    if (!ville) return;
+
+    this.isLoadingPointsRelais.set(true);
+    this.relaisService.getPointsRelaisParVille(ville).subscribe({
+      next: (data) => {
+        this.isLoadingPointsRelais.set(false);
+        this.pointsRelaisDisponibles.set(data);
+      },
+      error: () => {
+        this.isLoadingPointsRelais.set(false);
+        this.pointsRelaisDisponibles.set([]);
+      }
+    });
+  }
+
   onOptionsChange() {
     this.estimationTrigger$.next();
   }
@@ -121,6 +163,14 @@ export class Expedition implements OnInit {
     if (this.expeditionForm.invalid) {
       this.erreurMessage.set('Veuillez remplir tous les champs obligatoires.');
       this.expeditionForm.markAllAsTouched();
+      return;
+    }
+
+    // ── AJOUT : validation cohérente côté frontend aussi ─────────────────
+    const mode = this.expeditionForm.get('modeLivraison')?.value;
+    const pointRelaisId = this.expeditionForm.get('pointRelaisDestinationId')?.value;
+    if (mode === 'RETRAIT_RELAIS' && !pointRelaisId) {
+      this.erreurMessage.set('Veuillez sélectionner un point relais.');
       return;
     }
 
@@ -138,7 +188,6 @@ export class Expedition implements OnInit {
       return;
     }
 
-    // On ne crée pas l'expédition ici. On passe juste à l'étape récapitulatif.
     this.isLoading.set(false);
     this.router.navigate(['/client/recapitulatif']);
   }

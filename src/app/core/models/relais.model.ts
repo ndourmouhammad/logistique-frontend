@@ -16,3 +16,11 @@ export interface CommissionResponse {
   dateVersement:           string | null;
   codeTrackingExpedition:  string;
 }
+
+export interface PointRelaisListItem {
+    id:               number;
+    nomEnseigne:      string;
+    ville:            string;
+    capaciteMaxColis: number;
+    stockActuel:      number;
+}

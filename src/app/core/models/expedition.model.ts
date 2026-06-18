@@ -1,3 +1,5 @@
+export type ModeLivraison = 'RETRAIT_HUB' | 'RETRAIT_RELAIS' | 'LIVRAISON_DOMICILE';
+
 export interface ExpeditionRequest {
   clientId:             number;
   nomDestinataire:      string;
@@ -71,6 +73,8 @@ export interface ExpeditionFormData {
   assurance: boolean;
   valeurDeclaree: number;
   methodePaiement: string;
+  modeLivraison: ModeLivraison;
+  pointRelaisDestinationId: number | null;
 }
 
 export interface EstimationRequest {
@@ -80,6 +84,7 @@ export interface EstimationRequest {
   avecRamassage:  boolean;
   assurance:      boolean;
   valeurDeclaree: number;
+  modeLivraison:  ModeLivraison;
 }
 
 export interface TrackingResponse {

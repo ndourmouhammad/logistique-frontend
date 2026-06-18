@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpeditionResponse } from '../models/expedition.model';
-import { CommissionResponse } from '../models/relais.model';
+import { CommissionResponse, PointRelaisListItem } from '../models/relais.model';
 import { ExpeditionListItem } from './hub';
 
 
@@ -48,4 +48,12 @@ export class RelaisService {
       `${this.apiUrl}/${relaisId}/commissions`
     );
   }
+
+  // ── Points relais par ville ───────────────────────────────────────────────────────────
+
+getPointsRelaisParVille(ville: string): Observable<PointRelaisListItem[]> {
+  return this.http.get<PointRelaisListItem[]>(
+    `${this.apiUrl}/par-ville?ville=${encodeURIComponent(ville)}`
+  );
+}
 }
