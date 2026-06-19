@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpeditionResponse } from '../models/expedition.model';
-import { CommissionResponse, PointRelaisListItem } from '../models/relais.model';
-import { ExpeditionListItem } from './hub';
+import { CommissionResponse, ExpeditionListItem, PointRelaisListItem } from '../models/relais.model';
 
 
 

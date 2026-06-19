@@ -15,7 +15,9 @@
           <tr class="bg-slate-50 text-left border-b border-slate-200">
             <th class="px-4 py-3"></th>
             <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Code</th>
-            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Destination</th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Destination réelle</th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Mode</th>
+            <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Suggestion</th>
             <th class="px-4 py-3 text-[10px] uppercase text-slate-500">Poids</th>
           </tr>
         </thead>
@@ -27,7 +29,23 @@
                 <i [class]="estSelectionne(c.id) ? 'ti ti-square-check text-navy' : 'ti ti-square text-slate-300'"></i>
               </td>
               <td class="px-4 py-3 font-mono font-semibold text-navy">{{ c.codeTracking }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ c.villeDestinataire }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ villeDestinationReelle(c) }}</td>
+              <td class="px-4 py-3">
+                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">
+                  {{ c.modeLivraison }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                @if (besoinChauffeur(c)) {
+                  <span class="text-[10px] bg-orange-50 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 w-fit">
+                    <i class="ti ti-truck text-xs"></i> Chauffeur
+                  </span>
+                } @else {
+                  <span class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 w-fit">
+                    <i class="ti ti-bike text-xs"></i> Livreur
+                  </span>
+                }
+              </td>
               <td class="px-4 py-3 text-slate-600">{{ c.poids }} kg</td>
             </tr>
           }
@@ -41,9 +59,22 @@
       }
     }
 
-    <button (click)="suivant()" [disabled]="colisSelectionnes().length === 0"
+    @if (typeSuggere() === 'MIXTE') {
+      <div class="bg-orange-50 border border-orange-200 text-orange-700 text-xs px-4 py-3 rounded-xl mt-4">
+        Votre sélection mélange des colis nécessitant un Livreur et d'autres un Chauffeur.
+        Veuillez sélectionner uniquement des colis du même type pour continuer.
+      </div>
+    }
+
+    <button (click)="suivant()"
+      [disabled]="colisSelectionnes().length === 0 || typeSuggere() === 'MIXTE'"
       class="mt-6 bg-tt-orange text-white px-6 py-3 rounded-xl font-semibold disabled:opacity-40">
       Suivant ({{ colisSelectionnes().length }} colis sélectionnés)
+      @if (typeSuggere() === 'CHAUFFEUR') {
+        — vers Chauffeur
+      } @else if (typeSuggere() === 'LIVREUR') {
+        — vers Livreur
+      }
     </button>
   </main>
 </app-hub-layout>

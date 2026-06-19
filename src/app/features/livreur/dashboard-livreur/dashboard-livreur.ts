@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { LivreurLayout } from '../../../shared/components/livreur-layout/livreur-layout';
+import { LivreurService } from '../../../core/services/livreur';
+import { Auth } from '../../../core/services/auth';
+import { ExpeditionListItem } from '../../../core/models/relais.model';
 
 @Component({
   selector: 'app-dashboard-livreur',
@@ -9,34 +12,59 @@ import { LivreurLayout } from '../../../shared/components/livreur-layout/livreur
   templateUrl: './dashboard-livreur.html',
   styleUrl: './dashboard-livreur.scss',
 })
-export class DashboardLivreur {
-  nomLivreur   = 'Ibrahima Balde';
-  initiales    = 'IB';
-  zone         = 'Zone Dakar Nord';
-  enService    = true;
+export class DashboardLivreur implements OnInit {
 
-  stats = { courses: 12, gains: 18500, taux: 98 };
+  nomLivreur = signal('');
+  initiales  = signal('');
+  zone       = signal('');
+  enService  = signal(true);
 
-  courses = [
-    {
-      code: 'DKR-4839',
-      statut: 'EN_COURS_LIVRAISON',
-      label: 'En cours de livraison',
-      depart: 'Hub Dakar Nord',
-      destination: 'Almadies, Zone 12',
-      departFait: true
-    },
-    {
-      code: 'DKR-4912',
-      statut: 'RECU_AU_HUB',
-      label: 'À récupérer (Hub)',
-      depart: 'Hub Dakar Centre',
-      destination: 'Plateau, Av. Pompidou',
-      departFait: false
-    }
-  ];
+  livraisons = signal<ExpeditionListItem[]>([]);
+  isLoading  = signal(false);
+
+  stats = { courses: 0, gains: 0, taux: 98 };
+
+  private livreurService = inject(LivreurService);
+  private authService    = inject(Auth);
+  private router         = inject(Router);
+
+  ngOnInit() {
+    const livreurId = this.authService.getUserId();
+    if (!livreurId) return;
+
+    // ── CORRECTION : utiliser getNomComplet() au lieu de getUser() ──────────
+    const nomComplet = this.authService.getNomComplet() || 'Livreur';
+    this.nomLivreur.set(nomComplet);
+    this.initiales.set(
+      nomComplet
+        .split(' ')
+        .map((n: string) => n.charAt(0))
+        .join('')
+        .substring(0, 2)
+        .toUpperCase()
+    );
+
+    // Charger les livraisons affectées
+    this.isLoading.set(true);
+    this.livreurService.getMesLivraisons(livreurId).subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
+        this.livraisons.set(data);
+        this.stats.courses = data.length;
+      },
+      error: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
 
   toggleService() {
-    this.enService = !this.enService;
+    this.enService.update(v => !v);
+  }
+
+  naviguerVersColis(expedition: ExpeditionListItem) {
+    // Stocker l'expédition sélectionnée pour la passer aux écrans suivants
+    sessionStorage.setItem('expeditionEnLivraison', JSON.stringify(expedition));
+    this.router.navigate(['/livreur/itineraire']);
   }
 }

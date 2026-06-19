@@ -3,7 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
-import { ExpeditionListItem } from '../../../core/services/hub';
+import { ExpeditionListItem } from '../../../core/models/relais.model';
 import { RelaisService } from '../../../core/services/relais';
 
 @Component({

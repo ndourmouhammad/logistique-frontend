@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
-import { ExpeditionListItem } from '../../../core/services/hub';
+import { ExpeditionListItem } from '../../../core/models/relais.model';
 import { RelaisService } from '../../../core/services/relais';
 import { OnInit } from '@angular/core';
 

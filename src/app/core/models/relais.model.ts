@@ -6,6 +6,13 @@ export interface ExpeditionListItem {
   statut:            string;
   poids:             number;
   fraisLivraison:    number;
+  modeLivraison:     'RETRAIT_HUB' | 'RETRAIT_RELAIS' | 'LIVRAISON_DOMICILE';
+  villePointRelais:  string | null;
+}
+
+export interface DispatchRequest {
+  expeditionIds: number[];
+  livreurId: number;
 }
 
 export interface CommissionResponse {

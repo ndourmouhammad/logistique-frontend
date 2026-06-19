@@ -1,24 +1,26 @@
 export type ModeLivraison = 'RETRAIT_HUB' | 'RETRAIT_RELAIS' | 'LIVRAISON_DOMICILE';
 
 export interface ExpeditionRequest {
-  clientId:             number;
-  nomDestinataire:      string;
-  telephoneDestinataire:string;
-  adresseDepart:        string;
-  villeDepart?:         string;
-  rue:                  string;
-  ville:                string;
-  region:               string;
-  codePostal:           string;
-  pays:                 string;
-  descriptionContenu:   string;
-  poids:                number;
-  volume?:              number;
-  estExpress:           boolean;
-  avecRamassage?:       boolean;
-  assurance?:           boolean;
-  valeurDeclaree?:      number;
-  methodePaiement:      string;
+  clientId: number;
+  nomDestinataire: string;
+  telephoneDestinataire: string;
+  adresseDepart: string;
+  villeDepart: string;
+  rue: string;
+  ville: string;
+  region: string;
+  codePostal: string;
+  pays: string;
+  descriptionContenu: string;
+  poids: number;
+  volume: number;
+  estExpress: boolean;
+  avecRamassage: boolean;
+  assurance: boolean;
+  valeurDeclaree: number;
+  methodePaiement: string;
+  modeLivraison: string;                    
+  pointRelaisDestinationId: number | null;  
 }
 
 export interface ExpeditionResponse {
@@ -48,6 +50,17 @@ export interface LivreurResponse {
   nomComplet:  string;
   zoneAction:  string;
   statutDispo: boolean;
+}
+
+export interface ChauffeurResponse {
+  id: number;
+  nomComplet: string;
+  numeroPermis: string;
+}
+
+export interface DispatchChauffeurRequest {
+  expeditionIds: number[];
+  chauffeurId: number;
 }
 
 // Interface for the frontend Reactive Form

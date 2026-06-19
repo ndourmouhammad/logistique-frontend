@@ -1,27 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExpeditionResponse, LivreurResponse } from '../models/expedition.model';
+import { ChauffeurResponse, DispatchChauffeurRequest, ExpeditionResponse, LivreurResponse } from '../models/expedition.model';
+import { DispatchRequest, ExpeditionListItem } from '../models/relais.model';
+import { HubResponse } from '../models/hub.model';
 
 
-export interface ExpeditionListItem {
-  id:                number;
-  codeTracking:      string;
-  nomDestinataire:   string;
-  villeDestinataire: string;
-  statut:            string;
-  poids:             number;
-  fraisLivraison:    number;
-}
-
-export interface DispatchRequest {
-  expeditionIds: number[];
-  livreurId:     number;
-}
 
 @Injectable({ providedIn: 'root' })
 export class HubService {
-
   private apiUrl = 'http://localhost:8080/api/hub';
 
   constructor(private http: HttpClient) {}
@@ -29,41 +16,55 @@ export class HubService {
   // ── Réception d'un colis ─────────────────────────────────────────────────
   recevoirColis(expeditionId: number, hubId: number): Observable<ExpeditionResponse> {
     return this.http.put<ExpeditionResponse>(
-      `${this.apiUrl}/expeditions/${expeditionId}/reception?hubId=${hubId}`, {}
+      `${this.apiUrl}/expeditions/${expeditionId}/reception?hubId=${hubId}`,
+      {},
     );
   }
 
   // ── Colis attendus (en cours de ramassage, pas encore reçus) ─────────────
   getColisAttendus(hubId: number): Observable<ExpeditionListItem[]> {
-    return this.http.get<ExpeditionListItem[]>(
-      `${this.apiUrl}/${hubId}/colis-attendus`
-    );
+    return this.http.get<ExpeditionListItem[]>(`${this.apiUrl}/${hubId}/colis-attendus`);
   }
 
   // ── Expéditions reçues, pas encore affectées à un livreur ───────────────
   getExpeditionsATrier(hubId: number): Observable<ExpeditionListItem[]> {
-    return this.http.get<ExpeditionListItem[]>(
-      `${this.apiUrl}/${hubId}/expeditions-a-trier`
-    );
+    return this.http.get<ExpeditionListItem[]>(`${this.apiUrl}/${hubId}/expeditions-a-trier`);
   }
 
   // ── Affecter un livreur à un lot d'expéditions ───────────────────────────
   dispatcher(request: DispatchRequest): Observable<ExpeditionResponse[]> {
-    return this.http.post<ExpeditionResponse[]>(
-      `${this.apiUrl}/expeditions/dispatch`, request
-    );
+    return this.http.post<ExpeditionResponse[]>(`${this.apiUrl}/expeditions/dispatch`, request);
   }
 
   // ── Remise directe au guichet (retrait client au hub) ───────────────────
   remiseGuichet(expeditionId: number, otpSaisi: string): Observable<ExpeditionResponse> {
     return this.http.post<ExpeditionResponse>(
-      `${this.apiUrl}/expeditions/${expeditionId}/remise-guichet?otpSaisi=${otpSaisi}`, {}
+      `${this.apiUrl}/expeditions/${expeditionId}/remise-guichet?otpSaisi=${otpSaisi}`,
+      {},
     );
   }
 
   getLivreursDisponibles(zone: string): Observable<LivreurResponse[]> {
-  return this.http.get<LivreurResponse[]>(
-   `http://localhost:8080/api/livreur/disponibles?zone=${zone}`
+    return this.http.get<LivreurResponse[]>(
+      `http://localhost:8080/api/livreur/disponibles?zone=${zone}`,
+    );
+  }
+
+  getChauffeursDisponibles(): Observable<ChauffeurResponse[]> {
+  return this.http.get<ChauffeurResponse[]>(
+    `${this.apiUrl}/chauffeurs/disponibles`
+  );
+}
+
+dispatcherChauffeur(request: DispatchChauffeurRequest): Observable<ExpeditionResponse[]> {
+  return this.http.post<ExpeditionResponse[]>(
+    `${this.apiUrl}/expeditions/dispatch-chauffeur`, request
+  );
+}
+
+getMonHub(gestionnaireId: number): Observable<HubResponse> {
+  return this.http.get<HubResponse>(
+    `${this.apiUrl}/mon-hub?gestionnaireId=${gestionnaireId}`
   );
 }
 }

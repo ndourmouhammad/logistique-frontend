@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
 import { HubService } from '../../../core/services/hub';
 import { LivreurResponse } from '../../../core/models/expedition.model';
+import { HubContext } from '../../../core/services/hub-context';
 
 @Component({
   selector: 'app-preparation-expedition',
@@ -20,11 +21,17 @@ export class PreparationExpedition implements OnInit {
   erreurMessage     = signal('');
   successMessage    = signal('');
 
-  // Zone utilisée pour filtrer les livreurs — correspond à la ville du hub connecté
-  zoneHub = 'Dakar';
-
+  private hubContext = inject(HubContext);
   private hubService = inject(HubService);
   private router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      if (this.hubContext.isLoaded()) {
+        this.chargerLivreursDisponibles();
+      }
+    });
+  }
 
   ngOnInit() {
     const data = sessionStorage.getItem('colisSelectionnes');
@@ -35,12 +42,12 @@ export class PreparationExpedition implements OnInit {
       return;
     }
 
-    this.chargerLivreursDisponibles();
+    this.hubContext.chargerHub();
   }
 
   chargerLivreursDisponibles() {
     this.isLoadingLivreurs.set(true);
-    this.hubService.getLivreursDisponibles(this.zoneHub).subscribe({
+    this.hubService.getLivreursDisponibles(this.hubContext.villeHub).subscribe({
       next: (data) => {
         this.isLoadingLivreurs.set(false);
         this.livreurs.set(data);

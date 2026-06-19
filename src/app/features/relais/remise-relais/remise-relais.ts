@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
 import { RelaisService } from '../../../core/services/relais';
-import { ExpeditionListItem } from '../../../core/services/hub';
+import { ExpeditionListItem } from '../../../core/models/relais.model';
 
 @Component({
   selector: 'app-remise-relais',

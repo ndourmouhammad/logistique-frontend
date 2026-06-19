@@ -43,6 +43,7 @@ export const routes: Routes = [
   { path: 'hub/reception',         canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/reception-colis/reception-colis').then(m => m.ReceptionColis) },
   { path: 'hub/plan',              canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/plan-hub/plan-hub').then(m => m.PlanHub) },
   { path: 'hub/tri',               canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/tri-selection/tri-selection').then(m => m.TriSelection) },
+  { path: 'hub/depart-chauffeur',  canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/depart-chauffeur/depart-chauffeur').then(m => m.DepartChauffeur) },
   { path: 'hub/preparation',       canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/preparation-expedition/preparation-expedition').then(m => m.PreparationExpedition) },
   { path: 'hub/validation-depart', canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
   { path: 'hub/remise-guichet',    canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },

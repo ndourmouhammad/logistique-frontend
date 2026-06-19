@@ -1,7 +1,9 @@
 <div class="bg-slate-50 h-screen flex flex-col pb-20">
 
   <div class="bg-navy text-white px-4 pt-10 pb-4 flex items-center gap-3 shadow-md relative z-10">
-    <a routerLink="/chauffeur/trajet" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center"><i class="ti ti-arrow-left"></i></a>
+    <a routerLink="/chauffeur/trajet" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
+      <i class="ti ti-arrow-left"></i>
+    </a>
     <div>
       <div class="font-semibold text-sm">Valider déchargement</div>
       <div class="text-[10px] text-white/60">{{ hubDestination() }} · Arrivée {{ heureArrivee() }}</div>
@@ -9,60 +11,86 @@
   </div>
 
   <div class="flex-1 overflow-y-auto px-4 py-6">
-    
-    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-5 flex items-start gap-3">
-      <i class="ti ti-map-pin text-xl text-emerald-600 shrink-0 mt-0.5"></i>
-      <div>
-        <div class="font-bold text-emerald-800 text-sm">Arrivé au {{ hubDestination() }}</div>
-        <div class="text-xs text-emerald-600">Position GPS confirmée · {{ heureArrivee() }}</div>
+
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
       </div>
-    </div>
+    }
 
-    <div class="bg-white border border-slate-100 rounded-2xl p-4 mb-5 shadow-sm">
-      <h3 class="text-xs font-semibold text-slate-800 mb-3 uppercase tracking-wider">Résumé du trajet</h3>
-      <div class="space-y-2">
-        <div class="flex justify-between items-center py-1.5 border-b border-slate-50 text-sm">
-          <span class="text-slate-500">Départ</span><span class="font-semibold text-navy">{{ trajet().depart }}</span>
-        </div>
-        <div class="flex justify-between items-center py-1.5 border-b border-slate-50 text-sm">
-          <span class="text-slate-500">Arrivée</span><span class="font-semibold text-navy">{{ trajet().arrivee }}</span>
-        </div>
-        <div class="flex justify-between items-center py-1.5 border-b border-slate-50 text-sm">
-          <span class="text-slate-500">Durée</span><span class="font-semibold text-navy">{{ trajet().duree }}</span>
-        </div>
-        <div class="flex justify-between items-center py-1.5 text-sm">
-          <span class="text-slate-500">Colis déposés</span><span class="font-bold text-emerald-600">{{ trajet().colisDeposes }} / {{ trajet().colisTotal }} <i class="ti ti-check"></i></span>
+    @if (erreurMessage()) {
+      <div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-xl text-sm mb-4">
+        {{ erreurMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="text-center py-10">
+        <i class="ti ti-loader-2 animate-spin text-3xl text-navy"></i>
+      </div>
+    } @else {
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-5 flex items-start gap-3">
+        <i class="ti ti-map-pin text-xl text-emerald-600 shrink-0 mt-0.5"></i>
+        <div>
+          <div class="font-bold text-emerald-800 text-sm">Arrivé au {{ hubDestination() }}</div>
+          <div class="text-xs text-emerald-600">{{ heureArrivee() }}</div>
         </div>
       </div>
-    </div>
 
-    <h3 class="text-xs font-semibold text-slate-800 mb-2 uppercase tracking-wider">Vérification colis déchargés</h3>
-    <div class="bg-slate-100 rounded-xl p-3 mb-5">
-      <div class="flex justify-between text-sm mb-2">
-        <span class="text-slate-600">Scannés au déchargement</span>
-        <span class="font-bold text-emerald-600">{{ trajet().colisDeposes }}/{{ trajet().colisTotal }} <i class="ti ti-check"></i></span>
+      <div class="bg-white border border-slate-100 rounded-2xl p-4 mb-5 shadow-sm">
+        <h3 class="text-xs font-semibold text-slate-800 mb-3 uppercase tracking-wider">Résumé du trajet</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center py-1.5 border-b border-slate-50 text-sm">
+            <span class="text-slate-500">Départ</span>
+            <span class="font-semibold text-navy">{{ trajet().depart }}</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-slate-50 text-sm">
+            <span class="text-slate-500">Arrivée</span>
+            <span class="font-semibold text-navy">{{ trajet().arrivee }}</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 text-sm">
+            <span class="text-slate-500">Colis à décharger</span>
+            <span class="font-bold text-emerald-600">{{ trajet().colisDeposes }} / {{ trajet().colisTotal }} <i class="ti ti-check"></i></span>
+          </div>
+        </div>
       </div>
-      <div class="w-full h-2 bg-white rounded-full overflow-hidden">
-        <div class="h-full bg-emerald-500" [style.width]="((trajet().colisDeposes / trajet().colisTotal) * 100) + '%'"></div>
+
+      <!-- Liste des colis en transit -->
+      <h3 class="text-xs font-semibold text-slate-800 mb-2 uppercase tracking-wider">Colis à décharger</h3>
+      <div class="space-y-2 mb-5">
+        @for (e of expeditions(); track e.id) {
+          <div class="bg-white border border-slate-100 rounded-xl p-3 flex items-center gap-3 shadow-sm">
+            <div class="w-7 h-7 bg-orange-50 text-tt-orange rounded-lg flex items-center justify-center shrink-0">
+              <i class="ti ti-package text-sm"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="font-mono text-sm font-semibold text-navy">{{ e.codeTracking }}</div>
+              <div class="text-xs text-slate-500 truncate">
+                {{ e.nomDestinataire }} · {{ e.poids }} kg
+              </div>
+            </div>
+            <span class="text-[10px] bg-orange-50 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-full font-semibold shrink-0">
+              EN_TRANSIT
+            </span>
+          </div>
+        }
       </div>
-    </div>
 
-    <h3 class="text-xs font-semibold text-slate-800 mb-2 uppercase tracking-wider">Signature du gestionnaire hub</h3>
-    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl h-24 flex items-center justify-center relative mb-5">
-      <span class="text-sm text-slate-400">Zone de signature numérique</span>
-      <div class="absolute bottom-4 left-4 right-4 h-0.5 bg-slate-200"></div>
-    </div>
+      @if (expeditions().length === 0) {
+        <div class="text-center py-6 text-slate-400 text-sm">
+          Aucune expédition en transit pour ce chauffeur.
+        </div>
+      }
 
-    <button (click)="confirmerDechargement()" [disabled]="isLoading()" class="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition-transform mb-3 disabled:opacity-70 disabled:cursor-wait">
-      <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
-      {{ isLoading() ? 'Confirmation...' : 'Confirmer le déchargement' }}
-    </button>
-    <button class="w-full border border-slate-300 text-slate-600 py-3.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 active:bg-slate-50 transition-colors">
-      <i class="ti ti-alert-triangle"></i> Signaler un problème
-    </button>
-
+      <button (click)="confirmerDechargement()"
+        [disabled]="isConfirming() || expeditions().length === 0"
+        class="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 disabled:opacity-40 mb-3">
+        <i [class]="isConfirming() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
+        {{ isConfirming() ? 'Confirmation...' : 'Confirmer le déchargement' }}
+      </button>
+    }
   </div>
-
 </div>
 
 <app-chauffeur-layout></app-chauffeur-layout>

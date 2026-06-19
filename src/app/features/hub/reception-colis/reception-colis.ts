@@ -1,10 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HubLayout } from '../../../shared/components/hub-layout/hub-layout';
-import { ExpeditionListItem, HubService } from '../../../core/services/hub';
+import { HubService } from '../../../core/services/hub';
 import { Auth } from '../../../core/services/auth';
+import { ExpeditionListItem } from '../../../core/models/relais.model';
+import { HubContext } from '../../../core/services/hub-context';
 
 @Component({
   selector: 'app-reception-colis',
@@ -20,17 +22,24 @@ export class ReceptionColis implements OnInit {
   erreurMessage = signal('');
   successMessage = signal('');
 
-  hubId = 1;
-
+  private hubContext = inject(HubContext);
   private hubService = inject(HubService);
 
+  constructor() {
+    effect(() => {
+      if (this.hubContext.isLoaded()) {
+        this.chargerColisAttendus();
+      }
+    });
+  }
+
   ngOnInit() {
-    this.chargerColisAttendus();
+    this.hubContext.chargerHub();
   }
 
   chargerColisAttendus() {
     this.isLoading.set(true);
-    this.hubService.getColisAttendus(this.hubId).subscribe({
+    this.hubService.getColisAttendus(this.hubContext.hubId).subscribe({
       next: (data) => {
         this.isLoading.set(false);
         this.colisEnAttente.set(data);
@@ -75,7 +84,7 @@ export class ReceptionColis implements OnInit {
     this.erreurMessage.set('');
     this.successMessage.set('');
 
-    this.hubService.recevoirColis(expeditionId, this.hubId).subscribe({
+    this.hubService.recevoirColis(expeditionId, this.hubContext.hubId).subscribe({
       next: (expedition) => {
         this.successMessage.set(`Colis ${expedition.codeTracking} réceptionné avec succès.`);
         this.codeSaisi.set('');

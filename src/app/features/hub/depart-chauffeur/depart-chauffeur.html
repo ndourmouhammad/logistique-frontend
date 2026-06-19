@@ -1,0 +1,61 @@
+<app-hub-layout active="tri">
+  <header class="bg-white border-b border-slate-200 px-6 py-3">
+    <h1 class="text-sm font-semibold text-slate-800">Affecter un chauffeur</h1>
+    <p class="text-xs text-slate-400 mt-0.5">{{ colisSelectionnes().length }} colis à transporter vers un autre hub</p>
+  </header>
+
+  <main class="p-6">
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (erreurMessage()) {
+      <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm mb-4">
+        {{ erreurMessage() }}
+      </div>
+    }
+
+    @if (isLoadingChauffeurs()) {
+      <div class="text-center py-10">
+        <i class="ti ti-loader-2 animate-spin text-3xl text-navy"></i>
+      </div>
+    } @else {
+      @if (chauffeurs().length === 0) {
+        <div class="text-center py-10 text-slate-400">
+          Aucun chauffeur disponible pour le moment.
+        </div>
+      } @else {
+        <div class="space-y-3">
+          @for (c of chauffeurs(); track c.id) {
+            <div (click)="selectionnerChauffeur(c.id)"
+              [class]="chauffeurSelectionneId() === c.id
+                ? 'bg-indigo-50 border-2 border-navy rounded-xl p-4 cursor-pointer'
+                : 'bg-white border border-slate-200 rounded-xl p-4 cursor-pointer hover:border-slate-300'">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white text-sm font-bold">
+                  {{ c.nomComplet.charAt(0) }}
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-navy">{{ c.nomComplet }}</div>
+                  <div class="text-[11px] text-slate-500">Permis : {{ c.numeroPermis }}</div>
+                </div>
+                @if (chauffeurSelectionneId() === c.id) {
+                  <i class="ti ti-check text-navy"></i>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+
+    <button (click)="confirmerAffectation()" [disabled]="isLoading() || chauffeurs().length === 0"
+      class="w-full mt-6 bg-tt-orange text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-40">
+      <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-truck'"></i>
+      {{ isLoading() ? 'Affectation...' : 'Confirmer l\'affectation du chauffeur' }}
+    </button>
+  </main>
+</app-hub-layout>

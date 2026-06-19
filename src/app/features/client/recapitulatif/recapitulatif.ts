@@ -69,6 +69,8 @@ export class Recapitulatif implements OnInit {
       assurance:             form.assurance,
       valeurDeclaree:        form.valeurDeclaree,
       methodePaiement:       form.methodePaiement,
+      modeLivraison: form.modeLivraison,
+      pointRelaisDestinationId: form.pointRelaisDestinationId,
     }).subscribe({
       next: (expedition) => {
         this.isLoading.set(false);
