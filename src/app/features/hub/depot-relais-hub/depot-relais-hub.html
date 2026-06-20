@@ -1,0 +1,63 @@
+<app-hub-layout active="tri">
+  <header class="bg-white border-b border-slate-200 px-6 py-3">
+    <h1 class="text-sm font-semibold text-slate-800">Déposer au point relais</h1>
+    <p class="text-xs text-slate-400 mt-0.5">{{ colisSelectionnes().length }} colis à déposer</p>
+  </header>
+
+  <main class="p-6">
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (erreurMessage()) {
+      <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm mb-4">
+        {{ erreurMessage() }}
+      </div>
+    }
+
+    @if (isLoadingRelais()) {
+      <div class="text-center py-10">
+        <i class="ti ti-loader-2 animate-spin text-3xl text-navy"></i>
+      </div>
+    } @else {
+      @if (pointsRelais().length === 0) {
+        <div class="text-center py-10 text-slate-400">
+          Aucun point relais disponible dans cette ville.
+        </div>
+      } @else {
+        <div class="space-y-3">
+          @for (pr of pointsRelais(); track pr.id) {
+            <div (click)="selectionnerRelais(pr.id)"
+              [class]="relaisSelectionneId() === pr.id
+                ? 'bg-indigo-50 border-2 border-navy rounded-xl p-4 cursor-pointer'
+                : 'bg-white border border-slate-200 rounded-xl p-4 cursor-pointer hover:border-slate-300'">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-700">
+                  <i class="ti ti-building-store text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-navy">{{ pr.nomEnseigne }}</div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ pr.ville }} · Stock : {{ pr.stockActuel }}/{{ pr.capaciteMaxColis }}
+                  </div>
+                </div>
+                @if (relaisSelectionneId() === pr.id) {
+                  <i class="ti ti-check text-navy"></i>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+
+    <button (click)="confirmerDepot()" [disabled]="isLoading() || pointsRelais().length === 0"
+      class="w-full mt-6 bg-tt-orange text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-40">
+      <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-building-store'"></i>
+      {{ isLoading() ? 'Dépôt en cours...' : 'Confirmer le dépôt au relais' }}
+    </button>
+  </main>
+</app-hub-layout>

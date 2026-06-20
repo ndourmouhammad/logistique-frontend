@@ -67,4 +67,12 @@ getMonHub(gestionnaireId: number): Observable<HubResponse> {
     `${this.apiUrl}/mon-hub?gestionnaireId=${gestionnaireId}`
   );
 }
+
+// Ajoutez cette méthode dans HubService
+deposerAuRelais(expeditionId: number, pointRelaisId: number, forcerSubstitution: boolean = false): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/expeditions/${expeditionId}/depot-relais?pointRelaisId=${pointRelaisId}&forcerSubstitution=${forcerSubstitution}`,
+    {}
+  );
+}
 }

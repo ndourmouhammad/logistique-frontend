@@ -47,6 +47,7 @@ export const routes: Routes = [
   { path: 'hub/preparation',       canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/preparation-expedition/preparation-expedition').then(m => m.PreparationExpedition) },
   { path: 'hub/validation-depart', canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
   { path: 'hub/remise-guichet',    canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },
+  { path: 'hub/depot-relais',      canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/depot-relais-hub/depot-relais-hub').then(m => m.DepotRelaisHub) },
 
   // Admin
   { path: 'admin/dashboard',        canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/dashboard-admin/dashboard-admin').then(m => m.DashboardAdmin) },

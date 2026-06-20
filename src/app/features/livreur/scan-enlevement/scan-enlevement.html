@@ -1,89 +1,106 @@
-<div class="bg-black text-white h-screen flex flex-col">
-
-  <!-- Top bar overlay -->
-  <div class="px-4 py-4 flex items-center justify-between absolute top-0 w-full z-10 bg-linear-to-b from-black/80 to-transparent">
-    <a routerLink="/livreur/dashboard" class="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center cursor-pointer">
-      <i class="ti ti-x text-xl"></i>
+<div class="bg-slate-50 min-h-screen pb-20">
+  <div class="bg-navy text-white px-4 pt-10 pb-4 flex items-center gap-3">
+    <a routerLink="/livreur/dashboard" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
+      <i class="ti ti-arrow-left"></i>
     </a>
-    <span class="font-semibold text-sm">Scanner l'étiquette QR</span>
-    <button class="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
-      <i class="ti ti-bulb text-xl"></i>
-    </button>
-  </div>
-
-  <!-- Camera Viewport (Simulated) -->
-  <div class="flex-1 relative flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-slate-800 opacity-50"></div>
-
-    <!-- Zone de scan -->
-    <div class="relative w-64 h-64">
-      <div class="absolute inset-0 border-2 border-white/30 rounded-3xl"></div>
-      <!-- Coins du scanner -->
-      <div class="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-tt-orange rounded-tl-3xl"></div>
-      <div class="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-tt-orange rounded-tr-3xl"></div>
-      <div class="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-tt-orange rounded-bl-3xl"></div>
-      <div class="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-tt-orange rounded-br-3xl"></div>
-
-      <!-- Ligne de scan animée -->
-      <div *ngIf="!scanReussi" class="absolute top-0 left-4 right-4 h-0.5 bg-tt-orange shadow-[0_0_10px_#F97316] animate-[scan_2s_ease-in-out_infinite]"></div>
-      <!-- Overlay succès -->
-      <div *ngIf="scanReussi" class="absolute inset-0 bg-emerald-500/20 rounded-3xl flex items-center justify-center">
-        <i class="ti ti-check text-5xl text-emerald-400"></i>
-      </div>
+    <div>
+      <div class="font-semibold text-sm">Scanner un enlèvement</div>
+      <p class="text-xs text-white/60">{{ expeditionsDispos().length }} colis disponibles</p>
     </div>
-
-    <!-- Helper text -->
-    <p class="absolute bottom-20 text-center text-sm font-medium text-white/80 bg-black/40 px-4 py-2 rounded-full backdrop-blur">
-      {{ scanReussi ? 'Colis identifié avec succès !' : 'Placez le QR Code dans le cadre' }}
-    </p>
   </div>
 
-  <!-- Bottom Sheet -->
-  <div class="bg-white text-slate-800 rounded-t-3xl px-6 py-6">
-    <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-6"></div>
+  <div class="px-4 py-6 space-y-4">
 
-    <!-- State: Scan en attente -->
-    <div *ngIf="!scanReussi">
-      <h3 class="text-base font-semibold text-center mb-4">Saisie manuelle</h3>
+    @if (successMessage()) {
+      <div class="fixed top-6 right-6 bg-emerald-500 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50">
+        <i class="ti ti-circle-check text-lg"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (erreurMessage()) {
+      <div class="bg-red-50 text-red-700 p-3 rounded-xl text-sm">
+        {{ erreurMessage() }}
+      </div>
+    }
+
+    <!-- Saisie code -->
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+      <h3 class="text-xs font-semibold text-slate-500 mb-3">Code de tracking</h3>
       <div class="flex gap-2">
-        <input type="text" [(ngModel)]="codeSaisi" placeholder="Entrez le code ex: TT-DKR..."
-               class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none uppercase font-mono focus:border-navy transition"
-               (keyup.enter)="confirmerScan()">
-        <button (click)="confirmerScan()" class="bg-navy text-white px-4 py-3 rounded-xl font-semibold cursor-pointer hover:bg-navy/90 transition">
-          <i class="ti ti-arrow-right"></i>
+        <input type="text" [value]="codeSaisi()"
+          (input)="onCodeChange($any($event.target).value)"
+          (keyup.enter)="rechercherParCode()"
+          placeholder="TT-2026-XXXXXX"
+          class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono">
+        <button (click)="rechercherParCode()"
+          class="bg-navy text-white px-4 rounded-xl">
+          <i class="ti ti-search"></i>
         </button>
       </div>
     </div>
 
-    <!-- State: Scan réussi -->
-    <div *ngIf="scanReussi">
-      <div class="flex items-center gap-4 mb-5">
-        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl">
-          <i class="ti ti-check"></i>
+    <!-- Fiche colis trouvé -->
+    @if (colisTrouve()) {
+      <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4">
+        <div class="font-mono text-base font-semibold text-navy mb-2">
+          {{ colisTrouve()!.codeTracking }}
         </div>
-        <div>
-          <div class="text-xs text-slate-400">Colis identifié</div>
-          <div class="font-mono font-bold text-lg text-navy">{{ codeTrouve }}</div>
+        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div>
+            <span class="text-xs text-slate-400">Destinataire</span>
+            <div class="font-medium">{{ colisTrouve()!.nomDestinataire }}</div>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400">Destination</span>
+            <div class="font-medium">{{ colisTrouve()!.villeDestinataire }}</div>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400">Poids</span>
+            <div class="font-medium">{{ colisTrouve()!.poids }} kg</div>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400">Mode</span>
+            <div class="font-medium text-xs">{{ colisTrouve()!.modeLivraison }}</div>
+          </div>
         </div>
+        <button (click)="collecterColis()" [disabled]="isCollecting()"
+          class="w-full bg-navy text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
+          <i [class]="isCollecting() ? 'ti ti-loader-2 animate-spin' : 'ti ti-package-import'"></i>
+          {{ isCollecting() ? 'Collecte en cours...' : 'Confirmer la collecte' }}
+        </button>
       </div>
-      <button (click)="confirmerPriseEnCharge()" class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-navy/90 transition">
-        Confirmer la prise en charge <i class="ti ti-arrow-right"></i>
-      </button>
-    </div>
+    }
 
-    <!-- Bouton démo -->
-    <div class="mt-4 text-center">
-      <button (click)="simulerScan()" class="text-xs text-slate-400 underline cursor-pointer hover:text-slate-600 transition">
-        Démo : Simuler scan réussi
-      </button>
-    </div>
+    <!-- Liste des colis disponibles -->
+    @if (isLoading()) {
+      <div class="text-center py-6">
+        <i class="ti ti-loader-2 animate-spin text-2xl text-navy"></i>
+      </div>
+    } @else {
+      <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        Colis disponibles ({{ expeditionsDispos().length }})
+      </h3>
+      <div class="space-y-2">
+        @for (e of expeditionsDispos(); track e.id) {
+          <div (click)="colisTrouve.set(e); codeSaisi.set(e.codeTracking)"
+            class="bg-white rounded-xl border border-slate-100 p-3 flex items-center gap-3 cursor-pointer hover:border-navy transition">
+            <div class="w-8 h-8 bg-orange-50 text-tt-orange rounded-lg flex items-center justify-center shrink-0">
+              <i class="ti ti-package text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-mono text-sm font-semibold text-navy">{{ e.codeTracking }}</div>
+              <div class="text-xs text-slate-500">{{ e.nomDestinataire }} · {{ e.poids }} kg</div>
+            </div>
+            <i class="ti ti-chevron-right text-slate-400"></i>
+          </div>
+        }
+        @if (expeditionsDispos().length === 0) {
+          <div class="text-center py-6 text-slate-400 text-sm">
+            Aucun colis disponible à collecter.
+          </div>
+        }
+      </div>
+    }
   </div>
-
 </div>
-
-<style>
-@keyframes scan {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(256px); }
-}
-</style>

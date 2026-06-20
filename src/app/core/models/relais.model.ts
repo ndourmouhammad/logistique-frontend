@@ -31,3 +31,9 @@ export interface PointRelaisListItem {
     capaciteMaxColis: number;
     stockActuel:      number;
 }
+
+export interface PointRelaisContext {
+  id:          number;
+  nomEnseigne: string;
+  ville:       string;
+}

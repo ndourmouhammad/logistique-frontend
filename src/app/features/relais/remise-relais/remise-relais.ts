@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, effect, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
 import { RelaisService } from '../../../core/services/relais';
 import { ExpeditionListItem } from '../../../core/models/relais.model';
+import { RelaisContext } from '../../../core/services/relais-context';
 
 @Component({
   selector: 'app-remise-relais',
@@ -12,12 +13,11 @@ import { ExpeditionListItem } from '../../../core/models/relais.model';
   templateUrl: './remise-relais.html',
   styleUrl: './remise-relais.scss',
 })
-export class RemiseRelais {
+export class RemiseRelais implements OnInit {
   codeRecherche = signal('');
   colisEnCours  = signal<ExpeditionListItem | null>(null);
   otpSaisi      = signal('');
 
-  // Checklist vérification identité
   cniVerifiee   = signal(false);
   nomCorrespond = signal(false);
   otpVerifie    = signal(false);
@@ -26,16 +26,18 @@ export class RemiseRelais {
   erreurMessage  = signal('');
   successMessage = signal('');
 
-  relaisId = 5;
-
-  // Pour activer le bouton : identité vérifiée ET un OTP saisi (non vide)
   peutRemettre = computed(() =>
     this.cniVerifiee() && this.nomCorrespond() && this.otpSaisi().trim().length > 0
   );
 
   private relaisService = inject(RelaisService);
+  private relaisContext = inject(RelaisContext);
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.relaisContext.chargerRelais();
+  }
 
   rechercherColis() {
     const code = this.codeRecherche().trim().toUpperCase();
@@ -44,8 +46,7 @@ export class RemiseRelais {
     this.erreurMessage.set('');
     this.colisEnCours.set(null);
 
-    // On utilise getStock() pour retrouver le colis correspondant au code saisi
-    this.relaisService.getStock(this.relaisId).subscribe({
+    this.relaisService.getStock(this.relaisContext.relaisId).subscribe({
       next: (stock) => {
         const colis = stock.find(c => c.codeTracking === code);
         if (colis) {
@@ -76,7 +77,6 @@ export class RemiseRelais {
         this.isLoading.set(false);
         this.successMessage.set(`Colis ${expedition.codeTracking} remis avec succès.`);
 
-        // Reset complet du formulaire
         this.colisEnCours.set(null);
         this.codeRecherche.set('');
         this.otpSaisi.set('');

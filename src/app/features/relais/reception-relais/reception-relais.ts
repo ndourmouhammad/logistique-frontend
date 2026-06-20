@@ -1,11 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
 import { ExpeditionListItem } from '../../../core/models/relais.model';
 import { RelaisService } from '../../../core/services/relais';
-import { OnInit } from '@angular/core';
+import { RelaisContext } from '../../../core/services/relais-context';
 
 @Component({
   selector: 'app-reception-relais',
@@ -14,24 +14,30 @@ import { OnInit } from '@angular/core';
   styleUrl: './reception-relais.scss',
 })
 export class ReceptionRelais implements OnInit {
-    codeSaisi      = signal('');
+  codeSaisi      = signal('');
   colisAttendus  = signal<ExpeditionListItem[]>([]);
   isLoading      = signal(false);
   erreurMessage  = signal('');
   successMessage = signal('');
 
-  // ⚠️ À remplacer plus tard par l'id du relais du gérant connecté
-  relaisId = 5;
-
   private relaisService = inject(RelaisService);
+  private relaisContext = inject(RelaisContext);
+
+  constructor() {
+    effect(() => {
+      if (this.relaisContext.isLoaded()) {
+        this.chargerColisAttendus();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.chargerColisAttendus();
+    this.relaisContext.chargerRelais();
   }
 
   chargerColisAttendus() {
     this.isLoading.set(true);
-    this.relaisService.getColisAttendus(this.relaisId).subscribe({
+    this.relaisService.getColisAttendus(this.relaisContext.relaisId).subscribe({
       next: (data) => {
         this.isLoading.set(false);
         this.colisAttendus.set(data);
@@ -63,7 +69,7 @@ export class ReceptionRelais implements OnInit {
     this.erreurMessage.set('');
     this.successMessage.set('');
 
-    this.relaisService.deposerColis(expeditionId, this.relaisId).subscribe({
+    this.relaisService.deposerColis(expeditionId, this.relaisContext.relaisId).subscribe({
       next: (expedition) => {
         this.successMessage.set(`Colis ${expedition.codeTracking} déposé avec succès.`);
         this.codeSaisi.set('');

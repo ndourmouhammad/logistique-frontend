@@ -55,10 +55,21 @@ export class TriSelection implements OnInit {
     return c.villeDestinataire;
   }
 
-  // ── Suggestion automatique : ce colis a-t-il besoin d'un Chauffeur ? ──────
-  besoinChauffeur(c: ExpeditionListItem): boolean {
-    return this.villeDestinationReelle(c).toLowerCase() !== this.hubContext.villeHub.toLowerCase();
+  // ── Détermine le type d'action pour chaque colis ──────────────────────────
+  typeAction(c: ExpeditionListItem): 'DEPOT_RELAIS' | 'CHAUFFEUR' | 'LIVREUR' {
+  if (c.modeLivraison === 'RETRAIT_RELAIS') {
+    const villeDestination = c.villePointRelais ?? c.villeDestinataire;
+    if (villeDestination.toLowerCase() === this.hubContext.villeHub.toLowerCase()) {
+      return 'DEPOT_RELAIS';
+    } else {
+      return 'CHAUFFEUR'; // ← Diourbel ≠ Dakar → doit retourner ici
+    }
   }
+  if (this.villeDestinationReelle(c).toLowerCase() !== this.hubContext.villeHub.toLowerCase()) {
+    return 'CHAUFFEUR';
+  }
+  return 'LIVREUR';
+}
 
   toggleSelection(id: number) {
     const current = this.colisSelectionnes();
@@ -74,7 +85,7 @@ export class TriSelection implements OnInit {
     return this.colisSelectionnes().includes(id);
   }
 
-  // ── Les colis sélectionnés sont-ils homogènes (tous Livreur OU tous Chauffeur) ? ──
+  // ── Les colis sélectionnés sont-ils homogènes ? ──
   colisSelectionnesData = computed(() =>
     this.colis().filter(c => this.colisSelectionnes().includes(c.id))
   );
@@ -82,11 +93,12 @@ export class TriSelection implements OnInit {
   typeSuggere = computed(() => {
     const selection = this.colisSelectionnesData();
     if (selection.length === 0) return null;
-    const tousChauffeur = selection.every(c => this.besoinChauffeur(c));
-    const tousLivreur   = selection.every(c => !this.besoinChauffeur(c));
-    if (tousChauffeur) return 'CHAUFFEUR';
-    if (tousLivreur)   return 'LIVREUR';
-    return 'MIXTE'; // sélection incohérente, à éviter
+
+    const types = selection.map(c => this.typeAction(c));
+    const tousIdentiques = types.every(t => t === types[0]);
+
+    if (tousIdentiques) return types[0];
+    return 'MIXTE';
   });
 
   suivant() {
@@ -95,11 +107,8 @@ export class TriSelection implements OnInit {
     const type = this.typeSuggere();
     sessionStorage.setItem('colisSelectionnes', JSON.stringify(this.colisSelectionnes()));
 
-    if (type === 'CHAUFFEUR') {
-      this.router.navigate(['/hub/depart-chauffeur']);
-    } else if (type === 'LIVREUR') {
-      this.router.navigate(['/hub/preparation']);
-    }
-    // Si MIXTE, on ne navigue pas — le bouton sera désactivé dans ce cas (voir template)
+    if (type === 'CHAUFFEUR')          this.router.navigate(['/hub/depart-chauffeur']);
+    else if (type === 'LIVREUR')       this.router.navigate(['/hub/preparation']);
+    else if (type === 'DEPOT_RELAIS')  this.router.navigate(['/hub/depot-relais']);
   }
 }

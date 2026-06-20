@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RelaisLayout } from '../../../shared/components/relais-layout/relais-layout';
 import { ExpeditionListItem } from '../../../core/models/relais.model';
 import { RelaisService } from '../../../core/services/relais';
+import { RelaisContext } from '../../../core/services/relais-context';
 
 @Component({
   selector: 'app-stock-relais',
@@ -12,13 +13,11 @@ import { RelaisService } from '../../../core/services/relais';
   templateUrl: './stock-relais.html',
   styleUrl: './stock-relais.scss',
 })
-export class StockRelais implements OnInit{
+export class StockRelais implements OnInit {
   stock         = signal<ExpeditionListItem[]>([]);
   recherche     = signal('');
   isLoading     = signal(false);
   erreurMessage = signal('');
-
-  relaisId = 5;
 
   stockFiltre = computed(() => {
     const recherche = this.recherche().toLowerCase();
@@ -29,14 +28,24 @@ export class StockRelais implements OnInit{
   });
 
   private relaisService = inject(RelaisService);
+  private relaisContext = inject(RelaisContext);
+
+  constructor() {
+    // ── Charger le stock dès que le point relais est connu ──────────────────
+    effect(() => {
+      if (this.relaisContext.isLoaded()) {
+        this.chargerStock();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.chargerStock();
+    this.relaisContext.chargerRelais();
   }
 
   chargerStock() {
     this.isLoading.set(true);
-    this.relaisService.getStock(this.relaisId).subscribe({
+    this.relaisService.getStock(this.relaisContext.relaisId).subscribe({
       next: (data) => {
         this.isLoading.set(false);
         this.stock.set(data);

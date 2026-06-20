@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpeditionResponse } from '../models/expedition.model';
-import { CommissionResponse, ExpeditionListItem, PointRelaisListItem } from '../models/relais.model';
+import { CommissionResponse, ExpeditionListItem, PointRelaisContext, PointRelaisListItem } from '../models/relais.model';
 
 
 
@@ -53,6 +53,12 @@ export class RelaisService {
 getPointsRelaisParVille(ville: string): Observable<PointRelaisListItem[]> {
   return this.http.get<PointRelaisListItem[]>(
     `${this.apiUrl}/par-ville?ville=${encodeURIComponent(ville)}`
+  );
+}
+
+getMonRelais(gerantId: number): Observable<PointRelaisContext> {
+  return this.http.get<PointRelaisContext>(
+    `${this.apiUrl}/mon-relais?gerantId=${gerantId}`
   );
 }
 }

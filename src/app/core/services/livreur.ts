@@ -20,4 +20,17 @@ export class LivreurService {
       `${this.apiUrl}/expeditions/${expeditionId}/livrer?otpSaisi=${otpSaisi}`, {}
     );
   }
+
+  getExpeditionsACollecter(livreurId: number): Observable<ExpeditionListItem[]> {
+  return this.http.get<ExpeditionListItem[]>(
+    `${this.apiUrl}/a-collecter?livreurId=${livreurId}`
+  );
+}
+
+collecterExpedition(expeditionId: number, livreurId: number): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}/expeditions/${expeditionId}/collecte?livreurId=${livreurId}`,
+    {}
+  );
+}
 }
