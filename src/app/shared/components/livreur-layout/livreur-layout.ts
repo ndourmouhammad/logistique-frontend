@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-livreur-layout',
@@ -10,4 +11,10 @@ import { RouterModule } from '@angular/router';
 })
 export class LivreurLayout {
   @Input() active: 'home' | 'historique' | 'scanner' | 'profil' = 'home';
+
+  private authService = inject(Auth);
+
+  logout() {
+    this.authService.logout();
+  }
 }

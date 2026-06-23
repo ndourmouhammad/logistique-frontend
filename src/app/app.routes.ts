@@ -30,6 +30,7 @@ export const routes: Routes = [
   { path: 'livreur/validation-livraison',canActivate: [authGuard], data: { roles: ['ROLE_LIVREUR'] }, loadComponent: () => import('./features/livreur/validation-livraison/validation-livraison').then(m => m.ValidationLivraison) },
   { path: 'livreur/echec-livraison',     canActivate: [authGuard], data: { roles: ['ROLE_LIVREUR'] }, loadComponent: () => import('./features/livreur/echec-livraison/echec-livraison').then(m => m.EchecLivraison) },
   { path: 'livreur/historique-gains',    canActivate: [authGuard], data: { roles: ['ROLE_LIVREUR'] }, loadComponent: () => import('./features/livreur/historique-gains/historique-gains').then(m => m.HistoriqueGains) },
+  { path: 'livreur/profil',              canActivate: [authGuard], data: { roles: ['ROLE_LIVREUR'] }, loadComponent: () => import('./features/livreur/profil-livreur/profil-livreur').then(m => m.ProfilLivreur) },
 
   // Chauffeur
   { path: 'chauffeur/feuille-route',       canActivate: [authGuard], data: { roles: ['ROLE_CHAUFFEUR'] }, loadComponent: () => import('./features/chauffeur/feuille-route/feuille-route').then(m => m.FeuilleRoute) },

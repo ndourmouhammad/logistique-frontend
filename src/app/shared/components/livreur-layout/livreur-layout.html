@@ -2,27 +2,29 @@
 <ng-content></ng-content>
 
 <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 flex justify-around pb-3 pt-2 px-2 z-99">
-      <a routerLink="/livreur/dashboard"
-        [class]="active === 'home' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-home text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Accueil</span>
-      </a>
-      <a routerLink="/livreur/historique-gains"
-        [class]="active === 'historique' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-history text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Historique</span>
-      </a>
-      <a routerLink="/livreur/scan-enlevement"
-        [class]="active === 'scanner' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <div [class]="active === 'scanner' ? 'w-10 h-10 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-orange-500/30' : 'w-10 h-10 bg-navy text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-navy/30'">
-          <i class="ti ti-qrcode text-xl"></i>
-        </div>
-        <span class="text-[10px] font-medium mt-1">Scanner</span>
-      </a>
-      <a routerLink="/profil"
-        [class]="active === 'profil' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-user text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Profil</span>
-      </a>
-    </nav>
+<nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 flex justify-around pb-3 pt-2 px-2 z-99">
+  <a routerLink="/livreur/dashboard"
+    [class]="active === 'home' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-home text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Accueil</span>
+  </a>
+  <a routerLink="/livreur/historique-gains"
+    [class]="active === 'historique' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-history text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Historique</span>
+  </a>
+  <a routerLink="/livreur/scan-enlevement"
+    [class]="active === 'scanner' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <div [class]="active === 'scanner' ? 'w-10 h-10 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-orange-500/30' : 'w-10 h-10 bg-navy text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-navy/30'">
+      <i class="ti ti-qrcode text-xl"></i>
+    </div>
+    <span class="text-[10px] font-medium mt-1">Scanner</span>
+  </a>
+
+  <!-- Profil + déconnexion via page profil -->
+  <a routerLink="/livreur/profil"
+    [class]="active === 'profil' ? 'flex flex-col items-center p-2 text-tt-orange' : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-user text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Profil</span>
+  </a>
+</nav>

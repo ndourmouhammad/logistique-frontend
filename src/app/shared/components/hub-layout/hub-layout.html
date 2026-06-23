@@ -3,14 +3,15 @@
   <aside class="w-[56px] bg-navy flex flex-col items-center py-4 gap-1 fixed top-0 left-0 h-full z-50">
     <div class="w-8 h-8 bg-tt-orange rounded-lg flex items-center justify-center text-white text-xs font-bold mb-3">TT</div>
 
-    <a *ngFor="let item of navItems"
-       [routerLink]="item.route"
+    @for (item of navItems; track item.id) {
+    <a [routerLink]="item.route"
        [class]="isActive(item.id)
          ? 'sidebar-item active w-9 h-9 rounded-lg flex items-center justify-center'
          : 'sidebar-item w-9 h-9 rounded-lg flex items-center justify-center'"
        [title]="item.label">
       <i [class]="'ti ' + item.icon + (isActive(item.id) ? ' text-white text-lg' : ' text-white/40 text-lg')"></i>
     </a>
+    }
 
     <div class="w-6 h-px bg-white/10 my-2"></div>
 
@@ -20,12 +21,23 @@
       <i class="ti ti-bell text-tt-orange text-lg"></i>
     </a>
 
-    <div class="mt-auto">
-      <a routerLink="/profil"
-         class="sidebar-item w-9 h-9 rounded-lg flex items-center justify-center"
-         title="Profil">
-        <i class="ti ti-user text-white/40 text-lg"></i>
-      </a>
+    <!-- Bas de sidebar : avatar + déconnexion -->
+    <div class="mt-auto flex flex-col items-center gap-2">
+
+      <!-- Avatar initiales -->
+      <div class="w-8 h-8 bg-tt-orange rounded-full flex items-center justify-center
+                  text-white text-[10px] font-bold"
+           [title]="initiales">
+        {{ initiales }}
+      </div>
+
+      <!-- Bouton déconnexion -->
+      <button (click)="logout()"
+        class="w-9 h-9 rounded-lg flex items-center justify-center
+               hover:bg-red-500/20 transition"
+        title="Se déconnecter">
+        <i class="ti ti-logout text-white/40 hover:text-red-400 text-lg"></i>
+      </button>
     </div>
   </aside>
 
