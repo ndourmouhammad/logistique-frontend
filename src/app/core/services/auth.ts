@@ -14,6 +14,11 @@ export class Auth {
     private router: Router
   ) {}
 
+  // Inscription
+  register(request: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, request);
+  }
+
   // Connexion
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials)

@@ -26,7 +26,8 @@
   <div class="flex-1 px-5 py-5 overflow-y-auto">
 
     <!-- Step 1 : Infos personnelles -->
-    <div *ngIf="etape() === 1" class="fade-up">
+    @if (etape() === 1) {
+    <div class="fade-up">
       <div class="flex items-center gap-3 mb-5">
         <div class="w-10 h-10 bg-orange-50 text-tt-orange rounded-xl flex items-center justify-center">
           <i class="ti ti-user-plus text-xl"></i>
@@ -46,7 +47,9 @@
               [class.border-red-500]="(submitted() && f['nomComplet'].invalid)"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
           </div>
-          <span *ngIf="(submitted() && f['nomComplet'].invalid)" class="text-[10px] text-red-500 mt-1 block">Ce champ est requis.</span>
+          @if (submitted() && f['nomComplet'].invalid) {
+            <span class="text-[10px] text-red-500 mt-1 block">Ce champ est requis.</span>
+          }
         </div>
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
@@ -58,7 +61,9 @@
               [class.border-red-500]="(submitted() && f['telephone'].invalid)"
               class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
           </div>
-          <span *ngIf="(submitted() && f['telephone'].invalid)" class="text-[10px] text-red-500 mt-1 block">Numéro invalide.</span>
+          @if (submitted() && f['telephone'].invalid) {
+            <span class="text-[10px] text-red-500 mt-1 block">Numéro invalide.</span>
+          }
         </div>
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
@@ -69,7 +74,9 @@
               [class.border-red-500]="(submitted() && f['email'].invalid)"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
           </div>
-          <span *ngIf="(submitted() && f['email'].invalid)" class="text-[10px] text-red-500 mt-1 block">Email invalide.</span>
+          @if (submitted() && f['email'].invalid) {
+            <span class="text-[10px] text-red-500 mt-1 block">Email invalide.</span>
+          }
         </div>
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Mot de passe</label>
@@ -84,16 +91,20 @@
             </button>
           </div>
           <!-- Barre de force -->
-          <div class="flex gap-1 mt-2" *ngIf="!(submitted() && f['motDePasse'].invalid)">
-            <div class="h-1 flex-1 rounded-full transition-all duration-300"
-              [style.background]="passwordStrength() >= 1 ? passwordColor() : '#e2e8f0'"></div>
-            <div class="h-1 flex-1 rounded-full transition-all duration-300"
-              [style.background]="passwordStrength() >= 2 ? passwordColor() : '#e2e8f0'"></div>
-            <div class="h-1 flex-1 rounded-full transition-all duration-300"
-              [style.background]="passwordStrength() >= 3 ? passwordColor() : '#e2e8f0'"></div>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-1" *ngIf="!(submitted() && f['motDePasse'].invalid)">Min. 8 caractères, 1 majuscule, 1 chiffre</div>
-          <span *ngIf="(submitted() && f['motDePasse'].invalid)" class="text-[10px] text-red-500 mt-1 block">Mot de passe trop faible.</span>
+          @if (!(submitted() && f['motDePasse'].invalid)) {
+            <div class="flex gap-1 mt-2">
+              <div class="h-1 flex-1 rounded-full transition-all duration-300"
+                [style.background]="passwordStrength() >= 1 ? passwordColor() : '#e2e8f0'"></div>
+              <div class="h-1 flex-1 rounded-full transition-all duration-300"
+                [style.background]="passwordStrength() >= 2 ? passwordColor() : '#e2e8f0'"></div>
+              <div class="h-1 flex-1 rounded-full transition-all duration-300"
+                [style.background]="passwordStrength() >= 3 ? passwordColor() : '#e2e8f0'"></div>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-1">Min. 8 caractères, 1 majuscule, 1 chiffre</div>
+          }
+          @if (submitted() && f['motDePasse'].invalid) {
+            <span class="text-[10px] text-red-500 mt-1 block">Mot de passe trop faible.</span>
+          }
         </div>
       </div>
       <button (click)="goToStep2()"
@@ -104,35 +115,18 @@
         Déjà un compte ? <a routerLink="/connexion" class="text-navy font-semibold hover:underline">Se connecter</a>
       </p>
     </div>
+    }
 
-    <!-- Step 2 : Vérification OTP -->
+    <!-- Step 2 : Vérification OTP (désactivée — on passe directement à l'étape 3) -->
+    <!--
     <div *ngIf="etape() === 2" class="fade-up">
-      <div class="text-center mb-6 mt-4">
-        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <i class="ti ti-message-chatbot text-3xl text-blue-600"></i>
-        </div>
-        <h2 class="text-base font-bold text-slate-800">Vérification SMS</h2>
-        <p class="text-sm text-slate-400 mt-1">Code envoyé au <span class="font-semibold text-slate-600">+221 {{ inscriptionForm.get('telephone')?.value }}</span></p>
-      </div>
-      <div class="text-xs text-center text-slate-500 uppercase tracking-wider font-semibold mb-4">Code à 4 chiffres</div>
-      <div class="flex gap-3 justify-center mb-4">
-        <input *ngFor="let i of [0,1,2,3]" type="text" maxlength="1"
-          class="w-14 h-14 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
-      </div>
-      <p class="text-center text-xs text-slate-400 mb-6">
-        Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
-      </p>
-      <button (click)="etape.set(3)"
-        class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-        Valider <i class="ti ti-circle-check"></i>
-      </button>
-      <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
-        <i class="ti ti-arrow-left text-xs"></i> Retour
-      </button>
+      ...
     </div>
+    -->
 
     <!-- Step 3 : Finalisation -->
-    <div *ngIf="etape() === 3" class="fade-up">
+    @if (etape() === 3) {
+    <div class="fade-up">
       <div class="flex items-center gap-3 mb-5">
         <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
           <i class="ti ti-user-check text-xl"></i>
@@ -142,20 +136,41 @@
           <p class="text-xs text-slate-400">Derniers détails</p>
         </div>
       </div>
-      <div class="space-y-4">
-        <div>
-          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Type de compte</label>
-          <div class="grid grid-cols-2 gap-3">
-            <label *ngFor="let r of roles" class="cursor-pointer">
-              <input type="radio" name="role" [value]="r.value" formControlName="role" class="peer hidden">
-              <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-3 text-center transition-all">
-                <i [class]="'ti ' + r.icon + ' text-2xl text-slate-500'"></i>
-                <div class="text-xs font-semibold text-slate-700 mt-1">{{ r.label }}</div>
-              </div>
-            </label>
+      <div class="space-y-3 mb-5">
+        <label class="cursor-pointer block">
+          <input type="radio" name="typeClient" value="B2C" class="peer hidden" checked>
+          <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-4 flex items-center gap-3 transition-all">
+            <div class="w-10 h-10 bg-orange-50 text-tt-orange rounded-xl flex items-center justify-center shrink-0">
+              <i class="ti ti-user text-xl"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-slate-700">Particulier</div>
+              <div class="text-xs text-slate-400">J'envoie des colis pour mon usage personnel</div>
+            </div>
           </div>
-        </div>
+        </label>
+        <label class="cursor-pointer block">
+          <input type="radio" name="typeClient" value="B2B" class="peer hidden">
+          <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-4 flex items-center gap-3 transition-all">
+            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+              <i class="ti ti-building text-xl"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-slate-700">Entreprise</div>
+              <div class="text-xs text-slate-400">J'expédie régulièrement pour mon activité</div>
+            </div>
+          </div>
+        </label>
       </div>
+
+      <!-- Message d'erreur API -->
+      @if (erreurMessage()) {
+        <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-4">
+          <i class="ti ti-alert-circle text-sm"></i>
+          {{ erreurMessage() }}
+        </div>
+      }
+
       <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 mt-5 flex gap-2 items-start">
         <i class="ti ti-shield-check text-indigo-600 mt-0.5"></i>
         <p class="text-xs text-indigo-700">En continuant, vous acceptez les <u>CGU</u> et la <u>politique de confidentialité</u>.</p>
@@ -166,6 +181,10 @@
         {{ isLoading() ? 'Création...' : 'Créer mon compte' }}
       </button>
     </div>
+    }
+
+  </div>
+</form>
 
 <!-- ===== DESKTOP ===== -->
 <form [formGroup]="inscriptionForm" class="hidden lg:grid lg:grid-cols-2 min-h-screen">
@@ -215,7 +234,8 @@
       </div>
 
       <!-- Step 1 Desktop -->
-      <div *ngIf="etape() === 1">
+      @if (etape() === 1) {
+      <div>
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Créer votre compte</h2>
         <p class="text-sm text-slate-400 mb-7">Étape 1 — Vos informations personnelles</p>
         <div class="space-y-4">
@@ -228,7 +248,9 @@
                 [class.border-red-500]="(submitted() && f['nomComplet'].invalid)"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="(submitted() && f['nomComplet'].invalid)" class="text-[10px] text-red-500 mt-1 block">Ce champ est requis.</span>
+            @if (submitted() && f['nomComplet'].invalid) {
+              <span class="text-[10px] text-red-500 mt-1 block">Ce champ est requis.</span>
+            }
           </div>
           <div>
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Téléphone</label>
@@ -240,7 +262,9 @@
                 [class.border-red-500]="(submitted() && f['telephone'].invalid)"
                 class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="(submitted() && f['telephone'].invalid)" class="text-[10px] text-red-500 mt-1 block">Numéro invalide.</span>
+            @if (submitted() && f['telephone'].invalid) {
+              <span class="text-[10px] text-red-500 mt-1 block">Numéro invalide.</span>
+            }
           </div>
           <div>
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
@@ -251,7 +275,9 @@
                 [class.border-red-500]="(submitted() && f['email'].invalid)"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
             </div>
-            <span *ngIf="(submitted() && f['email'].invalid)" class="text-[10px] text-red-500 mt-1 block">Email invalide.</span>
+            @if (submitted() && f['email'].invalid) {
+              <span class="text-[10px] text-red-500 mt-1 block">Email invalide.</span>
+            }
           </div>
           <div>
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Mot de passe</label>
@@ -265,15 +291,19 @@
                 <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
               </button>
             </div>
-            <div class="flex gap-1 mt-2" *ngIf="!(submitted() && f['motDePasse'].invalid)">
-              <div class="h-1 flex-1 rounded-full transition-all"
-                [style.background]="passwordStrength() >= 1 ? passwordColor() : '#e2e8f0'"></div>
-              <div class="h-1 flex-1 rounded-full transition-all"
-                [style.background]="passwordStrength() >= 2 ? passwordColor() : '#e2e8f0'"></div>
-              <div class="h-1 flex-1 rounded-full transition-all"
-                [style.background]="passwordStrength() >= 3 ? passwordColor() : '#e2e8f0'"></div>
-            </div>
-            <span *ngIf="(submitted() && f['motDePasse'].invalid)" class="text-[10px] text-red-500 mt-1 block">Mot de passe trop faible.</span>
+            @if (!(submitted() && f['motDePasse'].invalid)) {
+              <div class="flex gap-1 mt-2">
+                <div class="h-1 flex-1 rounded-full transition-all"
+                  [style.background]="passwordStrength() >= 1 ? passwordColor() : '#e2e8f0'"></div>
+                <div class="h-1 flex-1 rounded-full transition-all"
+                  [style.background]="passwordStrength() >= 2 ? passwordColor() : '#e2e8f0'"></div>
+                <div class="h-1 flex-1 rounded-full transition-all"
+                  [style.background]="passwordStrength() >= 3 ? passwordColor() : '#e2e8f0'"></div>
+              </div>
+            }
+            @if (submitted() && f['motDePasse'].invalid) {
+              <span class="text-[10px] text-red-500 mt-1 block">Mot de passe trop faible.</span>
+            }
           </div>
         </div>
         <button (click)="goToStep2()"
@@ -284,40 +314,55 @@
           Déjà un compte ? <a routerLink="/connexion" class="text-navy font-semibold hover:underline">Se connecter</a>
         </p>
       </div>
+      }
 
-      <!-- Step 2 Desktop -->
+      <!-- Step 2 Desktop (désactivée — on passe directement à l'étape 3) -->
+      <!--
       <div *ngIf="etape() === 2">
-        <h2 class="text-2xl font-bold text-slate-800 mb-1">Vérification</h2>
-        <p class="text-sm text-slate-400 mb-7">Étape 2 — Code SMS envoyé au +221 {{ inscriptionForm.get('telephone')?.value }}</p>
-        <div class="flex gap-3 justify-center mb-4">
-          <input *ngFor="let i of [0,1,2,3]" type="text" maxlength="1"
-            class="w-16 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
-        </div>
-        <p class="text-center text-xs text-slate-400 mb-6">
-          Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
-        </p>
-        <button (click)="etape.set(3)"
-          class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-          Valider <i class="ti ti-circle-check"></i>
-        </button>
-        <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
-          <i class="ti ti-arrow-left text-xs"></i> Retour
-        </button>
+        ...
       </div>
+      -->
 
       <!-- Step 3 Desktop -->
-      <div *ngIf="etape() === 3">
+      @if (etape() === 3) {
+      <div>
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Finalisez votre profil</h2>
         <p class="text-sm text-slate-400 mb-7">Étape 3 — Type de compte</p>
-        <div class="grid grid-cols-2 gap-3 mb-5">
-          <label *ngFor="let r of roles" class="cursor-pointer">
-            <input type="radio" name="role" [value]="r.value" formControlName="role" class="peer hidden">
-            <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-4 text-center transition-all">
-              <i [class]="'ti ' + r.icon + ' text-2xl text-slate-500'"></i>
-              <div class="text-sm font-semibold text-slate-700 mt-1">{{ r.label }}</div>
+        <div class="space-y-3 mb-5">
+          <label class="cursor-pointer block">
+            <input type="radio" name="typeClient" value="B2C" class="peer hidden" checked>
+            <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-4 flex items-center gap-3 transition-all">
+              <div class="w-10 h-10 bg-orange-50 text-tt-orange rounded-xl flex items-center justify-center shrink-0">
+                <i class="ti ti-user text-xl"></i>
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-slate-700">Particulier</div>
+                <div class="text-xs text-slate-400">J'envoie des colis pour mon usage personnel</div>
+              </div>
+            </div>
+          </label>
+          <label class="cursor-pointer block">
+            <input type="radio" name="typeClient" value="B2B" class="peer hidden">
+            <div class="peer-checked:border-navy peer-checked:bg-navy/5 border-2 border-slate-200 rounded-xl p-4 flex items-center gap-3 transition-all">
+              <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                <i class="ti ti-building text-xl"></i>
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-slate-700">Entreprise</div>
+                <div class="text-xs text-slate-400">J'expédie régulièrement pour mon activité</div>
+              </div>
             </div>
           </label>
         </div>
+
+        <!-- Message d'erreur API -->
+        @if (erreurMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-4">
+            <i class="ti ti-alert-circle text-sm"></i>
+            {{ erreurMessage() }}
+          </div>
+        }
+
         <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 flex gap-2 items-start">
           <i class="ti ti-shield-check text-indigo-600 mt-0.5"></i>
           <p class="text-xs text-indigo-700">En continuant, vous acceptez les <u>CGU</u> et la <u>politique de confidentialité</u>.</p>
@@ -328,6 +373,7 @@
           {{ isLoading() ? 'Création...' : 'Créer mon compte' }}
         </button>
       </div>
+      }
 
     </div>
   </div>
