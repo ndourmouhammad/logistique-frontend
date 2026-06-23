@@ -58,15 +58,27 @@
       </a>
     </nav>
 
-    <!-- Profil -->
-    <div class="border-t border-white/[.08] px-3 py-3 flex items-center gap-2.5">
-      <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center text-tt-orange text-[10px] font-medium">
-        {{ userInitiales }}
+    <!-- Profil + déconnexion -->
+    <div class="border-t border-white/[.08] px-3 py-3">
+      <!-- Infos utilisateur -->
+      <div class="flex items-center gap-2.5 mb-2">
+        <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center
+                    text-tt-orange text-[10px] font-medium shrink-0">
+          {{ userInitiales() }}
+        </div>
+        <div class="min-w-0">
+          <div class="text-[11px] font-medium text-white/70 truncate">{{ userNom() }}</div>
+          <div class="text-[9px] text-white/30">Gérant relais</div>
+        </div>
       </div>
-      <div>
-        <div class="text-[11px] font-medium text-white/70">{{ userNom }}</div>
-        <div class="text-[9px] text-white/30">Gérant relais</div>
-      </div>
+
+      <!-- Bouton déconnexion -->
+      <button (click)="demanderConfirmation()"
+        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg
+               hover:bg-red-500/10 transition group">
+        <i class="ti ti-logout text-white/30 group-hover:text-red-400 text-sm"></i>
+        <span class="text-[11px] text-white/30 group-hover:text-red-400">Se déconnecter</span>
+      </button>
     </div>
 
   </aside>
@@ -75,5 +87,32 @@
   <div class="flex-1 ml-[200px] flex flex-col">
     <ng-content></ng-content>
   </div>
+
+  <!-- Modal confirmation déconnexion -->
+  @if (showConfirm()) {
+    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="text-center mb-5">
+          <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="ti ti-logout text-2xl text-red-500"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-800">Se déconnecter ?</h3>
+          <p class="text-sm text-slate-400 mt-1">
+            Vous devrez vous reconnecter pour accéder à votre espace.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <button (click)="annulerDeconnexion()"
+            class="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold">
+            Annuler
+          </button>
+          <button (click)="confirmerDeconnexion()"
+            class="flex-1 bg-red-500 text-white py-3 rounded-xl text-sm font-semibold">
+            Déconnecter
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>
