@@ -1,51 +1,55 @@
-<!-- Bottom Nav Chauffeur -->
-    <nav class="fixed bottom-0 w-full border-t flex justify-around pb-safe pt-2 px-2 z-50"
-      [class]="darkMode ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'">
+<ng-content></ng-content>
 
-      <a routerLink="/chauffeur/feuille-route"
-        [class]="active === 'feuille'
-          ? 'flex flex-col items-center p-2 text-tt-orange'
-          : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
-                     : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-route text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Feuille</span>
-      </a>
+<nav class="fixed bottom-0 w-full border-t flex justify-around pb-safe pt-2 px-2 z-50"
+  [class]="darkMode ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'">
 
-      <a routerLink="/chauffeur/historique-tournees"
-        [class]="active === 'historique'
-          ? 'flex flex-col items-center p-2 text-tt-orange'
-          : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
-                     : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-truck-delivery text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Historique</span>
-      </a>
+  <a routerLink="/chauffeur/feuille-route"
+    [class]="active === 'feuille'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
+                 : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-route text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Feuille</span>
+  </a>
 
-      <a routerLink="/chauffeur/scan-lot"
-        class="flex flex-col items-center p-2 text-slate-400">
-        <div [class]="active === 'scanner'
-          ? 'w-11 h-11 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-slate-900'
-          : darkMode
-            ? 'w-11 h-11 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-slate-900'
-            : 'w-11 h-11 bg-navy text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-navy/30'">
-          <i class="ti ti-qrcode text-xl"></i>
-        </div>
-        <span class="text-[10px] font-medium mt-1"
-          [class]="darkMode ? 'text-white/40' : 'text-slate-400'">Scanner</span>
-      </a>
+  <a routerLink="/chauffeur/historique-tournees"
+    [class]="active === 'historique'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
+                 : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-truck-delivery text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Historique</span>
+  </a>
 
-      <a routerLink="/chauffeur/trajet"
-        [class]="active === 'carte'
-          ? 'flex flex-col items-center p-2 text-tt-orange'
-          : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
-                     : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-map text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Carte</span>
-      </a>
+  <a routerLink="/chauffeur/scan-lot"
+    class="flex flex-col items-center p-2 text-slate-400">
+    <div [class]="active === 'scanner'
+      ? 'w-11 h-11 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-slate-900'
+      : darkMode
+        ? 'w-11 h-11 bg-tt-orange text-white rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-slate-900'
+        : 'w-11 h-11 bg-navy text-white rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-navy/30'">
+      <i class="ti ti-qrcode text-xl"></i>
+    </div>
+    <span class="text-[10px] font-medium mt-1"
+      [class]="darkMode ? 'text-white/40' : 'text-slate-400'">Scanner</span>
+  </a>
 
-      <a routerLink="/profil"
-        [class]="darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
-                          : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
-        <i class="ti ti-user text-2xl mb-1"></i>
-        <span class="text-[10px] font-medium">Profil</span>
-      </a>
-    </nav>
+  <a routerLink="/chauffeur/trajet"
+    [class]="active === 'carte'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
+                 : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-map text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Carte</span>
+  </a>
+
+  <!-- ── Profil → /chauffeur/profil (plus /profil landing page) ───────────── -->
+  <a routerLink="/chauffeur/profil"
+    [class]="active === 'profil'
+      ? 'flex flex-col items-center p-2 text-tt-orange'
+      : darkMode ? 'flex flex-col items-center p-2 text-white/40 hover:text-white'
+                 : 'flex flex-col items-center p-2 text-slate-400 hover:text-navy'">
+    <i class="ti ti-user text-2xl mb-1"></i>
+    <span class="text-[10px] font-medium">Profil</span>
+  </a>
+</nav>

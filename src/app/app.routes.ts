@@ -38,7 +38,7 @@ export const routes: Routes = [
   { path: 'chauffeur/trajet',              canActivate: [authGuard], data: { roles: ['ROLE_CHAUFFEUR'] }, loadComponent: () => import('./features/chauffeur/trajet-chauffeur/trajet-chauffeur').then(m => m.TrajetChauffeur) },
   { path: 'chauffeur/validation-transfert',canActivate: [authGuard], data: { roles: ['ROLE_CHAUFFEUR'] }, loadComponent: () => import('./features/chauffeur/validation-transfert/validation-transfert').then(m => m.ValidationTransfert) },
   { path: 'chauffeur/historique-tournees', canActivate: [authGuard], data: { roles: ['ROLE_CHAUFFEUR'] }, loadComponent: () => import('./features/chauffeur/historique-tournees/historique-tournees').then(m => m.HistoriqueTournees) },
-
+  { path: 'chauffeur/profil',              canActivate: [authGuard], data: { roles: ['ROLE_CHAUFFEUR'] }, loadComponent: () => import('./features/chauffeur/profil-chauffeur/profil-chauffeur').then(m => m.ProfilChauffeur) },
   // Hub
   { path: 'hub/dashboard',         canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/dashboard-hub/dashboard-hub').then(m => m.DashboardHub) },
   { path: 'hub/reception',         canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/reception-colis/reception-colis').then(m => m.ReceptionColis) },
