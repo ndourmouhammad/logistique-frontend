@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Navbar } from '../navbar/navbar';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-client-layout',
@@ -12,9 +13,18 @@ import { Navbar } from '../navbar/navbar';
 export class ClientLayout {
   @Input() activeTab: 'dashboard' | 'expeditions' | 'tracking' | 'profil' = 'dashboard';
 
-  constructor(private router: Router) {}
+  private authService = inject(Auth);
 
-  navigate(route: string) {
-    this.router.navigate([route]);
+  get nomComplet(): string {
+    return this.authService.getNomComplet() || '';
+  }
+
+  get initiales(): string {
+    return this.nomComplet
+      .split(' ')
+      .map(n => n.charAt(0))
+      .join('')
+      .substring(0, 2)
+      .toUpperCase();
   }
 }

@@ -16,7 +16,9 @@ export class Auth {
 
   // Inscription
   register(request: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, request);
+    return this.http.post(`${this.apiUrl}/auth/register`, request, {
+      responseType: 'text'
+    });
   }
 
   // Connexion

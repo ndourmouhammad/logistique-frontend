@@ -1,5 +1,9 @@
 <!-- NAVBAR Desktop -->
-<app-navbar [activeLink]="activeTab"></app-navbar>
+<app-navbar
+  [activeLink]="activeTab"
+  [userInitiales]="initiales"
+  [nomComplet]="nomComplet">
+</app-navbar>
 
 <!-- Contenu de la page -->
 <ng-content></ng-content>

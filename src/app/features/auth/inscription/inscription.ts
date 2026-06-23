@@ -100,11 +100,16 @@ export class Inscription implements OnInit {
 
     this.authService.register(request).subscribe({
       next: () => {
-        this.isLoading.set(false);
         // Connexion automatique après inscription réussie
         this.authService.login({ email, motDePasse }).subscribe({
-          next: () => this.authService.redirectByRole(),
-          error: () => this.router.navigate(['/connexion'])
+          next: () => {
+            this.isLoading.set(false);
+            this.authService.redirectByRole();
+          },
+          error: () => {
+            this.isLoading.set(false);
+            this.router.navigate(['/connexion']);
+          }
         });
       },
       error: (err) => {
