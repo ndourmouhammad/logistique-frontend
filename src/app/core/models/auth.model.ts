@@ -8,6 +8,7 @@ export interface AuthResponse {
   role: string;
   nomComplet: string;
   userId: number;
+  premierConnexion: boolean;
 }
 
 export interface RegisterRequest {

@@ -1,0 +1,125 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+
+    <!-- Header selon le mode -->
+    <div class="text-center mb-6">
+      <div [class]="mode() === 'premier'
+        ? 'w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-4'
+        : 'w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4'">
+        <i [class]="mode() === 'premier'
+          ? 'ti ti-shield-lock text-3xl text-tt-orange'
+          : 'ti ti-lock text-3xl text-blue-500'"></i>
+      </div>
+
+      @if (mode() === 'premier') {
+        <h2 class="text-xl font-bold text-slate-800 mb-1">Définissez votre mot de passe</h2>
+        <p class="text-sm text-slate-400">
+          C'est votre première connexion. Choisissez un mot de passe personnel sécurisé.
+        </p>
+      } @else {
+        <h2 class="text-xl font-bold text-slate-800 mb-1">Changer le mot de passe</h2>
+        <p class="text-sm text-slate-400">Modifiez votre mot de passe actuel.</p>
+      }
+    </div>
+
+    <!-- Succès -->
+    @if (succes()) {
+      <div class="text-center">
+        <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+          <i class="ti ti-circle-check text-5xl text-emerald-500"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Mot de passe modifié !</h3>
+        <p class="text-sm text-slate-400 mb-6">Votre mot de passe a été mis à jour avec succès.</p>
+        <button (click)="continuer()"
+          class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
+                 shadow-lg shadow-navy/15">
+          Continuer vers mon espace
+        </button>
+      </div>
+    }
+
+    <!-- Formulaire -->
+    @if (!succes()) {
+
+      @if (erreurMessage()) {
+        <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2
+                    rounded-xl mb-4 flex items-center gap-2">
+          <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
+        </div>
+      }
+
+      <div class="space-y-4 mb-6">
+
+        <!-- Ancien mot de passe (seulement en mode profil) -->
+        @if (mode() === 'profil') {
+          <div>
+            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">
+              Ancien mot de passe
+            </label>
+            <div class="relative">
+              <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="password"
+                [value]="ancienMotDePasse()"
+                (input)="ancienMotDePasse.set($any($event.target).value)"
+                placeholder="Votre mot de passe actuel"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl
+                       pl-10 pr-4 py-3.5 text-sm outline-none">
+            </div>
+          </div>
+        }
+
+        <!-- Nouveau mot de passe -->
+        <div>
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">
+            Nouveau mot de passe
+          </label>
+          <div class="relative">
+            <i class="ti ti-lock-open absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input [type]="showPassword() ? 'text' : 'password'"
+              [value]="nouveauMotDePasse()"
+              (input)="nouveauMotDePasse.set($any($event.target).value); erreurMessage.set('')"
+              placeholder="Min. 8 caractères, 1 majuscule, 1 chiffre"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl
+                     pl-10 pr-10 py-3.5 text-sm outline-none">
+            <button type="button" (click)="togglePassword()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirmation -->
+        <div>
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">
+            Confirmer le mot de passe
+          </label>
+          <div class="relative">
+            <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="password"
+              [value]="confirmation()"
+              (input)="confirmation.set($any($event.target).value); erreurMessage.set('')"
+              placeholder="Retapez le nouveau mot de passe"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl
+                     pl-10 pr-4 py-3.5 text-sm outline-none">
+          </div>
+        </div>
+      </div>
+
+      <button (click)="valider()" [disabled]="isLoading()"
+        class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
+               flex items-center justify-center gap-2 shadow-lg shadow-navy/20
+               disabled:opacity-60">
+        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
+        {{ isLoading() ? 'Modification...' : 'Valider le nouveau mot de passe' }}
+      </button>
+
+      @if (mode() === 'profil') {
+        <button (click)="router.navigate(['/'])"
+          class="w-full py-3 text-sm text-slate-400 mt-2 text-center">
+          Annuler
+        </button>
+      }
+    }
+
+  </div>
+</div>

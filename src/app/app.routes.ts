@@ -11,7 +11,9 @@ export const routes: Routes = [
   { path: 'inscription',          loadComponent: () => import('./features/auth/inscription/inscription').then(m => m.Inscription) },
   { path: 'mot-de-passe-oublie',  loadComponent: () => import('./features/auth/mot-de-passe-oublie/mot-de-passe-oublie').then(m => m.MotDePasseOublie) },
   { path: 'reinitialiser-mot-de-passe', loadComponent: () => import('./features/auth/reinitialiser-mot-de-passe/reinitialiser-mot-de-passe').then(m => m.ReinitialiserMotDePasse) },
+  { path: 'changer-mot-de-passe',     canActivate: [authGuard], loadComponent: () => import('./features/auth/changer-mot-de-passe/changer-mot-de-passe').then(m => m.ChangerMotDePasse) },
   { path: 'client/tracking',      loadComponent: () => import('./features/client/tracking/tracking').then(m => m.Tracking) },
+  
 
   // Client
   { path: 'client/dashboard',     canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] }, loadComponent: () => import('./features/client/dashboard/dashboard').then(m => m.Dashboard) },
