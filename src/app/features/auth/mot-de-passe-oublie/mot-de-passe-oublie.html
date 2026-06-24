@@ -1,389 +1,172 @@
 <!-- ===== MOBILE ===== -->
 <div class="lg:hidden min-h-screen flex flex-col bg-white">
-
-  <!-- Header -->
   <div class="bg-navy px-4 py-3.5 flex items-center gap-3 relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute top-[-50%] right-[-30%] w-[200px] h-[200px] bg-indigo-500/10 rounded-full blur-3xl"></div>
-    </div>
-    <a routerLink="/connexion" class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center relative z-10">
+    <a routerLink="/connexion" class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
       <i class="ti ti-arrow-left text-white"></i>
     </a>
-    <div class="text-sm font-semibold text-white relative z-10">Mot de passe oublié</div>
+    <div class="text-sm font-semibold text-white">Mot de passe oublié</div>
   </div>
 
-  <div class="flex-1 px-5 py-6 overflow-y-auto">
+  <div class="flex-1 px-5 py-6">
 
-    <!-- Étape 1 : Choix méthode -->
-    <div *ngIf="etape() === 1" class="fade-up">
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+    <!-- Étape 1 : Saisie email -->
+    @if (etape() === 1) {
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <i class="ti ti-lock-question text-3xl text-indigo-600"></i>
         </div>
-        <h1 class="text-lg font-bold text-slate-800 mb-1">Réinitialiser le mot de passe</h1>
-        <p class="text-xs text-slate-400 leading-relaxed">Choisissez comment recevoir votre code.</p>
+        <h1 class="text-lg font-bold text-slate-800 mb-1">Mot de passe oublié ?</h1>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Entrez votre email — on vous envoie un lien pour réinitialiser votre mot de passe.
+        </p>
       </div>
 
-      <div class="space-y-3 mb-6">
-        <label class="block cursor-pointer">
-          <input type="radio" name="method" value="sms" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
-          <div [class]="methode() === 'sms'
-            ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
-            : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 transition-all'">
-            <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
-              <i class="ti ti-message text-xl"></i>
-            </div>
-            <div class="flex-1">
-              <div class="text-sm font-semibold text-slate-800">Par SMS</div>
-              <div class="text-xs text-slate-400">Code envoyé au +221 77 *** ** 34</div>
-            </div>
-            <div [class]="methode() === 'sms'
-              ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center'
-              : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-              <div *ngIf="methode() === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
-            </div>
+      <div class="mb-5">
+        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
+        <div class="relative">
+          <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="email" [value]="email()"
+            (input)="email.set($any($event.target).value); erreurMessage.set('')"
+            placeholder="email@exemple.sn"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
+        </div>
+        @if (erreurMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2 rounded-xl mt-2 flex items-center gap-2">
+            <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
           </div>
-        </label>
-
-        <label class="block cursor-pointer">
-          <input type="radio" name="method" value="email" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
-          <div [class]="methode() === 'email'
-            ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
-            : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 transition-all'">
-            <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
-              <i class="ti ti-mail text-xl"></i>
-            </div>
-            <div class="flex-1">
-              <div class="text-sm font-semibold text-slate-800">Par Email</div>
-              <div class="text-xs text-slate-400">Lien envoyé à f***&#64;exemple.sn</div>
-            </div>
-            <div [class]="methode() === 'email'
-              ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center'
-              : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-              <div *ngIf="methode() === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          </div>
-        </label>
+        }
       </div>
 
-      <button (click)="allerSaisieContact()"
-        class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-        Continuer <i class="ti ti-arrow-right"></i>
+      <button (click)="envoyerLien()" [disabled]="isLoading()"
+        class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
+               flex items-center justify-center gap-2 shadow-lg shadow-navy/15
+               disabled:opacity-60">
+        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
+        {{ isLoading() ? 'Envoi en cours...' : 'Envoyer le lien' }}
       </button>
+
       <a routerLink="/connexion" class="block text-center text-xs text-slate-400 mt-4">
         Vous vous souvenez ? <span class="text-navy font-semibold">Se connecter</span>
       </a>
-    </div>
+    }
 
-      <div *ngIf="etape() === 2" class="fade-up">
-        <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-linear-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <i [class]="methode() === 'sms' ? 'ti ti-phone text-3xl text-indigo-600' : 'ti ti-mail text-3xl text-indigo-600'"></i>
-          </div>
-          <h1 class="text-lg font-bold text-slate-800 mb-1">Saisie de vos coordonnées</h1>
-          <p class="text-xs text-slate-400 leading-relaxed">Entrez votre {{ methode() === 'sms' ? 'numéro de téléphone' : 'adresse email' }}.</p>
+    <!-- Étape 2 : Confirmation -->
+    @if (etape() === 2) {
+      <div class="text-center mt-10">
+        <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+          <i class="ti ti-mail-check text-4xl text-emerald-500"></i>
         </div>
-
-        <div class="space-y-4 mb-6">
-          <div *ngIf="methode() === 'sms'">
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
-            <div class="flex gap-2">
-              <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium"
-                   [class.border-red-500]="errors()['telephone']">🇸🇳 +221</div>
-              <input type="tel" [value]="telephone()" (input)="telephone.set($any($event.target).value); clearError('telephone')" placeholder="77 XXX XX XX"
-                [class.border-red-500]="errors()['telephone']"
-                class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-            </div>
-            <span *ngIf="errors()['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['telephone'] }}</span>
-          </div>
-
-          <div *ngIf="methode() === 'email'">
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
-            <div class="relative">
-              <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="email" [value]="email()" (input)="email.set($any($event.target).value); clearError('email')" placeholder="email@exemple.sn"
-                [class.border-red-500]="errors()['email']"
-                class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
-            </div>
-            <span *ngIf="errors()['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['email'] }}</span>
-          </div>
-        </div>
-
-        <button (click)="envoyerOTP()" [disabled]="isLoading()"
-          class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
+        <h2 class="text-xl font-bold text-slate-800 mb-2">Email envoyé !</h2>
+        <p class="text-sm text-slate-400 mb-2">
+          Un lien de réinitialisation a été envoyé à
+        </p>
+        <p class="text-sm font-semibold text-navy mb-6">{{ email() }}</p>
+        <p class="text-xs text-slate-400 mb-8">
+          Le lien est valable <strong>30 minutes</strong>. Vérifiez aussi vos spams.
+        </p>
+        <button (click)="etape.set(1)"
+          class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold mb-3">
+          Utiliser un autre email
         </button>
-        <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
-          <i class="ti ti-arrow-left text-xs"></i> Retour
-        </button>
+        <a routerLink="/connexion"
+          class="block w-full bg-navy text-white py-3.5 rounded-xl text-sm
+                 font-semibold text-center shadow-lg shadow-navy/15">
+          Retour à la connexion
+        </a>
       </div>
-    <div *ngIf="etape() === 3" class="fade-up">
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <i class="ti ti-mail-check text-3xl text-emerald-600"></i>
-        </div>
-        <h2 class="text-lg font-bold text-slate-800 mb-1">Code envoyé !</h2>
-        <p class="text-xs text-slate-400">Entrez le code reçu par {{ methode() === 'sms' ? 'SMS' : 'Email' }}</p>
-      </div>
-      <div class="flex gap-3 justify-center mb-1">
-        <input *ngFor="let i of [0,1,2,3]; let idx = index" type="text" maxlength="1"
-          [value]="otpValues()[idx]"
-          (input)="updateOtpValue(idx, $any($event.target).value); clearError('otp')"
-          [class.border-red-500]="errors()['otp']"
-          class="w-14 h-14 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
-      </div>
-      <span *ngIf="errors()['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors()['otp'] }}</span>
-      <p class="text-center text-xs text-slate-400 mb-6">
-        Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
-      </p>
-      <button (click)="verifierOTP()" [disabled]="isLoading()"
-        class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
-        {{ isLoading() ? 'Vérification...' : 'Vérifier' }}
-      </button>
-      <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2 flex items-center justify-center gap-1">
-        <i class="ti ti-arrow-left text-xs"></i> Retour
-      </button>
-    </div>
+    }
 
-    <!-- Étape 4 : Nouveau mot de passe -->
-    <div *ngIf="etape() === 4" class="fade-up">
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <i class="ti ti-lock-open text-3xl text-tt-orange"></i>
-        </div>
-        <h2 class="text-lg font-bold text-slate-800 mb-1">Nouveau mot de passe</h2>
-        <p class="text-xs text-slate-400">Choisissez un mot de passe sécurisé.</p>
-      </div>
-      <div class="space-y-4 mb-6">
-        <div>
-          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Nouveau mot de passe</label>
-          <div class="relative">
-            <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input [type]="showPassword() ? 'text' : 'password'" [value]="newPassword()" (input)="newPassword.set($any($event.target).value); clearError('newPassword')"
-              placeholder="Min. 8 caractères"
-              [class.border-red-500]="errors()['newPassword']"
-              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 text-sm outline-none">
-            <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
-              <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
-            </button>
-          </div>
-          <span *ngIf="errors()['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['newPassword'] }}</span>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Confirmer</label>
-          <div class="relative">
-            <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="password" [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value); clearError('confirmPassword')"
-              placeholder="Retapez le mot de passe"
-              [class.border-red-500]="errors()['confirmPassword']"
-              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
-          </div>
-          <span *ngIf="errors()['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['confirmPassword'] }}</span>
-        </div>
-      </div>
-      <button (click)="reinitialiser()" [disabled]="isLoading()"
-        class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
-        <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
-        {{ isLoading() ? 'Réinitialisation...' : 'Réinitialiser' }}
-      </button>
-    </div>
-
-    <!-- Étape 5 : Succès -->
-    <div *ngIf="etape() === 5" class="fade-up text-center mt-10">
-      <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
-        <i class="ti ti-circle-check text-5xl text-emerald-500"></i>
-      </div>
-      <h2 class="text-xl font-bold text-slate-800 mb-2">Mot de passe modifié !</h2>
-      <p class="text-sm text-slate-400 mb-8">Votre mot de passe a été réinitialisé avec succès.</p>
-      <a routerLink="/connexion"
-        class="btn-press block w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold text-center shadow-lg shadow-navy/15">
-        Se connecter
-      </a>
-    </div>
   </div>
 </div>
 
 <!-- ===== DESKTOP ===== -->
 <div class="hidden lg:grid lg:grid-cols-2 min-h-screen">
-  <!-- Left Panel -->
   <div class="bg-navy p-12 flex flex-col justify-between relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
       <div class="absolute top-[-10%] right-[-15%] w-[500px] h-[500px] bg-indigo-500/8 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-500/8 rounded-full blur-3xl"></div>
     </div>
-    <a routerLink="/onboarding" class="flex items-center gap-3 relative z-10">
-      <div class="w-11 h-11 bg-linear-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">TT</div>
+    <a routerLink="/connexion" class="flex items-center gap-3 relative z-10">
+      <div class="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl
+                  flex items-center justify-center text-white font-bold shadow-lg">TT</div>
       <span class="text-white font-semibold text-lg">Tiak-Tiak</span>
     </a>
     <div class="relative z-10 max-w-md">
-      <div class="mb-8 float-slow">
-        <div class="w-20 h-20 bg-linear-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl">
+      <div class="mb-8">
+        <div class="w-20 h-20 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl
+                    flex items-center justify-center shadow-2xl">
           <i class="ti ti-lock-question text-white text-4xl"></i>
         </div>
       </div>
       <h1 class="text-4xl font-bold text-white leading-tight mb-4">Récupérez<br>votre accès</h1>
-      <p class="text-sm text-white/40 leading-relaxed">Nous allons vous aider à réinitialiser votre mot de passe en quelques étapes simples.</p>
+      <p class="text-sm text-white/40 leading-relaxed">
+        Nous vous envoyons un lien sécurisé pour réinitialiser votre mot de passe.
+      </p>
     </div>
-    <div class="text-xs text-white/20 relative z-10">© 2026 Tiak-Tiak · Plateforme logistique</div>
+    <div class="text-xs text-white/20 relative z-10">© 2026 Tiak-Tiak</div>
   </div>
 
-  <!-- Right Panel Desktop -->
   <div class="flex items-center justify-center p-12 bg-white">
     <div class="w-full max-w-md">
 
-      <!-- Étape 1 Desktop -->
-      <div *ngIf="etape() === 1">
+      @if (etape() === 1) {
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Mot de passe oublié</h2>
-        <p class="text-sm text-slate-400 mb-8">Choisissez votre méthode de récupération</p>
-        <div class="space-y-3 mb-6">
-          <label class="block cursor-pointer">
-            <input type="radio" name="dmethod" value="sms" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
-            <div [class]="methode() === 'sms'
-              ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
-              : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-50 transition-all'">
-              <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0"><i class="ti ti-message text-xl"></i></div>
-              <div class="flex-1"><div class="text-sm font-semibold text-slate-800">Par SMS</div><div class="text-xs text-slate-400">+221 77 *** ** 34</div></div>
-              <div [class]="methode() === 'sms' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-                <div *ngIf="methode() === 'sms'" class="w-2 h-2 bg-white rounded-full"></div>
-              </div>
+        <p class="text-sm text-slate-400 mb-8">
+          Entrez votre email pour recevoir un lien de réinitialisation.
+        </p>
+
+        <div class="mb-6">
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
+          <div class="relative">
+            <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="email" [value]="email()"
+              (input)="email.set($any($event.target).value); erreurMessage.set('')"
+              placeholder="email@exemple.sn"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4
+                     py-3.5 text-sm outline-none focus:border-navy transition">
+          </div>
+          @if (erreurMessage()) {
+            <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2
+                        rounded-xl mt-2 flex items-center gap-2">
+              <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
             </div>
-          </label>
-          <label class="block cursor-pointer">
-            <input type="radio" name="dmethod" value="email" [ngModel]="methode()" (ngModelChange)="methode.set($event)" class="hidden">
-            <div [class]="methode() === 'email'
-              ? 'border-2 border-navy bg-navy/5 rounded-xl p-4 flex items-center gap-4 transition-all'
-              : 'border-2 border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-50 transition-all'">
-              <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0"><i class="ti ti-mail text-xl"></i></div>
-              <div class="flex-1"><div class="text-sm font-semibold text-slate-800">Par Email</div><div class="text-xs text-slate-400">f***&#64;exemple.sn</div></div>
-              <div [class]="methode() === 'email' ? 'w-5 h-5 rounded-full border-2 border-navy bg-navy flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-slate-300'">
-                <div *ngIf="methode() === 'email'" class="w-2 h-2 bg-white rounded-full"></div>
-              </div>
-            </div>
-          </label>
+          }
         </div>
-        <button (click)="envoyerOTP()" [disabled]="isLoading()"
-          class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
+
+        <button (click)="envoyerLien()" [disabled]="isLoading()"
+          class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
+                 flex items-center justify-center gap-2 shadow-lg shadow-navy/20
+                 disabled:opacity-60 mb-4">
           <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
+          {{ isLoading() ? 'Envoi en cours...' : 'Envoyer le lien' }}
         </button>
-        <a routerLink="/connexion" class="block text-center text-sm text-slate-400 mt-5">
+
+        <a routerLink="/connexion" class="block text-center text-sm text-slate-400">
           Retour à la <span class="text-navy font-semibold">connexion</span>
         </a>
-      </div>
+      }
 
-      <!-- Étape 2 Desktop : Saisie Coordonnées -->
-      <div *ngIf="etape() === 2">
-        <h2 class="text-2xl font-bold text-slate-800 mb-1">Saisie de vos coordonnées</h2>
-        <p class="text-sm text-slate-400 mb-8">Entrez votre {{ methode() === 'sms' ? 'numéro de téléphone' : 'adresse email' }}</p>
-        
-        <div class="space-y-4 mb-6">
-          <div *ngIf="methode() === 'sms'">
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
-            <div class="flex gap-2">
-              <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium"
-                   [class.border-red-500]="errors()['telephone']">🇸🇳 +221</div>
-              <input type="tel" [value]="telephone()" (input)="telephone.set($any($event.target).value); clearError('telephone')" placeholder="77 XXX XX XX"
-                [class.border-red-500]="errors()['telephone']"
-                class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-            </div>
-            <span *ngIf="errors()['telephone']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['telephone'] }}</span>
+      @if (etape() === 2) {
+        <div class="text-center">
+          <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+            <i class="ti ti-mail-check text-5xl text-emerald-500"></i>
           </div>
-
-          <div *ngIf="methode() === 'email'">
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
-            <div class="relative">
-              <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="email" [value]="email()" (input)="email.set($any($event.target).value); clearError('email')" placeholder="email@exemple.sn"
-                [class.border-red-500]="errors()['email']"
-                class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none">
-            </div>
-            <span *ngIf="errors()['email']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['email'] }}</span>
-          </div>
+          <h2 class="text-2xl font-bold text-slate-800 mb-2">Email envoyé !</h2>
+          <p class="text-sm text-slate-400 mb-1">Lien envoyé à</p>
+          <p class="text-base font-semibold text-navy mb-4">{{ email() }}</p>
+          <p class="text-xs text-slate-400 mb-8">
+            Lien valable <strong>30 minutes</strong>. Vérifiez vos spams si besoin.
+          </p>
+          <button (click)="etape.set(1)"
+            class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold mb-3">
+            Utiliser un autre email
+          </button>
+          <a routerLink="/connexion"
+            class="block w-full bg-navy text-white py-3.5 rounded-xl text-sm
+                   font-semibold text-center">
+            Retour à la connexion
+          </a>
         </div>
-
-        <button (click)="envoyerOTP()" [disabled]="isLoading()"
-          class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/15">
-          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
-          {{ isLoading() ? 'Envoi...' : 'Envoyer le code' }}
-        </button>
-        <button (click)="etape.set(1)" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
-      </div>
-
-      <!-- Étape 3 Desktop -->
-      <div *ngIf="etape() === 3">
-        <h2 class="text-2xl font-bold text-slate-800 mb-1">Vérification</h2>
-        <p class="text-sm text-slate-400 mb-8">Code envoyé par {{ methode() === 'sms' ? 'SMS' : 'Email' }}</p>
-        <div class="flex gap-3 justify-center mb-1">
-          <input *ngFor="let i of [0,1,2,3]; let idx = index" type="text" maxlength="1"
-            [value]="otpValues()[idx]"
-            (input)="updateOtpValue(idx, $any($event.target).value); clearError('otp')"
-            [class.border-red-500]="errors()['otp']"
-            class="w-16 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-navy outline-none">
-        </div>
-        <span *ngIf="errors()['otp']" class="text-[10px] text-red-500 mb-4 block text-center">{{ errors()['otp'] }}</span>
-        <p class="text-center text-xs text-slate-400 mb-6">
-          Pas reçu ? <button class="text-tt-orange font-semibold">Renvoyer</button>
-        </p>
-        <button (click)="verifierOTP()" [disabled]="isLoading()"
-          class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-circle-check'"></i>
-          {{ isLoading() ? 'Vérification...' : 'Vérifier' }}
-        </button>
-        <button (click)="etape.set(2)" class="w-full py-3 text-sm text-slate-400 mt-2">← Retour</button>
-      </div>
-
-      <!-- Étape 4 Desktop -->
-      <div *ngIf="etape() === 4">
-        <h2 class="text-2xl font-bold text-slate-800 mb-1">Nouveau mot de passe</h2>
-        <p class="text-sm text-slate-400 mb-8">Choisissez un mot de passe sécurisé</p>
-        <div class="space-y-4 mb-6">
-          <div>
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Nouveau mot de passe</label>
-            <div class="relative">
-              <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input [type]="showPassword() ? 'text' : 'password'" [value]="newPassword()" (input)="newPassword.set($any($event.target).value); clearError('newPassword')"
-                placeholder="Min. 8 caractères"
-                [class.border-red-500]="errors()['newPassword']"
-                class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 text-sm outline-none">
-              <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
-              </button>
-            </div>
-            <span *ngIf="errors()['newPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['newPassword'] }}</span>
-          </div>
-          <div>
-            <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Confirmer</label>
-            <div class="relative">
-              <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="password" [value]="confirmPassword()" (input)="confirmPassword.set($any($event.target).value); clearError('confirmPassword')"
-                placeholder="Retapez le mot de passe"
-                [class.border-red-500]="errors()['confirmPassword']"
-                class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
-            </div>
-            <span *ngIf="errors()['confirmPassword']" class="text-[10px] text-red-500 mt-1 block">{{ errors()['confirmPassword'] }}</span>
-          </div>
-        </div>
-        <button (click)="reinitialiser()" [disabled]="isLoading()"
-          class="btn-press w-full bg-linear-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
-          <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-check'"></i>
-          {{ isLoading() ? 'Réinitialisation...' : 'Réinitialiser' }}
-        </button>
-      </div>
-
-      <!-- Étape 5 Desktop -->
-      <div *ngIf="etape() === 5" class="text-center">
-        <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
-          <i class="ti ti-circle-check text-5xl text-emerald-500"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-slate-800 mb-2">C'est fait !</h2>
-        <p class="text-sm text-slate-400 mb-8">Votre mot de passe a été réinitialisé.</p>
-        <a routerLink="/connexion"
-          class="btn-press block w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold text-center">
-          Se connecter
-        </a>
-      </div>
+      }
 
     </div>
   </div>

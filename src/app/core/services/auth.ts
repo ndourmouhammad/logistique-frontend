@@ -78,4 +78,21 @@ export class Auth {
     };
     this.router.navigate([routes[role ?? ''] ?? '/connexion']);
   }
+
+  // Ajoutez ces deux méthodes
+demanderReinitialisationMotDePasse(email: string): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/auth/mot-de-passe-oublie`,
+    { email },
+    { responseType: 'text' }
+  );
+}
+
+reinitialiserMotDePasse(token: string, nouveauMotDePasse: string): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/auth/reinitialiser-mot-de-passe`,
+    { token, nouveauMotDePasse },
+    { responseType: 'text' }
+  );
+}
 }
