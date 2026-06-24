@@ -11,7 +11,7 @@ import { signal } from '@angular/core';
   styleUrl: './relais-layout.scss',
 })
 export class RelaisLayout implements OnInit {
-  @Input() active: 'dashboard' | 'reception' | 'stock' | 'remise' | 'commissions' = 'dashboard';
+  @Input() active: 'dashboard' | 'reception' | 'stock' | 'remise' | 'commissions' | 'profil' = 'dashboard';
   @Input() nbStock = 0;
 
   userInitiales = signal('');

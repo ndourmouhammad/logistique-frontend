@@ -56,21 +56,25 @@
         <i [class]="active === 'commissions' ? 'ti ti-cash text-white text-base' : 'ti ti-cash text-white/45 text-base'"></i>
         <span [class]="active === 'commissions' ? 'text-xs text-white' : 'text-xs text-white/55'">Commissions</span>
       </a>
+
     </nav>
 
     <!-- Profil + déconnexion -->
     <div class="border-t border-white/[.08] px-3 py-3">
       <!-- Infos utilisateur -->
-      <div class="flex items-center gap-2.5 mb-2">
+      <a routerLink="/relais/profil" 
+         class="flex items-center gap-2.5 mb-2 hover:bg-white/5 p-1.5 -mx-1.5 rounded-lg transition group"
+         [class.bg-white_10]="active === 'profil'">
         <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center
                     text-tt-orange text-[10px] font-medium shrink-0">
           {{ userInitiales() }}
         </div>
-        <div class="min-w-0">
-          <div class="text-[11px] font-medium text-white/70 truncate">{{ userNom() }}</div>
+        <div class="min-w-0 flex-1">
+          <div class="text-[11px] font-medium text-white/70 truncate group-hover:text-white transition">{{ userNom() }}</div>
           <div class="text-[9px] text-white/30">Gérant relais</div>
         </div>
-      </div>
+        <i class="ti ti-chevron-right text-white/20 group-hover:text-white/50 text-xs transition"></i>
+      </a>
 
       <!-- Bouton déconnexion -->
       <button (click)="demanderConfirmation()"

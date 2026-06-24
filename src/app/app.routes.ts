@@ -65,6 +65,7 @@ export const routes: Routes = [
   { path: 'relais/stock',       canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/stock-relais/stock-relais').then(m => m.StockRelais) },
   { path: 'relais/remise',      canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/remise-relais/remise-relais').then(m => m.RemiseRelais) },
   { path: 'relais/commissions', canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/commissions-relais/commissions-relais').then(m => m.CommissionsRelais) },
+  { path: 'relais/profil',      canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/profil-relais/profil-relais').then(m => m.ProfilRelais) },
 
   { path: '**', redirectTo: 'accueil' }
 ];

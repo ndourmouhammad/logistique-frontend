@@ -23,20 +23,16 @@
 
     <!-- Bas de sidebar : avatar + déconnexion -->
     <div class="mt-auto flex flex-col items-center gap-2">
-
-      <!-- Avatar initiales -->
       <div class="w-8 h-8 bg-tt-orange rounded-full flex items-center justify-center
                   text-white text-[10px] font-bold"
-           [title]="initiales">
+           [title]="nomComplet">
         {{ initiales }}
       </div>
-
-      <!-- Bouton déconnexion -->
-      <button (click)="logout()"
+      <button (click)="demanderConfirmation()"
         class="w-9 h-9 rounded-lg flex items-center justify-center
-               hover:bg-red-500/20 transition"
+               hover:bg-red-500/20 transition group"
         title="Se déconnecter">
-        <i class="ti ti-logout text-white/40 hover:text-red-400 text-lg"></i>
+        <i class="ti ti-logout text-white/40 group-hover:text-red-400 text-lg"></i>
       </button>
     </div>
   </aside>
@@ -45,4 +41,32 @@
   <div class="flex-1 ml-[56px] flex flex-col">
     <ng-content></ng-content>
   </div>
+
+  <!-- Modal confirmation déconnexion -->
+  @if (showConfirm()) {
+    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="text-center mb-5">
+          <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="ti ti-logout text-2xl text-red-500"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-800">Se déconnecter ?</h3>
+          <p class="text-sm text-slate-400 mt-1">
+            Vous devrez vous reconnecter pour accéder à votre espace.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <button (click)="annulerDeconnexion()"
+            class="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold">
+            Annuler
+          </button>
+          <button (click)="confirmerDeconnexion()"
+            class="flex-1 bg-red-500 text-white py-3 rounded-xl text-sm font-semibold">
+            Déconnecter
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
@@ -12,6 +12,8 @@ import { Auth } from '../../../core/services/auth';
 export class HubLayout {
   @Input() active: 'dashboard' | 'reception' | 'plan' | 'tri' | 'preparation' | 'validation' | 'guichet' = 'dashboard';
 
+  showConfirm = signal(false);
+
   private authService = inject(Auth);
 
   get initiales(): string {
@@ -23,9 +25,13 @@ export class HubLayout {
       .toUpperCase();
   }
 
-  logout() {
-    this.authService.logout();
+  get nomComplet(): string {
+    return this.authService.getNomComplet() || '';
   }
+
+  demanderConfirmation() { this.showConfirm.set(true);  }
+  annulerDeconnexion()   { this.showConfirm.set(false); }
+  confirmerDeconnexion() { this.authService.logout();   }
 
   navItems = [
     { id: 'dashboard', route: '/hub/dashboard',     icon: 'ti-layout-dashboard',   label: 'Dashboard' },
