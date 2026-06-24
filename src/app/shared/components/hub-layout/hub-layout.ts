@@ -10,7 +10,7 @@ import { Auth } from '../../../core/services/auth';
   styleUrl: './hub-layout.scss',
 })
 export class HubLayout {
-  @Input() active: 'dashboard' | 'reception' | 'plan' | 'tri' | 'preparation' | 'validation' | 'guichet' = 'dashboard';
+  @Input() active: 'dashboard' | 'reception' | 'plan' | 'tri' | 'preparation' | 'validation' | 'guichet' | 'profil' = 'dashboard';
 
   showConfirm = signal(false);
 
@@ -34,8 +34,8 @@ export class HubLayout {
   confirmerDeconnexion() { this.authService.logout();   }
 
   navItems = [
-    { id: 'dashboard', route: '/hub/dashboard',     icon: 'ti-layout-dashboard',   label: 'Dashboard' },
-    { id: 'reception', route: '/hub/reception',      icon: 'ti-package',            label: 'Réception' },
+    { id: 'dashboard', route: '/hub/dashboard',     icon: 'ti-layout-dashboard',   label: 'Tableau de bord' },
+    { id: 'reception', route: '/hub/reception',      icon: 'ti-package',            label: 'Réception colis' },
     { id: 'plan',      route: '/hub/plan',           icon: 'ti-building-warehouse', label: 'Stock / Plan' },
     { id: 'tri',       route: '/hub/tri',            icon: 'ti-truck',              label: 'Tri & Préparation' },
     { id: 'guichet',   route: '/hub/remise-guichet', icon: 'ti-hand-finger',        label: 'Guichet' },

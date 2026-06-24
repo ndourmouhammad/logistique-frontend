@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'client/confirmation',  canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] }, loadComponent: () => import('./features/client/confirmation/confirmation').then(m => m.Confirmation) },
   { path: 'client/historique',    canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] }, loadComponent: () => import('./features/client/historique/historique').then(m => m.Historique) },
   { path: 'client/validation-otp',canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] }, loadComponent: () => import('./features/client/validation-otp/validation-otp').then(m => m.ValidationOtp) },
+  { path: 'client/profil',        canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] }, loadComponent: () => import('./features/client/profil-client/profil-client').then(m => m.ProfilClient) },
 
   // Livreur
   { path: 'livreur/dashboard',           canActivate: [authGuard], data: { roles: ['ROLE_LIVREUR'] }, loadComponent: () => import('./features/livreur/dashboard-livreur/dashboard-livreur').then(m => m.DashboardLivreur) },
@@ -49,7 +50,7 @@ export const routes: Routes = [
   { path: 'hub/validation-depart', canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
   { path: 'hub/remise-guichet',    canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },
   { path: 'hub/depot-relais',      canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/depot-relais-hub/depot-relais-hub').then(m => m.DepotRelaisHub) },
-
+  { path: 'hub/profil',              canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/profil-hub/profil-hub').then(m => m.ProfilHub) },
   // Admin
   { path: 'admin/dashboard',        canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/dashboard-admin/dashboard-admin').then(m => m.DashboardAdmin) },
   { path: 'admin/utilisateurs',     canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/utilisateurs/utilisateurs').then(m => m.Utilisateurs) },

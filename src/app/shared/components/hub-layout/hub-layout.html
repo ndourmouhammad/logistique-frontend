@@ -1,44 +1,60 @@
 <div class="flex min-h-screen">
+
   <!-- Sidebar -->
-  <aside class="w-[56px] bg-navy flex flex-col items-center py-4 gap-1 fixed top-0 left-0 h-full z-50">
-    <div class="w-8 h-8 bg-tt-orange rounded-lg flex items-center justify-center text-white text-xs font-bold mb-3">TT</div>
+  <aside class="w-[200px] bg-navy flex flex-col fixed top-0 left-0 h-full z-40">
 
-    @for (item of navItems; track item.id) {
-    <a [routerLink]="item.route"
-       [class]="isActive(item.id)
-         ? 'sidebar-item active w-9 h-9 rounded-lg flex items-center justify-center'
-         : 'sidebar-item w-9 h-9 rounded-lg flex items-center justify-center'"
-       [title]="item.label">
-      <i [class]="'ti ' + item.icon + (isActive(item.id) ? ' text-white text-lg' : ' text-white/40 text-lg')"></i>
-    </a>
-    }
-
-    <div class="w-6 h-px bg-white/10 my-2"></div>
-
-    <a routerLink="/hub/dashboard"
-       class="sidebar-item w-9 h-9 rounded-lg flex items-center justify-center"
-       title="Alertes">
-      <i class="ti ti-bell text-tt-orange text-lg"></i>
-    </a>
-
-    <!-- Bas de sidebar : avatar + déconnexion -->
-    <div class="mt-auto flex flex-col items-center gap-2">
-      <div class="w-8 h-8 bg-tt-orange rounded-full flex items-center justify-center
-                  text-white text-[10px] font-bold"
-           [title]="nomComplet">
-        {{ initiales }}
+    <!-- Logo -->
+    <div class="px-4 py-3.5 border-b border-white/[.08] flex items-center gap-2.5">
+      <div class="w-7 h-7 bg-tt-orange rounded-lg flex items-center justify-center text-white text-[10px] font-bold">TT</div>
+      <div>
+        <div class="text-[13px] font-medium text-white">Tiak-Tiak</div>
+        <div class="text-[10px] text-white/40">Hub</div>
       </div>
+    </div>
+
+    <div class="px-3 pt-4 pb-1 text-[9px] font-medium tracking-widest uppercase text-white/30">Gestion</div>
+
+    <!-- Menu -->
+    <nav class="flex-1 px-2 space-y-0.5">
+      @for (item of navItems; track item.id) {
+        <a [routerLink]="item.route"
+          [class]="isActive(item.id)
+            ? 'flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/10'
+            : 'flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/5 transition'">
+          <i [class]="'ti ' + item.icon + (isActive(item.id) ? ' text-white text-base' : ' text-white/45 text-base')"></i>
+          <span [class]="isActive(item.id) ? 'text-xs text-white' : 'text-xs text-white/55'">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <!-- Profil + déconnexion -->
+    <div class="border-t border-white/[.08] px-3 py-3">
+      <a routerLink="/hub/profil"
+         class="flex items-center gap-2.5 mb-2 hover:bg-white/5 p-1.5 -mx-1.5 rounded-lg transition group"
+         [class.bg-white_10]="active === 'profil'">
+        <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center
+                    text-tt-orange text-[10px] font-medium shrink-0">
+          {{ initiales }}
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="text-[11px] font-medium text-white/70 truncate group-hover:text-white transition">{{ nomComplet }}</div>
+          <div class="text-[9px] text-white/30">Gestionnaire Hub</div>
+        </div>
+        <i class="ti ti-chevron-right text-white/20 group-hover:text-white/50 text-xs transition"></i>
+      </a>
+
       <button (click)="demanderConfirmation()"
-        class="w-9 h-9 rounded-lg flex items-center justify-center
-               hover:bg-red-500/20 transition group"
-        title="Se déconnecter">
-        <i class="ti ti-logout text-white/40 group-hover:text-red-400 text-lg"></i>
+        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg
+               hover:bg-red-500/10 transition group">
+        <i class="ti ti-logout text-white/30 group-hover:text-red-400 text-sm"></i>
+        <span class="text-[11px] text-white/30 group-hover:text-red-400">Se déconnecter</span>
       </button>
     </div>
+
   </aside>
 
   <!-- Contenu principal -->
-  <div class="flex-1 ml-[56px] flex flex-col">
+  <div class="flex-1 ml-[200px] flex flex-col">
     <ng-content></ng-content>
   </div>
 
