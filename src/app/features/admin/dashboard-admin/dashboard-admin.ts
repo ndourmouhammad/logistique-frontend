@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminLayout } from '../../../shared/components/admin-layout/admin-layout';
+import { AdminService } from '../../../core/services/admin';
+import { AdminStats } from '../../../core/models/admin.model';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -9,16 +11,13 @@ import { AdminLayout } from '../../../shared/components/admin-layout/admin-layou
   templateUrl: './dashboard-admin.html',
   styleUrl: './dashboard-admin.scss',
 })
-export class DashboardAdmin {
-  kpis = {
-    caJour:         485000,
-    expeditions:    127,
-    livreesJour:     89,
-    tauxSucces:      94,
-    livreurs:        23,
-    incidents:        2,
-  };
+export class DashboardAdmin implements OnInit {
 
+  stats     = signal<AdminStats | null>(null);
+  isLoading = signal(false);
+
+  // Expéditions récentes — gardées statiques pour l'instant
+  // (nécessite un endpoint dédié qu'on peut ajouter plus tard)
   expeditionsRecentes = [
     { code: 'TT-DKR-4839', client: 'Moussa D.',  destination: 'Almadies',    statut: 'EN_COURS_LIVRAISON', livreur: 'Ibrahima B.' },
     { code: 'TT-DKR-4721', client: 'Fatou N.',   destination: 'Thiès',       statut: 'EN_TRANSIT',         livreur: 'Camion DK-1234' },
@@ -26,6 +25,25 @@ export class DashboardAdmin {
     { code: 'TT-DKR-4512', client: 'Aïda S.',   destination: 'Saint-Louis', statut: 'LIVRE',              livreur: 'Amadou S.' },
     { code: 'TT-DKR-4401', client: 'Cheikh F.',  destination: 'Kaolack',     statut: 'EN_LITIGE',          livreur: 'Moussa K.' },
   ];
+
+  private adminService = inject(AdminService);
+
+  ngOnInit() {
+    this.chargerStats();
+  }
+
+  chargerStats() {
+    this.isLoading.set(true);
+    this.adminService.getStats().subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
+        this.stats.set(data);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
 
   getStatutClass(statut: string): string {
     const map: Record<string, string> = {

@@ -3,7 +3,7 @@
   <aside class="w-[200px] shrink-0 bg-navy flex flex-col fixed top-0 left-0 h-full z-50">
 
     <!-- Logo -->
-    <div class="px-4 py-3.5 border-b border-white/[.08] flex items-center gap-2.5">
+    <div class="px-4 py-3.5 border-b border-white/8 flex items-center gap-2.5">
       <a routerLink="/accueil" class="flex items-center gap-2.5">
         <div class="w-7 h-7 bg-tt-orange rounded-lg flex items-center justify-center text-white text-[10px] font-bold">TT</div>
         <div>
@@ -49,7 +49,7 @@
           : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
         <i [class]="active === 'dispatch' ? 'ti ti-arrows-shuffle text-white text-base' : 'ti ti-arrows-shuffle text-white/45 text-base'"></i>
         <span [class]="active === 'dispatch' ? 'text-xs text-white flex-1' : 'text-xs text-white/55 flex-1'">Dispatch / Litiges</span>
-        <span *ngIf="badgeDispatch > 0" class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeDispatch }}</span>
+        @if (badgeDispatch > 0) { <span class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeDispatch }}</span> }
       </a>
 
       <a routerLink="/admin/rapports"
@@ -77,24 +77,27 @@
           : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
         <i [class]="active === 'incidents' ? 'ti ti-alert-circle text-white text-base' : 'ti ti-alert-circle text-red-400/70 text-base'"></i>
         <span [class]="active === 'incidents' ? 'text-xs text-white flex-1' : 'text-xs text-red-400/70 flex-1'">Incidents</span>
-        <span *ngIf="badgeIncidents > 0" class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeIncidents }}</span>
+        @if (badgeIncidents > 0) { <span class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeIncidents }}</span> }
       </a>
 
     </nav>
 
-    <!-- Profil -->
-    <div class="border-t border-white/[.08] px-3 py-3 flex items-center gap-2.5">
-      <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center text-tt-orange text-[10px] font-medium">
-        {{ userInitiales }}
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="text-[11px] font-medium text-white/70 truncate">{{ userNom }}</div>
-        <div class="text-[9px] text-white/30">{{ userRole }}</div>
-      </div>
-      <a routerLink="/connexion" class="text-white/40 hover:text-white transition">
-        <i class="ti ti-logout text-sm"></i>
-      </a>
-    </div>
+    <!-- Profil + déconnexion -->
+<div class="border-t border-white/8 px-3 py-3 flex items-center gap-2.5">
+  <div class="w-7 h-7 rounded-full bg-tt-orange/30 flex items-center justify-center
+              text-tt-orange text-[10px] font-medium shrink-0">
+    {{ userInitiales() }}
+  </div>
+  <div class="flex-1 min-w-0">
+    <div class="text-[11px] font-medium text-white/70 truncate">{{ userNom() }}</div>
+    <div class="text-[9px] text-white/30">Super Admin</div>
+  </div>
+  <button (click)="demanderConfirmation()"
+    class="text-white/40 hover:text-red-400 transition"
+    title="Se déconnecter">
+    <i class="ti ti-logout text-sm"></i>
+  </button>
+</div>
 
   </aside>
 
@@ -102,4 +105,32 @@
   <div class="flex-1 ml-[200px] flex flex-col min-w-0">
     <ng-content></ng-content>
   </div>
+
+  <!-- Modal confirmation déconnexion -->
+  @if (showConfirm()) {
+    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="text-center mb-5">
+          <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="ti ti-logout text-2xl text-red-500"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-800">Se déconnecter ?</h3>
+          <p class="text-sm text-slate-400 mt-1">
+            Vous devrez vous reconnecter pour accéder au panneau Admin.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <button (click)="annulerDeconnexion()"
+            class="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold">
+            Annuler
+          </button>
+          <button (click)="confirmerDeconnexion()"
+            class="flex-1 bg-red-500 text-white py-3 rounded-xl text-sm font-semibold">
+            Déconnecter
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
 </div>

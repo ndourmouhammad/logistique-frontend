@@ -13,33 +13,81 @@
 
   <main class="flex-1 p-6">
     <!-- KPIs -->
-    <div class="grid grid-cols-5 gap-4 mb-6">
-      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 fade-up">
-        <div class="flex items-center justify-between mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Expéditions</span><div class="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center"><i class="ti ti-package text-indigo-500 text-sm"></i></div></div>
-        <div class="text-2xl font-bold text-navy">{{ kpis.expeditions | number }}</div>
-        <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-1"><i class="ti ti-trending-up text-[10px]"></i> +18% vs mois dernier</div>
+    <!-- KPIs -->
+<div class="grid grid-cols-5 gap-4 mb-6">
+
+  @if (isLoading()) {
+    <div class="col-span-5 text-center py-6">
+      <i class="ti ti-loader-2 animate-spin text-2xl text-navy"></i>
+    </div>
+  }
+
+  @if (stats()) {
+    <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Expéditions</span>
+        <div class="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center">
+          <i class="ti ti-package text-indigo-500 text-sm"></i>
+        </div>
       </div>
-      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 fade-up">
-        <div class="flex items-center justify-between mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Chiffre d'affaires</span><div class="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center"><i class="ti ti-credit-card text-emerald-500 text-sm"></i></div></div>
-        <div class="text-xl font-bold text-navy">{{ kpis.caJour | number }} <span class="text-xs font-medium text-slate-400">FCFA</span></div>
-        <div class="text-[11px] text-emerald-600 font-medium mt-1">+22%</div>
-      </div>
-      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 fade-up">
-        <div class="flex items-center justify-between mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Taux livraison</span><div class="w-7 h-7 bg-sky-50 rounded-lg flex items-center justify-center"><i class="ti ti-target text-sky-500 text-sm"></i></div></div>
-        <div class="text-2xl font-bold text-navy">{{ kpis.tauxSucces }}%</div>
-        <div class="text-[11px] text-emerald-600 font-medium mt-1">+2% objectif atteint</div>
-      </div>
-      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 fade-up">
-        <div class="flex items-center justify-between mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Livreurs actifs</span><div class="w-7 h-7 bg-orange-50 rounded-lg flex items-center justify-center"><i class="ti ti-motorbike text-orange-500 text-sm"></i></div></div>
-        <div class="text-2xl font-bold text-navy">{{ kpis.livreurs }}</div>
-        <div class="text-[11px] text-slate-400 font-medium mt-1">3 indisponibles</div>
-      </div>
-      <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 fade-up">
-        <div class="flex items-center justify-between mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Litiges ouverts</span><div class="w-7 h-7 bg-red-50 rounded-lg flex items-center justify-center"><i class="ti ti-message-report text-red-500 text-sm"></i></div></div>
-        <div class="text-2xl font-bold text-red-600">5</div>
-        <div class="text-[11px] text-red-600 font-medium flex items-center gap-1 mt-1"><i class="ti ti-alert-triangle text-[10px]"></i> Action requise</div>
+      <div class="text-2xl font-bold text-navy">{{ stats()!.totalExpeditions | number }}</div>
+      <div class="text-[11px] text-emerald-600 font-medium mt-1">
+        {{ stats()!.expeditionsLivrees }} livrées
       </div>
     </div>
+
+    <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Taux livraison</span>
+        <div class="w-7 h-7 bg-sky-50 rounded-lg flex items-center justify-center">
+          <i class="ti ti-target text-sky-500 text-sm"></i>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-navy">{{ stats()!.tauxLivraison | number:'1.0-1' }}%</div>
+      <div class="text-[11px] text-slate-400 font-medium mt-1">Taux de succès</div>
+    </div>
+
+    <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Utilisateurs</span>
+        <div class="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center">
+          <i class="ti ti-users text-emerald-500 text-sm"></i>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-navy">{{ stats()!.totalUtilisateurs | number }}</div>
+      <div class="text-[11px] text-slate-400 font-medium mt-1">
+        {{ stats()!.totalClients }} clients · {{ stats()!.totalLivreurs }} livreurs
+      </div>
+    </div>
+
+    <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Infrastructure</span>
+        <div class="w-7 h-7 bg-orange-50 rounded-lg flex items-center justify-center">
+          <i class="ti ti-building-warehouse text-orange-500 text-sm"></i>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-navy">{{ stats()!.totalHubs }}</div>
+      <div class="text-[11px] text-slate-400 font-medium mt-1">
+        Hubs · {{ stats()!.totalRelais }} relais
+      </div>
+    </div>
+
+    <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Flotte</span>
+        <div class="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center">
+          <i class="ti ti-truck text-purple-500 text-sm"></i>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-navy">{{ stats()!.totalVehicules }}</div>
+      <div class="text-[11px] text-slate-400 font-medium mt-1">
+        {{ stats()!.totalChauffeurs }} chauffeurs
+      </div>
+    </div>
+  }
+
+</div>
 
     <!-- Charts + Right Column -->
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -90,19 +138,19 @@
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2"><i class="ti ti-alert-circle text-red-500 text-sm"></i><span class="text-xs font-semibold text-red-700 uppercase tracking-wider">Alertes critiques</span></div>
           <div class="p-3 space-y-2">
-            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800"><i class="ti ti-alert-triangle text-sm flex-shrink-0"></i><span>2 litiges non traités depuis +24h</span></div>
-            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800"><i class="ti ti-truck-off text-sm flex-shrink-0"></i><span>Véhicule DK-4821-A en panne signalée</span></div>
-            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-800"><i class="ti ti-building-warehouse text-sm flex-shrink-0"></i><span>Hub Saint-Louis : capacité à 89%</span></div>
+            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800"><i class="ti ti-alert-triangle text-sm shrink-0"></i><span>2 litiges non traités depuis +24h</span></div>
+            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800"><i class="ti ti-truck-off text-sm shrink-0"></i><span>Véhicule DK-4821-A en panne signalée</span></div>
+            <div class="flex items-center gap-2.5 px-3 py-2.5 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-800"><i class="ti ti-building-warehouse text-sm shrink-0"></i><span>Hub Saint-Louis : capacité à 89%</span></div>
           </div>
         </div>
         <!-- Real-time Activity -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2"><i class="ti ti-activity text-slate-500 text-sm"></i><span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Activité temps réel</span></div>
           <div class="p-3 space-y-0">
-            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></div><span class="flex-1 text-slate-600">TT-DKR-4839 livré avec succès</span><span class="text-slate-400">14h07</span></div>
-            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-tt-orange flex-shrink-0"></div><span class="flex-1 text-slate-600">Nouveau litige ouvert #LT-044</span><span class="text-slate-400">13h52</span></div>
-            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0"></div><span class="flex-1 text-slate-600">Nouveau livreur inscrit : Idrissa N.</span><span class="text-slate-400">13h30</span></div>
-            <div class="flex items-center gap-2.5 px-2 py-2.5 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></div><span class="flex-1 text-slate-600">Échec livraison TT-DKR-4540 — retour hub</span><span class="text-slate-400">13h15</span></div>
+            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div><span class="flex-1 text-slate-600">TT-DKR-4839 livré avec succès</span><span class="text-slate-400">14h07</span></div>
+            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-tt-orange shrink-0"></div><span class="flex-1 text-slate-600">Nouveau litige ouvert #LT-044</span><span class="text-slate-400">13h52</span></div>
+            <div class="flex items-center gap-2.5 px-2 py-2.5 border-b border-slate-100 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></div><span class="flex-1 text-slate-600">Nouveau livreur inscrit : Idrissa N.</span><span class="text-slate-400">13h30</span></div>
+            <div class="flex items-center gap-2.5 px-2 py-2.5 text-[11px]"><div class="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"></div><span class="flex-1 text-slate-600">Échec livraison TT-DKR-4540 — retour hub</span><span class="text-slate-400">13h15</span></div>
           </div>
         </div>
         <!-- Top Drivers -->

@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminLayout } from '../../../shared/components/admin-layout/admin-layout';
+import { AdminService } from '../../../core/services/admin';
+import { HubAdmin, RelaisAdmin, CreateEmployeRequest, UtilisateurAdmin } from '../../../core/models/admin.model';
 
 @Component({
   selector: 'app-utilisateurs',
@@ -10,27 +12,129 @@ import { AdminLayout } from '../../../shared/components/admin-layout/admin-layou
   templateUrl: './utilisateurs.html',
   styleUrl: './utilisateurs.scss',
 })
-export class Utilisateurs {
-  recherche  = '';
-  filtreRole = 'tous';
+export class Utilisateurs implements OnInit {
 
-  utilisateurs = [
-    { id: 1, nom: 'Ibrahima Balde',  email: 'ibrahima@tiaktiak.sn', role: 'ROLE_LIVREUR',          statut: 'ACTIF',    dateInscription: '12/03/2026' },
-    { id: 2, nom: 'Fatou Diallo',    email: 'fatou@tiaktiak.sn',    role: 'ROLE_CLIENT',            statut: 'ACTIF',    dateInscription: '05/04/2026' },
-    { id: 3, nom: 'Omar Diagne',     email: 'omar@tiaktiak.sn',     role: 'ROLE_CHAUFFEUR',         statut: 'ACTIF',    dateInscription: '18/02/2026' },
-    { id: 4, nom: 'Awa Ndour',       email: 'awa@tiaktiak.sn',      role: 'ROLE_GERANT_RELAIS',     statut: 'ACTIF',    dateInscription: '01/05/2026' },
-    { id: 5, nom: 'Ibou Sarr',       email: 'ibou@tiaktiak.sn',     role: 'ROLE_GESTIONNAIRE_HUB', statut: 'ACTIF',    dateInscription: '22/01/2026' },
-    { id: 6, nom: 'Cheikh Fall',     email: 'cheikh@tiaktiak.sn',   role: 'ROLE_CHAUFFEUR',         statut: 'SUSPENDU', dateInscription: '10/03/2026' },
-  ];
+  utilisateurs  = signal<UtilisateurAdmin[]>([]);
+  hubs          = signal<HubAdmin[]>([]);
+  relais        = signal<RelaisAdmin[]>([]);
+  isLoading     = signal(false);
+  showModal     = signal(false);
+  isCreating    = signal(false);
+  erreurMessage = signal('');
+  successMessage = signal('');
 
-  roles = ['tous', 'ROLE_CLIENT', 'ROLE_LIVREUR', 'ROLE_CHAUFFEUR', 'ROLE_GESTIONNAIRE_HUB', 'ROLE_GERANT_RELAIS'];
+  recherche  = signal('');
+  filtreRole = signal('tous');
 
-  get utilisateursFiltres() {
-    return this.utilisateurs.filter(u => {
-      const matchRecherche = u.nom.toLowerCase().includes(this.recherche.toLowerCase())
-        || u.email.toLowerCase().includes(this.recherche.toLowerCase());
-      const matchRole = this.filtreRole === 'tous' || u.role === this.filtreRole;
-      return matchRecherche && matchRole;
+  roles = ['tous', 'ROLE_CLIENT', 'ROLE_LIVREUR', 'ROLE_CHAUFFEUR',
+           'ROLE_GESTIONNAIRE_HUB', 'ROLE_GERANT_RELAIS', 'ROLE_ADMIN'];
+
+  // Formulaire création employé
+  form = signal({
+    nomComplet:   '',
+    email:        '',
+    telephone:    '',
+    role:         'ROLE_LIVREUR',
+    zoneAction:   '',
+    numeroPermis: '',
+    hubId:        null as number | null,
+    relaisId:     null as number | null,
+  });
+
+  utilisateursFiltres = computed(() => {
+    const r = this.recherche().toLowerCase();
+    const role = this.filtreRole();
+    return this.utilisateurs().filter(u => {
+      const matchR = u.nomComplet.toLowerCase().includes(r)
+                  || u.email.toLowerCase().includes(r);
+      const matchRole = role === 'tous' || u.role === role;
+      return matchR && matchRole;
+    });
+  });
+
+  private adminService = inject(AdminService);
+
+  ngOnInit() {
+    this.chargerDonnees();
+  }
+
+  chargerDonnees() {
+    this.isLoading.set(true);
+    this.adminService.getUtilisateurs().subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
+        this.utilisateurs.set(data);
+      },
+      error: () => this.isLoading.set(false)
+    });
+
+    // Charger hubs et relais pour le formulaire de création
+    this.adminService.getHubs().subscribe(data => this.hubs.set(data));
+    this.adminService.getRelais().subscribe(data => this.relais.set(data));
+  }
+
+  ouvrirModal() {
+    this.form.set({
+      nomComplet: '', email: '', telephone: '',
+      role: 'ROLE_LIVREUR', zoneAction: '', numeroPermis: '',
+      hubId: null, relaisId: null
+    });
+    this.erreurMessage.set('');
+    this.showModal.set(true);
+  }
+
+  fermerModal() { this.showModal.set(false); }
+
+  updateForm(field: string, value: any) {
+    this.form.update(f => ({ ...f, [field]: value }));
+  }
+
+  creerEmploye() {
+    const f = this.form();
+    if (!f.nomComplet || !f.email || !f.telephone) {
+      this.erreurMessage.set('Nom, email et téléphone sont requis.');
+      return;
+    }
+
+    this.isCreating.set(true);
+    this.erreurMessage.set('');
+
+    const request: CreateEmployeRequest = {
+      nomComplet:   f.nomComplet,
+      email:        f.email,
+      telephone:    '+221' + f.telephone,
+      role:         f.role,
+      zoneAction:   f.zoneAction || undefined,
+      numeroPermis: f.numeroPermis || undefined,
+      hubId:        f.hubId || undefined,
+      relaisId:     f.relaisId || undefined,
+    };
+
+    this.adminService.creerEmploye(request).subscribe({
+      next: () => {
+        this.isCreating.set(false);
+        this.showModal.set(false);
+        this.successMessage.set('Employé créé — identifiants envoyés par email.');
+        this.chargerDonnees();
+        setTimeout(() => this.successMessage.set(''), 4000);
+      },
+      error: (err) => {
+        this.isCreating.set(false);
+        this.erreurMessage.set(
+          err.error?.includes('email') ? 'Cet email est déjà utilisé.' : 'Erreur serveur.'
+        );
+      }
+    });
+  }
+
+  toggleStatut(id: number) {
+    this.adminService.toggleStatut(id).subscribe({
+      next: () => {
+        this.utilisateurs.update(list =>
+          list.map(u => u.id === id ? { ...u, actif: !u.actif } : u)
+        );
+      },
+      error: () => {}
     });
   }
 
@@ -39,15 +143,10 @@ export class Utilisateurs {
       'ROLE_CLIENT':           'Client',
       'ROLE_LIVREUR':          'Livreur',
       'ROLE_CHAUFFEUR':        'Chauffeur',
-      'ROLE_GESTIONNAIRE_HUB':'Gestionnaire Hub',
-      'ROLE_GERANT_RELAIS':   'Gérant Relais',
+      'ROLE_GESTIONNAIRE_HUB': 'Gestionnaire Hub',
+      'ROLE_GERANT_RELAIS':    'Gérant Relais',
       'ROLE_ADMIN':            'Admin',
     };
     return map[role] || role;
-  }
-
-  toggleStatut(id: number) {
-    const u = this.utilisateurs.find(u => u.id === id);
-    if (u) u.statut = u.statut === 'ACTIF' ? 'SUSPENDU' : 'ACTIF';
   }
 }
