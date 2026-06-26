@@ -52,6 +52,14 @@ export class Utilisateurs implements OnInit {
     });
   });
 
+  // ── KPI computed ──────────────────────────────────────────────────────────
+  kpiLivreurs  = computed(() => this.utilisateurs().filter(u => u.role === 'ROLE_LIVREUR').length);
+  kpiChauffeurs = computed(() => this.utilisateurs().filter(u => u.role === 'ROLE_CHAUFFEUR').length);
+  kpiGerantsRelais = computed(() => this.utilisateurs().filter(u => u.role === 'ROLE_GERANT_RELAIS').length);
+  kpiSuspendus = computed(() => this.utilisateurs().filter(u => !u.actif).length);
+  kpiActifs    = computed(() => this.utilisateurs().filter(u => u.actif).length);
+
+
   private adminService = inject(AdminService);
 
   ngOnInit() {

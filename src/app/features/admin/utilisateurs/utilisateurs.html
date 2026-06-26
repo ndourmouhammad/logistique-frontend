@@ -26,26 +26,61 @@
     
     <!-- KPIs -->
     <div class="grid grid-cols-4 gap-4 mb-6">
+
+      <!-- Total utilisateurs -->
       <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-        <div class="flex justify-between items-start mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Total Utilisateurs</span><div class="w-6 h-6 bg-slate-50 rounded-md flex items-center justify-center"><i class="ti ti-users text-slate-400 text-xs"></i></div></div>
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Total Utilisateurs</span>
+          <div class="w-6 h-6 bg-slate-50 rounded-md flex items-center justify-center"><i class="ti ti-users text-slate-400 text-xs"></i></div>
+        </div>
         <div class="text-2xl font-bold text-navy">{{ utilisateurs().length }}</div>
-        <div class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1"><i class="ti ti-trending-up text-[10px]"></i> +12 cette semaine</div>
+        <div class="text-[11px] text-slate-500 font-medium mt-1">
+          {{ kpiActifs() }} actifs · {{ kpiSuspendus() }} suspendus
+        </div>
       </div>
+
+      <!-- Livreurs & Chauffeurs -->
       <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-        <div class="flex justify-between items-start mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Livreurs & Chauffeurs</span><div class="w-6 h-6 bg-orange-50 rounded-md flex items-center justify-center"><i class="ti ti-motorbike text-orange-500 text-xs"></i></div></div>
-        <div class="text-2xl font-bold text-navy">45</div>
-        <div class="text-[11px] text-slate-500 font-medium mt-1">32 livreurs · 13 chauffeurs</div>
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Livreurs &amp; Chauffeurs</span>
+          <div class="w-6 h-6 bg-orange-50 rounded-md flex items-center justify-center"><i class="ti ti-motorbike text-orange-500 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-navy">{{ kpiLivreurs() + kpiChauffeurs() }}</div>
+        <div class="text-[11px] text-slate-500 font-medium mt-1">
+          {{ kpiLivreurs() }} livreurs · {{ kpiChauffeurs() }} chauffeurs
+        </div>
       </div>
+
+      <!-- Gérants Relais -->
       <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-        <div class="flex justify-between items-start mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Points Relais</span><div class="w-6 h-6 bg-violet-50 rounded-md flex items-center justify-center"><i class="ti ti-building-store text-violet-500 text-xs"></i></div></div>
-        <div class="text-2xl font-bold text-navy">18</div>
-        <div class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1"><i class="ti ti-check text-[10px]"></i> Tous actifs</div>
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Gérants Relais</span>
+          <div class="w-6 h-6 bg-violet-50 rounded-md flex items-center justify-center"><i class="ti ti-building-store text-violet-500 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold text-navy">{{ kpiGerantsRelais() }}</div>
+        <div class="text-[11px] font-medium mt-1 flex items-center gap-1"
+          [class]="kpiGerantsRelais() > 0 ? 'text-emerald-600' : 'text-slate-400'">
+          <i class="ti ti-building-store text-[10px]"></i>
+          {{ kpiGerantsRelais() > 0 ? 'Points relais actifs' : 'Aucun gérant' }}
+        </div>
       </div>
+
+      <!-- Comptes bloqués -->
       <div class="kpi-card bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-        <div class="flex justify-between items-start mb-1"><span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Comptes bloqués</span><div class="w-6 h-6 bg-red-50 rounded-md flex items-center justify-center"><i class="ti ti-lock text-red-500 text-xs"></i></div></div>
-        <div class="text-2xl font-bold text-red-600">11</div>
-        <div class="text-[11px] text-slate-500 font-medium mt-1 flex items-center gap-1">Principalement non-paiement</div>
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Comptes bloqués</span>
+          <div class="w-6 h-6 bg-red-50 rounded-md flex items-center justify-center"><i class="ti ti-lock text-red-500 text-xs"></i></div>
+        </div>
+        <div class="text-2xl font-bold"
+          [class]="kpiSuspendus() > 0 ? 'text-red-600' : 'text-emerald-600'">
+          {{ kpiSuspendus() }}
+        </div>
+        <div class="text-[11px] font-medium mt-1"
+          [class]="kpiSuspendus() > 0 ? 'text-red-500' : 'text-emerald-600'">
+          {{ kpiSuspendus() > 0 ? kpiSuspendus() + ' compte(s) suspendu(s)' : 'Aucun compte bloqué' }}
+        </div>
       </div>
+
     </div>
 
     <!-- Search & Filters -->
