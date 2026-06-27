@@ -35,6 +35,26 @@
         <span [class]="active === 'utilisateurs' ? 'text-xs text-white' : 'text-xs text-white/55'">Utilisateurs</span>
       </a>
 
+      <a routerLink="/admin/hubs"
+        [class]="active === 'hubs'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'hubs'
+          ? 'ti ti-building-warehouse text-white text-base'
+          : 'ti ti-building-warehouse text-white/45 text-base'"></i>
+        <span [class]="active === 'hubs' ? 'text-xs text-white' : 'text-xs text-white/55'">Hubs</span>
+      </a>
+
+      <a routerLink="/admin/relais"
+        [class]="active === 'relais'
+          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
+          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
+        <i [class]="active === 'relais'
+          ? 'ti ti-building-store text-white text-base'
+          : 'ti ti-building-store text-white/45 text-base'"></i>
+        <span [class]="active === 'relais' ? 'text-xs text-white' : 'text-xs text-white/55'">Relais</span>
+      </a>
+
       <a routerLink="/admin/flotte"
         [class]="active === 'flotte'
           ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'

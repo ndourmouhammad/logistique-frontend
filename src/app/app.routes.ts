@@ -62,7 +62,8 @@ export const routes: Routes = [
   { path: 'admin/incidents',        canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/incidents/incidents').then(m => m.Incidents) },
   { path: 'admin/rapports',         canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/rapports/rapports').then(m => m.Rapports) },
   { path: 'admin/parametres',       canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/parametres/parametres').then(m => m.Parametres) },
-
+  { path: 'admin/hubs',             canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/hub/hub').then(m => m.Hub) },
+  { path: 'admin/relais',           canActivate: [authGuard], data: { roles: ['ROLE_ADMIN'] }, loadComponent: () => import('./features/admin/admin-relais/admin-relais').then(m => m.AdminRelais) },
   // Point Relais
   { path: 'relais/dashboard',   canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/dashboard-relais/dashboard-relais').then(m => m.DashboardRelais) },
   { path: 'relais/reception',   canActivate: [authGuard], data: { roles: ['ROLE_GERANT_RELAIS'] }, loadComponent: () => import('./features/relais/reception-relais/reception-relais').then(m => m.ReceptionRelais) },

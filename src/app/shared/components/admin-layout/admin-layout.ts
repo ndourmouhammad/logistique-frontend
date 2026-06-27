@@ -10,7 +10,8 @@ import { Auth } from '../../../core/services/auth';
   styleUrl: './admin-layout.scss',
 })
 export class AdminLayout implements OnInit {
-  @Input() active: 'dashboard' | 'utilisateurs' | 'flotte' | 'dispatch' | 'incidents' | 'rapports' | 'parametres' = 'dashboard';
+  @Input() active: 'dashboard' | 'utilisateurs' | 'hubs' | 'relais' | 'flotte' |
+                   'dispatch' | 'incidents' | 'rapports' | 'parametres' = 'dashboard';
   @Input() badgeDispatch   = 0;
   @Input() badgeIncidents  = 0;
 
