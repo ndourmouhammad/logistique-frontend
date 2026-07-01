@@ -36,4 +36,11 @@ export class ExpeditionService {
       `${this.apiUrl}/estimations`, request
     );
   }
+
+  initierPaiement(expeditionId: number): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/paiement/initier`,
+    { expeditionId }
+  );
+}
 }

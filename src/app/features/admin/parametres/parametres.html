@@ -10,111 +10,167 @@
     </div>
     <div class="flex items-center gap-4">
       <span class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Système opérationnel</span>
-      <button (click)="sauvegarder()" class="bg-navy hover:bg-navy-light text-white text-[12px] font-medium px-4 py-2 rounded-[8px] hidden md:flex items-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-device-floppy text-sm"></i> Enregistrer</button>
     </div>
   </header>
 
   <main class="flex-1 p-4 lg:p-5">
     <div class="flex flex-col lg:flex-row gap-5 items-start">
       
-      <!-- Navigation Panel (Left) -->
-      <div class="w-full lg:w-[190px] shrink-0 bg-white border border-slate-200/80 rounded-[10px] overflow-hidden hidden lg:block shadow-sm sticky top-[76px]">
-        <div class="flex flex-col py-2">
-          <a href="#" class="settings-nav-item active flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-building-store text-lg"></i> Informations générales</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-bell text-lg"></i> Notifications & alertes</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-credit-card text-lg"></i> Paiements & tarification</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-map-2 text-lg"></i> Zones & régions</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-users-group text-lg"></i> Rôles & permissions</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-shield-lock text-lg"></i> Sécurité & accès</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-api-app text-lg"></i> Intégrations API</a>
-          <a href="#" class="settings-nav-item flex items-center gap-2.5 px-4 py-2.5 text-[12px] text-slate-600"><i class="ti ti-database text-lg"></i> Sauvegarde & logs</a>
-        </div>
-      </div>
 
-      <!-- Mobile/Tablet Tabs -->
-      <div class="w-full lg:hidden flex overflow-x-auto gap-1 pb-1 scrollbar-hide border-b border-slate-200">
-        <button class="shrink-0 px-3 py-2 text-xs font-semibold text-navy border-b-2 border-tt-orange flex items-center gap-1.5"><i class="ti ti-building-store"></i> Informations générales</button>
-        <button class="shrink-0 px-3 py-2 text-xs font-medium text-slate-500 flex items-center gap-1.5"><i class="ti ti-bell"></i> Notifications</button>
-        <button class="shrink-0 px-3 py-2 text-xs font-medium text-slate-500 flex items-center gap-1.5"><i class="ti ti-credit-card"></i> Paiements</button>
-        <button class="shrink-0 px-3 py-2 text-xs font-medium text-slate-500 flex items-center gap-1.5"><i class="ti ti-shield-lock"></i> Sécurité</button>
-      </div>
 
       <!-- Active Content Area -->
       <div class="flex-1 w-full flex flex-col gap-[14px]">
-        
-        <!-- Card 1: Identité de la plateforme -->
-        <section class="card">
-          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2"><i class="ti ti-id-badge text-slate-400"></i> Identité de la plateforme</h2>
+
+        <!-- Section 1 : Informations générales -->
+        <section class="card bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2">
+            <i class="ti ti-id-badge text-slate-400"></i> Informations générales
+          </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Nom de la plateforme</label><input type="text" value="Tiak-Tiak" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Slogan / tagline</label><input type="text" value="Livraison rapide & sécurisée au Sénégal" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Email support</label><input type="email" value="support@tiaktiak.sn" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Téléphone support</label><input type="tel" value="+221 33 XXX XX XX" class="form-input"></div>
-            <div class="md:col-span-2"><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Site web</label><input type="url" value="www.tiaktiak.sn" class="form-input"></div>
-            <div class="md:col-span-2 mt-1">
-              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Logo principal</label>
-              <div class="border border-dashed border-slate-300 rounded-[8px] bg-slate-50/50 hover:bg-slate-50 transition-colors px-4 py-5 flex flex-col items-center justify-center cursor-pointer">
-                <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mb-2"><i class="ti ti-upload text-lg"></i></div>
-                <p class="text-[12px] font-medium text-slate-700">Glisser le logo ici ou cliquer</p>
-                <p class="text-[10px] text-slate-400 mt-0.5">PNG, JPG (max 2MB, 500x500px reco.)</p>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Nom de la plateforme</label>
+              <input type="text" value="Tiak-Tiak" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Slogan</label>
+              <input type="text" value="Livraison rapide & sécurisée au Sénégal" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Email support</label>
+              <input type="email" value="support@tiaktiak.sn" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Téléphone support</label>
+              <input type="tel" value="+221 33 XXX XX XX" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Pays par défaut</label>
+              <select disabled class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default appearance-none">
+                <option>Sénégal 🇸🇳</option>
+                <option>Mali 🇲🇱</option>
+                <option>Côte d'Ivoire 🇨🇮</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Devise principale</label>
+              <select disabled class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default appearance-none">
+                <option>Franc CFA (FCFA)</option>
+                <option>Euro (€)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 : Paiements & Tarification -->
+        <section class="card bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h2 class="font-semibold text-[14px] text-slate-800 mb-1 flex items-center gap-2">
+            <i class="ti ti-credit-card text-slate-400"></i> Paiements & Tarification
+          </h2>
+          <p class="text-[11px] text-slate-400 mb-4">
+            Tarification de base — les modificateurs par mode sont appliqués automatiquement.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-4 mb-5">
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix de base (FCFA)</label>
+              <input [(ngModel)]="tarifs.prixBase" type="number" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par kg (FCFA)</label>
+              <input [(ngModel)]="tarifs.prixParKg" type="number" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par m³ (FCFA)</label>
+              <input [(ngModel)]="tarifs.prixParM3" type="number" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Multiplicateur Express</label>
+              <input [(ngModel)]="tarifs.multiplicateurExpress" type="number" step="0.1" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">
+                Remise Retrait Hub (%)
+                <span class="text-emerald-600">-{{ tarifs.remiseRetraitHub }}%</span>
+              </label>
+              <input [(ngModel)]="tarifs.remiseRetraitHub" type="number" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-500 mb-1.5">
+                Majoration Domicile (%)
+                <span class="text-orange-600">+{{ tarifs.majorationDomicile }}%</span>
+              </label>
+              <input [(ngModel)]="tarifs.majorationDomicile" type="number" readonly
+                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+            </div>
+          </div>
+
+          <!-- Aperçu dynamique -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">
+              Aperçu — Colis 5kg
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-white rounded-lg p-3 border border-slate-200">
+                <div class="text-[10px] text-slate-400 mb-1">Retrait Hub</div>
+                <div class="text-sm font-bold text-emerald-600">
+                  {{ ((tarifs.prixBase + tarifs.prixParKg * 5) * (1 - tarifs.remiseRetraitHub / 100)) | number:'1.0-0' }} FCFA
+                </div>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-slate-200">
+                <div class="text-[10px] text-slate-400 mb-1">Point Relais</div>
+                <div class="text-sm font-bold text-navy">
+                  {{ (tarifs.prixBase + tarifs.prixParKg * 5) | number:'1.0-0' }} FCFA
+                </div>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-slate-200">
+                <div class="text-[10px] text-slate-400 mb-1">Livraison Domicile</div>
+                <div class="text-sm font-bold text-orange-600">
+                  {{ ((tarifs.prixBase + tarifs.prixParKg * 5) * (1 + tarifs.majorationDomicile / 100)) | number:'1.0-0' }} FCFA
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Card 2: Localisation & devise -->
-        <section class="card">
-          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2"><i class="ti ti-world text-slate-400"></i> Localisation & devise</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-4">
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Pays par défaut</label><select class="form-input text-slate-800 cursor-pointer"><option>Sénégal 🇸🇳</option><option>Mali 🇲🇱</option><option>Côte d'Ivoire 🇨🇮</option></select></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Langue par défaut</label><select class="form-input text-slate-800 cursor-pointer"><option>Français</option><option>Anglais</option><option>Wolof</option></select></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Devise principale</label><select class="form-input text-slate-800 cursor-pointer"><option>Franc CFA (FCFA)</option><option>Euro (€)</option><option>Dollar ($)</option></select></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Fuseau horaire</label><select class="form-input text-slate-800 cursor-pointer"><option>Africa/Dakar (UTC+0)</option><option>Europe/Paris (UTC+1)</option></select></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Format de date</label><select class="form-input text-slate-800 cursor-pointer"><option>JJ/MM/AAAA</option><option>MM/JJ/AAAA</option><option>AAAA-MM-JJ</option></select></div>
+        <!-- Section 3 : Zones & Régions -->
+        <section class="card bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2">
+            <i class="ti ti-map-2 text-slate-400"></i> Zones & Régions
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-left">
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Zone</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Tarif de base (FCFA)</th>
+                  <th class="px-4 py-2.5 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Délai estimé</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @for (z of zones; track z.nom) {
+                  <tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 font-medium text-slate-700">{{ z.nom }}</td>
+                    <td class="px-4 py-3">
+                      <input [(ngModel)]="z.tarif" type="number" readonly
+                        class="bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none w-32 text-slate-600 cursor-default">
+                    </td>
+                    <td class="px-4 py-3 text-slate-500">{{ z.delai }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         </section>
 
-        <!-- Card 3: Paramètres opérationnels -->
-        <section class="card">
-          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2"><i class="ti ti-settings-cog text-slate-400"></i> Paramètres opérationnels</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-4 mb-5">
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Délai max stockage hub (h)</label><input type="number" value="48" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Délai max stockage relais (h)</label><input type="number" value="72" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Rayon dispatch auto (km)</label><input type="number" value="15" class="form-input"></div>
-          </div>
-          <div class="flex flex-col gap-3 pt-3 border-t border-slate-100">
-            <div class="flex items-center justify-between py-1">
-              <div><h3 class="text-[13px] font-medium text-slate-800">Dispatch automatique activé</h3><p class="text-[11px] text-slate-500 mt-0.5">Assigne les livreurs les plus proches automatiquement</p></div>
-              <input type="checkbox" checked class="toggle-switch">
-            </div>
-            <div class="flex items-center justify-between py-1">
-              <div><h3 class="text-[13px] font-medium text-slate-800">Notifications SMS activées</h3><p class="text-[11px] text-slate-500 mt-0.5">Envoi des statuts par SMS aux clients finaux</p></div>
-              <input type="checkbox" checked class="toggle-switch">
-            </div>
-            <div class="flex items-center justify-between py-1">
-              <div><h3 class="text-[13px] font-medium text-slate-800">Mode maintenance</h3><p class="text-[11px] text-slate-500 mt-0.5">Bloque l'accès à l'application avec un écran de travaux</p></div>
-              <input type="checkbox" class="toggle-switch">
-            </div>
-          </div>
-        </section>
 
-        <!-- Card 4: Tarification -->
-        <section class="card">
-          <h2 class="font-semibold text-[14px] text-slate-800 mb-4 flex items-center gap-2"><i class="ti ti-credit-card text-slate-400"></i> Tarification</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix de base (FCFA)</label><input [(ngModel)]="tarifs.prixBase" type="number" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par kg (FCFA)</label><input [(ngModel)]="tarifs.prixParKg" type="number" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par m³ (FCFA)</label><input [(ngModel)]="tarifs.prixParM3" type="number" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Multiplicateur express</label><input [(ngModel)]="tarifs.multiplicateurExpress" type="number" step="0.1" class="form-input"></div>
-            <div><label class="block text-[11px] font-medium text-slate-500 mb-1.5">Taux d'assurance</label><input [(ngModel)]="tarifs.tauxAssurance" type="number" step="0.01" class="form-input"></div>
-          </div>
-        </section>
-        
-        <!-- Bottom Action Buttons -->
-        <div class="flex items-center justify-end gap-3 mt-2">
-          <button class="bg-transparent border border-slate-300 text-slate-600 hover:bg-slate-50 text-[13px] font-medium px-4 py-2 rounded-[8px] transition-colors">Annuler</button>
-          <button (click)="sauvegarder()" class="bg-navy hover:bg-navy-light text-white text-[13px] font-medium px-4 py-2 rounded-[8px] flex items-center gap-1.5 transition-colors shadow-sm"><i class="ti ti-device-floppy"></i> Enregistrer les modifications</button>
-        </div>
 
       </div>
     </div>
