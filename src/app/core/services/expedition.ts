@@ -43,5 +43,12 @@ export class ExpeditionService {
     `${this.apiUrl}/paiement/initier`,
     { expeditionId }
   );
-}
+  }
+
+  // Obtenir une expédition par la référence de paiement PayTech
+  getExpeditionParRefPaytech(ref: string): Observable<ExpeditionResponse> {
+    return this.http.get<ExpeditionResponse>(
+      `${this.apiUrl}/paiement/par-ref?ref=${ref}`
+    );
+  }
 }
