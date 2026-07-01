@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -5,7 +6,7 @@ import { ExpeditionListItem } from '../models/relais.model';
 
 @Injectable({ providedIn: 'root' })
 export class ChauffeurService {
-  private apiUrl = 'http://localhost:8080/api/chauffeur';
+  private apiUrl = `${environment.apiUrl}/chauffeur`;
 
   constructor(private http: HttpClient) {}
 
@@ -35,7 +36,7 @@ export class ChauffeurService {
   // (réutilise l'endpoint Hub existant)
   recevoirAuHub(expeditionId: number, hubId: number): Observable<any> {
     return this.http.put(
-      `http://localhost:8080/api/hub/expeditions/${expeditionId}/reception?hubId=${hubId}`,
+      `${environment.apiUrl}/hub/expeditions/${expeditionId}/reception?hubId=${hubId}`,
       {},
     );
   }

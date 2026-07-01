@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { CommissionResponse, ExpeditionListItem, PointRelaisContext, PointRelais
 @Injectable({ providedIn: 'root' })
 export class RelaisService {
 
-  private apiUrl = 'http://localhost:8080/api/relais';
+  private apiUrl = `${environment.apiUrl}/relais`;
 
   constructor(private http: HttpClient) {}
 

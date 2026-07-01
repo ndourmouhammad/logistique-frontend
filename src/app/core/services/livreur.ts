@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { ExpeditionListItem } from '../models/relais.model';
 @Injectable({ providedIn: 'root' })
 export class LivreurService {
 
-  private apiUrl = 'http://localhost:8080/api/livreur';
+  private apiUrl = `${environment.apiUrl}/livreur`;
   private http = inject(HttpClient);
 
   getMesLivraisons(livreurId: number): Observable<ExpeditionListItem[]> {

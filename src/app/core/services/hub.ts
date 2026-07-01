@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { HubResponse } from '../models/hub.model';
 
 @Injectable({ providedIn: 'root' })
 export class HubService {
-  private apiUrl = 'http://localhost:8080/api/hub';
+  private apiUrl = `${environment.apiUrl}/hub`;
 
   constructor(private http: HttpClient) {}
 
@@ -46,7 +47,7 @@ export class HubService {
 
   getLivreursDisponibles(zone: string): Observable<LivreurResponse[]> {
     return this.http.get<LivreurResponse[]>(
-      `http://localhost:8080/api/livreur/disponibles?zone=${zone}`,
+      `${environment.apiUrl}/livreur/disponibles?zone=${zone}`,
     );
   }
 

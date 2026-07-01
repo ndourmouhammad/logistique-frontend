@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { AdminStats, UtilisateurAdmin, CreateEmployeRequest, HubAdmin, HubReques
 
 export class AdminService {
 
-  private apiUrl = 'http://localhost:8080/api/admin';
+  private apiUrl = `${environment.apiUrl}/admin`;
   private http   = inject(HttpClient);
 
   // ── Stats ─────────────────────────────────────────────────────────────────
