@@ -36,7 +36,7 @@ export class Rapports {
   }
 
   exporter(format: string) {
-    console.log('Export', format);
+
     // TODO : appel API export
   }
 }

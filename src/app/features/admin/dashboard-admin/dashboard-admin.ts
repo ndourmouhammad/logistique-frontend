@@ -16,15 +16,7 @@ export class DashboardAdmin implements OnInit {
   stats     = signal<AdminStats | null>(null);
   isLoading = signal(false);
 
-  // Expéditions récentes — gardées statiques pour l'instant
-  // (nécessite un endpoint dédié qu'on peut ajouter plus tard)
-  expeditionsRecentes = [
-    { code: 'TT-DKR-4839', client: 'Moussa D.',  destination: 'Almadies',    statut: 'EN_COURS_LIVRAISON', livreur: 'Ibrahima B.' },
-    { code: 'TT-DKR-4721', client: 'Fatou N.',   destination: 'Thiès',       statut: 'EN_TRANSIT',         livreur: 'Camion DK-1234' },
-    { code: 'TT-DKR-4698', client: 'Omar B.',    destination: 'Ziguinchor',  statut: 'RECU_AU_HUB',        livreur: '—' },
-    { code: 'TT-DKR-4512', client: 'Aïda S.',   destination: 'Saint-Louis', statut: 'LIVRE',              livreur: 'Amadou S.' },
-    { code: 'TT-DKR-4401', client: 'Cheikh F.',  destination: 'Kaolack',     statut: 'EN_LITIGE',          livreur: 'Moussa K.' },
-  ];
+  expeditionsRecentes: any[] = [];
 
   private adminService = inject(AdminService);
 

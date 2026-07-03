@@ -15,22 +15,13 @@ export class DashboardHub {
   gestionnaire = 'GH';
 
   kpis = {
-    enAttente:   14,
-    enTransit:    8,
-    livres:      47,
-    capacite:    78
+    enAttente:   0,
+    enTransit:   0,
+    livres:      0,
+    capacite:    0
   };
 
-  alertes = [
-    { type: 'warning', message: '3 colis en attente depuis +24h',    icon: 'ti-clock' },
-    { type: 'info',    message: 'Camion DK-1234 prévu à 14h30',      icon: 'ti-truck' },
-    { type: 'success', message: '12 colis reçus ce matin',           icon: 'ti-package' },
-  ];
+  alertes: any[] = [];
 
-  expeditionsRecentes = [
-    { code: 'TT-DKR-4839', destination: 'Almadies',    statut: 'EN_COURS_LIVRAISON', livreur: 'Ibrahima B.' },
-    { code: 'TT-DKR-4721', destination: 'Thiès',       statut: 'EN_TRANSIT',         livreur: 'Camion DK-1234' },
-    { code: 'TT-DKR-4698', destination: 'Point E',     statut: 'RECU_AU_HUB',        livreur: '—' },
-    { code: 'TT-DKR-4512', destination: 'Saint-Louis', statut: 'EN_TRANSIT',         livreur: 'Camion DK-5678' },
-  ];
+  expeditionsRecentes: any[] = [];
 }
