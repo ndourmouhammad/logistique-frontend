@@ -1,6 +1,6 @@
 {
-  "name": "Tiak-Tiak — Livraison au Sénégal",
-  "short_name": "Tiak-Tiak",
+  "name": "KolisGo - Plateforme logistique",
+  "short_name": "KolisGo",
   "description": "Plateforme logistique de livraison rapide et sécurisée au Sénégal",
   "theme_color": "#1A2E4A",
   "background_color": "#1A2E4A",
@@ -29,14 +29,14 @@
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Tiak-Tiak Mobile"
+      "label": "KolisGo Mobile"
     },
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Tiak-Tiak Desktop"
+      "label": "KolisGo Desktop"
     }
   ]
 }
