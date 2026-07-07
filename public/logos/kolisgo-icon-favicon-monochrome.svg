@@ -1,0 +1,5 @@
+<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="kolisgo-icon-title-mono">
+  <title id="kolisgo-icon-title-mono">Icône KolisGo, monochrome navy</title>
+  <polyline points="28,32 52,50 28,68" fill="none" stroke="#1A2E4A" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="45,32 69,50 45,68" fill="none" stroke="#1A2E4A" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+</svg>
