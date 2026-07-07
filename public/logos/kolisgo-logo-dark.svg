@@ -1,0 +1,8 @@
+<svg width="220" height="65" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="kolisgo-title-dark">
+  <title id="kolisgo-title-dark">KolisGo</title>
+  <polyline points="18,32 46,50 18,68" fill="none" stroke="#F8FAFC" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="38,32 66,50 38,68" fill="none" stroke="#F97316" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="90" y="66" font-family="Inter, sans-serif" font-size="42" font-weight="800">
+    <tspan fill="#F8FAFC">Kolis</tspan><tspan fill="#F97316">Go</tspan>
+  </text>
+</svg>
