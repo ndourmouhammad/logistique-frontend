@@ -13,6 +13,7 @@ import { AdminStats } from '../../../core/models/admin.model';
 })
 export class DashboardAdmin implements OnInit {
 
+  today     = new Date();
   stats     = signal<AdminStats | null>(null);
   isLoading = signal(false);
 
