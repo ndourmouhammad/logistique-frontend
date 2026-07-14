@@ -5,7 +5,7 @@
     <!-- Logo -->
     <div class="px-4 py-3.5 border-b border-white/8 flex items-center gap-2.5">
       <a routerLink="/accueil" class="flex flex-col gap-1 items-start justify-center">
-        <img src="logos/kolisgo-logo-light.svg" alt="KolisGo" class="h-6">
+        <img src="logos/kolisgo-logo-dark.svg" alt="KolisGo" class="h-6">
         <div class="text-[10px] text-white/40">Administration</div>
       </a>
     </div>
@@ -60,14 +60,14 @@
         <span [class]="active === 'flotte' ? 'text-xs text-white' : 'text-xs text-white/55'">Flotte</span>
       </a>
 
-      <a routerLink="/admin/dispatch-litiges"
+      <!-- <a routerLink="/admin/dispatch-litiges"
         [class]="active === 'dispatch'
           ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
           : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
         <i [class]="active === 'dispatch' ? 'ti ti-arrows-shuffle text-white text-base' : 'ti ti-arrows-shuffle text-white/45 text-base'"></i>
         <span [class]="active === 'dispatch' ? 'text-xs text-white flex-1' : 'text-xs text-white/55 flex-1'">Dispatch / Litiges</span>
         @if (badgeDispatch > 0) { <span class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeDispatch }}</span> }
-      </a>
+      </a> -->
 
       <a routerLink="/admin/rapports"
         [class]="active === 'rapports'
@@ -88,14 +88,14 @@
         <span [class]="active === 'parametres' ? 'text-xs text-white' : 'text-xs text-white/55'">Paramètres</span>
       </a>
 
-      <a routerLink="/admin/incidents"
+      <!-- <a routerLink="/admin/incidents"
         [class]="active === 'incidents'
           ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
           : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
         <i [class]="active === 'incidents' ? 'ti ti-alert-circle text-white text-base' : 'ti ti-alert-circle text-red-400/70 text-base'"></i>
         <span [class]="active === 'incidents' ? 'text-xs text-white flex-1' : 'text-xs text-red-400/70 flex-1'">Incidents</span>
         @if (badgeIncidents > 0) { <span class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeIncidents }}</span> }
-      </a>
+      </a> -->
 
     </nav>
 
