@@ -7,7 +7,9 @@
       <div class="absolute bottom-[-30%] left-[-15%] w-[200px] h-[200px] bg-linear-to-tr from-blue-500/10 to-transparent rounded-full blur-3xl"></div>
     </div>
     <div class="relative z-10 fade-up">
-      <div class="w-16 h-16 bg-linear-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-2xl mx-auto mb-4 shadow-lg shadow-orange-500/30"><img src="logos/kolisgo-icon-favicon-monochrome.svg" alt="KolisGo" class="h-10"></div>
+      <div class="w-16 h-16 bg-linear-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-2xl mx-auto mb-4 shadow-lg shadow-orange-500/30">
+        <img src="logos/kolisgo-icon-favicon-monochrome.svg" alt="KolisGo" class="h-10">
+      </div>
       <h1 class="text-xl font-bold text-white mb-1">Bon retour !</h1>
       <p class="text-xs text-white/40">Connectez-vous à votre espace KolisGo</p>
     </div>
@@ -19,15 +21,25 @@
 
       <!-- Email -->
       <div>
-        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email ou téléphone</label>
+        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
         <div class="relative">
-          <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 transition-colors"
+             [class.text-red-400]="submitted() && f['email'].errors"
+             [class.text-slate-400]="!(submitted() && f['email'].errors)"></i>
           <input
             type="text"
             formControlName="email"
-            placeholder="+221 77 XXX XX XX"
-            class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none">
+            placeholder="email@exemple.sn"
+            [class.border-red-500]="submitted() && f['email'].errors"
+            [class.bg-red-50]="submitted() && f['email'].errors"
+            class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none transition-colors">
         </div>
+        @if (submitted() && f['email'].errors?.['required']) {
+          <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> L'email est requis</p>
+        }
+        @if (submitted() && f['email'].errors?.['email']) {
+          <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Format d'email invalide</p>
+        }
       </div>
 
       <!-- Mot de passe -->
@@ -37,61 +49,73 @@
           <a routerLink="/mot-de-passe-oublie" class="text-xs text-tt-orange font-medium hover:underline">Oublié ?</a>
         </div>
         <div class="relative">
-          <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 transition-colors"
+             [class.text-red-400]="submitted() && f['motDePasse'].errors"
+             [class.text-slate-400]="!(submitted() && f['motDePasse'].errors)"></i>
           <input
             [type]="showPassword() ? 'text' : 'password'"
             formControlName="motDePasse"
             placeholder="••••••••"
-            class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
-          <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
+            [class.border-red-500]="submitted() && f['motDePasse'].errors"
+            [class.bg-red-50]="submitted() && f['motDePasse'].errors"
+            class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none transition-colors">
+          <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1 transition-colors">
             <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
           </button>
         </div>
+        @if (submitted() && f['motDePasse'].errors?.['required']) {
+          <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Le mot de passe est requis</p>
+        }
       </div>
     </div>
 
-    <!-- Rester connecté -->
-    <div class="flex items-center gap-2.5 mb-5 fade-up">
+    <!-- Rester connecté (commenté) -->
+    <!-- <div class="flex items-center gap-2.5 mb-5 fade-up">
       <input type="checkbox" formControlName="resterConnecte" class="accent-navy w-4 h-4 rounded">
       <label class="text-sm text-slate-500">Rester connecté</label>
-    </div>
+    </div> -->
 
-    <!-- Bouton connexion -->
+    <!-- Erreur API -->
     @if (erreurMessage()) {
       <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
         <i class="ti ti-alert-circle text-sm"></i>
         {{ erreurMessage() }}
       </div>
     }
+
+    <!-- Bouton connexion -->
     <button type="submit"
       [disabled]="isLoading()"
-      class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-navy/20 mb-4 fade-up">
+      class="btn-press w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-navy-dark transition shadow-lg shadow-navy/20 mb-4 fade-up">
       <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-login'"></i>
       {{ isLoading() ? 'Connexion…' : 'Se connecter' }}
     </button>
 
-    <!-- Séparateur -->
-    <div class="flex items-center gap-3 my-5">
+    <!-- Séparateur (commenté) -->
+    <!-- <div class="flex items-center gap-3 my-5">
       <div class="flex-1 h-px bg-slate-200"></div>
       <span class="text-xs text-slate-400">ou continuer avec</span>
       <div class="flex-1 h-px bg-slate-200"></div>
-    </div>
+    </div> -->
 
-    <!-- Boutons sociaux -->
-    <div class="grid grid-cols-2 gap-3 mb-6">
-      <button class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50">
+    <!-- Boutons sociaux (commenté) -->
+    <!-- <div class="grid grid-cols-2 gap-3 mb-6">
+      <button type="button" class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
         <i class="ti ti-brand-google text-lg text-red-500"></i> Google
       </button>
-      <button class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50">
+      <button type="button" class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
         <i class="ti ti-brand-facebook text-lg text-blue-600"></i> Facebook
       </button>
-    </div>
+    </div> -->
 
     <p class="text-center text-xs text-slate-400">
       Pas de compte ?
       <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a>
     </p>
-  </form></div><!-- ==================== DESKTOP VIEW ==================== -->
+  </form>
+</div>
+
+<!-- ==================== DESKTOP VIEW ==================== -->
 <div class="hidden lg:grid lg:grid-cols-2 min-h-screen">
   <!-- Left Panel Navy -->
   <div class="bg-navy p-12 flex flex-col justify-between relative overflow-hidden">
@@ -100,7 +124,7 @@
       <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-linear-to-tr from-blue-500/8 to-transparent rounded-full blur-3xl"></div>
     </div>
     <!-- Logo -->
-    <a routerLink="/onboarding" class="flex items-center gap-3 relative z-10">
+    <a routerLink="/" class="flex items-center gap-3 relative z-10">
       <img src="logos/kolisgo-logo-dark.svg" alt="KolisGo" class="h-10">
     </a>
     <!-- Centre -->
@@ -118,7 +142,6 @@
         <span class="bg-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5"><i class="ti ti-truck text-xs"></i> Chauffeur</span>
         <span class="bg-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5"><i class="ti ti-building-warehouse text-xs"></i> Hub</span>
         <span class="bg-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5"><i class="ti ti-building-store text-xs"></i> Relais</span>
-        <!-- <span class="bg-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5"><i class="ti ti-shield-check text-xs"></i> Admin</span> -->
       </div>
     </div>
     <div class="text-xs text-white/20 relative z-10">© 2026 KolisGo · Plateforme logistique</div>
@@ -126,41 +149,63 @@
 
   <!-- Right Panel -->
   <div class="flex items-center justify-center p-12 bg-white">
-    <form [formGroup]="connexionForm" (ngSubmit)="doLogin()" class="w-full max-w-md"><h2 class="text-2xl font-bold text-slate-800 mb-1 fade-up">Connexion</h2>
+    <form [formGroup]="connexionForm" (ngSubmit)="doLogin()" class="w-full max-w-md">
+      <h2 class="text-2xl font-bold text-slate-800 mb-1 fade-up">Connexion</h2>
       <p class="text-sm text-slate-400 mb-8 fade-up">Entrez vos identifiants pour accéder à votre espace</p>
 
       <div class="space-y-5 mb-5 fade-up">
+        <!-- Email -->
         <div>
-          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email ou numéro de téléphone</label>
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
           <div class="relative">
-            <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <i class="ti ti-user absolute left-4 top-1/2 -translate-y-1/2 transition-colors"
+               [class.text-red-400]="submitted() && f['email'].errors"
+               [class.text-slate-400]="!(submitted() && f['email'].errors)"></i>
             <input type="text" formControlName="email" placeholder="email@exemple.sn"
-              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none">
+              [class.border-red-500]="submitted() && f['email'].errors"
+              [class.bg-red-50]="submitted() && f['email'].errors"
+              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm outline-none transition-colors">
           </div>
+          @if (submitted() && f['email'].errors?.['required']) {
+            <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> L'email est requis</p>
+          }
+          @if (submitted() && f['email'].errors?.['email']) {
+            <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Format d'email invalide</p>
+          }
         </div>
+        
+        <!-- Mot de passe -->
         <div>
           <div class="flex justify-between mb-1.5">
             <label class="text-xs font-semibold text-slate-600">Mot de passe</label>
             <a routerLink="/mot-de-passe-oublie" class="text-xs text-tt-orange font-medium hover:underline">Mot de passe oublié ?</a>
           </div>
           <div class="relative">
-            <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <i class="ti ti-lock absolute left-4 top-1/2 -translate-y-1/2 transition-colors"
+               [class.text-red-400]="submitted() && f['motDePasse'].errors"
+               [class.text-slate-400]="!(submitted() && f['motDePasse'].errors)"></i>
             <input
               [type]="showPassword() ? 'text' : 'password'"
               formControlName="motDePasse"
               placeholder="••••••••"
-              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none">
-            <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1">
+              [class.border-red-500]="submitted() && f['motDePasse'].errors"
+              [class.bg-red-50]="submitted() && f['motDePasse'].errors"
+              class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-11 py-3.5 text-sm outline-none transition-colors">
+            <button type="button" (click)="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy p-1 transition-colors">
               <i [class]="showPassword() ? 'ti ti-eye-off' : 'ti ti-eye'"></i>
             </button>
           </div>
+          @if (submitted() && f['motDePasse'].errors?.['required']) {
+            <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Le mot de passe est requis</p>
+          }
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5 mb-6 fade-up">
+      <!-- Rester connecté (commenté) -->
+      <!-- <div class="flex items-center gap-2.5 mb-6 fade-up">
         <input type="checkbox" formControlName="resterConnecte" class="accent-navy w-4 h-4 rounded">
         <label class="text-sm text-slate-500">Rester connecté</label>
-      </div>
+      </div> -->
 
       @if (erreurMessage()) {
         <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-3">
@@ -174,21 +219,27 @@
         {{ isLoading() ? 'Connexion…' : 'Se connecter' }}
       </button>
 
-      <div class="flex items-center gap-3 my-5">
+      <!-- Séparateur (commenté) -->
+      <!-- <div class="flex items-center gap-3 my-5">
         <div class="flex-1 h-px bg-slate-200"></div>
         <span class="text-xs text-slate-400">ou continuer avec</span>
         <div class="flex-1 h-px bg-slate-200"></div>
-      </div>
+      </div> -->
 
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <button class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
+      <!-- Boutons sociaux (commenté) -->
+      <!-- <div class="grid grid-cols-2 gap-3 mb-6">
+        <button type="button" class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
           <i class="ti ti-brand-google text-lg text-red-500"></i> Google
         </button>
-        <button class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
+        <button type="button" class="btn-press bg-white border border-slate-200 text-slate-600 py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition">
           <i class="ti ti-brand-facebook text-lg text-blue-600"></i> Facebook
         </button>
-      </div>
+      </div> -->
 
       <p class="text-center text-sm text-slate-400">
         Pas encore de compte ?
-        <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a></p></form></div></div>
+        <a routerLink="/inscription" class="text-navy font-semibold hover:underline">Créer un compte</a>
+      </p>
+    </form>
+  </div>
+</div>

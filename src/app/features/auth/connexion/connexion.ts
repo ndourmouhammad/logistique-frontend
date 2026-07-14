@@ -24,8 +24,7 @@ export class Connexion implements OnInit {
   ngOnInit() {
     this.connexionForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      motDePasse: ['', Validators.required],
-      resterConnecte: [false]
+      motDePasse: ['', Validators.required]
     });
   }
 
