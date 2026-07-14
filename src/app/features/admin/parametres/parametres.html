@@ -10,6 +10,9 @@
     </div>
     <div class="flex items-center gap-4">
       <span class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Système opérationnel</span>
+      <button (click)="sauvegarder()" class="bg-tt-orange hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm shadow-orange-500/20">
+        <i class="ti ti-device-floppy text-sm"></i> Enregistrer
+      </button>
     </div>
   </header>
 
@@ -76,39 +79,39 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-4 mb-5">
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix de base (FCFA)</label>
-              <input [(ngModel)]="tarifs.prixBase" type="number" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.prixBase" type="number"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par kg (FCFA)</label>
-              <input [(ngModel)]="tarifs.prixParKg" type="number" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.prixParKg" type="number"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Prix par m³ (FCFA)</label>
-              <input [(ngModel)]="tarifs.prixParM3" type="number" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.prixParM3" type="number"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">Multiplicateur Express</label>
-              <input [(ngModel)]="tarifs.multiplicateurExpress" type="number" step="0.1" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.multiplicateurExpress" type="number" step="0.1"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">
                 Remise Retrait Hub (%)
                 <span class="text-emerald-600">-{{ tarifs.remiseRetraitHub }}%</span>
               </label>
-              <input [(ngModel)]="tarifs.remiseRetraitHub" type="number" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.remiseRetraitHub" type="number"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
             <div>
               <label class="block text-[11px] font-medium text-slate-500 mb-1.5">
                 Majoration Domicile (%)
                 <span class="text-orange-600">+{{ tarifs.majorationDomicile }}%</span>
               </label>
-              <input [(ngModel)]="tarifs.majorationDomicile" type="number" readonly
-                class="w-full bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-600 cursor-default">
+              <input [(ngModel)]="tarifs.majorationDomicile" type="number"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none text-slate-800 transition-colors focus:border-navy">
             </div>
           </div>
 
@@ -159,8 +162,8 @@
                   <tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 font-medium text-slate-700">{{ z.nom }}</td>
                     <td class="px-4 py-3">
-                      <input [(ngModel)]="z.tarif" type="number" readonly
-                        class="bg-slate-50/70 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none w-32 text-slate-600 cursor-default">
+                      <input [(ngModel)]="z.tarif" type="number"
+                        class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none w-32 text-slate-800 transition-colors focus:border-navy">
                     </td>
                     <td class="px-4 py-3 text-slate-500">{{ z.delai }}</td>
                   </tr>

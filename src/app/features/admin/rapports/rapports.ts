@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,8 @@ import { AdminLayout } from '../../../shared/components/admin-layout/admin-layou
   styleUrl: './rapports.scss',
 })
 export class Rapports {
-  periodeFiltree = 'mois';
+  today = new Date();
+  periodeFiltree = signal('mois');
   ongletActif    = 'financier';
 
   kpis = {
