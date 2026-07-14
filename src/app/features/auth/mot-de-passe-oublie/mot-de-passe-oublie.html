@@ -24,15 +24,19 @@
       <div class="mb-5">
         <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
         <div class="relative">
-          <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors"
+             [class.text-red-400]="erreurMessage()"
+             [class.text-slate-400]="!erreurMessage()"></i>
           <input type="email" [value]="email()"
             (input)="email.set($any($event.target).value); erreurMessage.set('')"
             placeholder="email@exemple.sn"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none">
+            [class.border-red-500]="erreurMessage()"
+            [class.bg-red-50]="erreurMessage()"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 text-sm outline-none focus:border-navy transition-colors">
         </div>
         @if (erreurMessage()) {
           <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2 rounded-xl mt-2 flex items-center gap-2">
-            <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
+            <i class="ti ti-alert-circle text-sm"></i> {{ erreurMessage() }}
           </div>
         }
       </div>
@@ -40,13 +44,13 @@
       <button (click)="envoyerLien()" [disabled]="isLoading()"
         class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
                flex items-center justify-center gap-2 shadow-lg shadow-navy/15
-               disabled:opacity-60">
+               disabled:opacity-60 transition-colors">
         <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
         {{ isLoading() ? 'Envoi en cours...' : 'Envoyer le lien' }}
       </button>
 
       <a routerLink="/connexion" class="block text-center text-xs text-slate-400 mt-4">
-        Vous vous souvenez ? <span class="text-navy font-semibold">Se connecter</span>
+        Vous vous souvenez ? <span class="text-navy font-semibold hover:underline">Se connecter</span>
       </a>
     }
 
@@ -65,11 +69,11 @@
           Le lien est valable <strong>30 minutes</strong>. Vérifiez aussi vos spams.
         </p>
         <button (click)="etape.set(1)"
-          class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold mb-3">
+          class="w-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors py-3 rounded-xl text-sm font-semibold mb-3">
           Utiliser un autre email
         </button>
         <a routerLink="/connexion"
-          class="block w-full bg-navy text-white py-3.5 rounded-xl text-sm
+          class="block w-full bg-navy hover:bg-navy-dark transition-colors text-white py-3.5 rounded-xl text-sm
                  font-semibold text-center shadow-lg shadow-navy/15">
           Retour à la connexion
         </a>
@@ -115,17 +119,21 @@
         <div class="mb-6">
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Adresse email</label>
           <div class="relative">
-            <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors"
+               [class.text-red-400]="erreurMessage()"
+               [class.text-slate-400]="!erreurMessage()"></i>
             <input type="email" [value]="email()"
               (input)="email.set($any($event.target).value); erreurMessage.set('')"
               placeholder="email@exemple.sn"
+              [class.border-red-500]="erreurMessage()"
+              [class.bg-red-50]="erreurMessage()"
               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4
-                     py-3.5 text-sm outline-none focus:border-navy transition">
+                     py-3.5 text-sm outline-none focus:border-navy transition-colors">
           </div>
           @if (erreurMessage()) {
             <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2
                         rounded-xl mt-2 flex items-center gap-2">
-              <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
+              <i class="ti ti-alert-circle text-sm"></i> {{ erreurMessage() }}
             </div>
           }
         </div>
@@ -133,12 +141,12 @@
         <button (click)="envoyerLien()" [disabled]="isLoading()"
           class="w-full bg-navy text-white py-3.5 rounded-xl text-sm font-semibold
                  flex items-center justify-center gap-2 shadow-lg shadow-navy/20
-                 disabled:opacity-60 mb-4">
+                 disabled:opacity-60 mb-4 transition-colors hover:bg-navy-dark">
           <i [class]="isLoading() ? 'ti ti-loader-2 animate-spin' : 'ti ti-send'"></i>
           {{ isLoading() ? 'Envoi en cours...' : 'Envoyer le lien' }}
         </button>
 
-        <a routerLink="/connexion" class="block text-center text-sm text-slate-400">
+        <a routerLink="/connexion" class="block text-center text-sm text-slate-400 hover:underline">
           Retour à la <span class="text-navy font-semibold">connexion</span>
         </a>
       }
@@ -155,12 +163,12 @@
             Lien valable <strong>30 minutes</strong>. Vérifiez vos spams si besoin.
           </p>
           <button (click)="etape.set(1)"
-            class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl text-sm font-semibold mb-3">
+            class="w-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-700 py-3 rounded-xl text-sm font-semibold mb-3">
             Utiliser un autre email
           </button>
           <a routerLink="/connexion"
-            class="block w-full bg-navy text-white py-3.5 rounded-xl text-sm
-                   font-semibold text-center">
+            class="block w-full bg-navy hover:bg-navy-dark transition-colors text-white py-3.5 rounded-xl text-sm
+                   font-semibold text-center shadow-lg shadow-navy/15">
             Retour à la connexion
           </a>
         </div>
