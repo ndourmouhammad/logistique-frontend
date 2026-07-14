@@ -14,7 +14,7 @@
 
     <button (click)="ouvrirModal()"
       class="bg-tt-orange hover:bg-orange-600 text-white text-xs font-semibold
-             px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm">
+             px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm shadow-orange-500/20">
       <i class="ti ti-plus text-sm"></i> Ajouter un relais
     </button>
   </header>
@@ -129,7 +129,7 @@
           @if (erreurMessage()) {
             <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2
                         rounded-xl flex items-center gap-2">
-              <i class="ti ti-alert-circle"></i> {{ erreurMessage() }}
+              <i class="ti ti-alert-circle text-sm"></i> {{ erreurMessage() }}
             </div>
           }
 
@@ -138,7 +138,12 @@
             <input type="text" [value]="form().nomEnseigne"
               (input)="updateForm('nomEnseigne', $any($event.target).value)"
               placeholder="Ex: Relais Dakar Plateau"
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+              [class.border-red-500]="erreurMessage() && !form().nomEnseigne"
+              [class.bg-red-50]="erreurMessage() && !form().nomEnseigne"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
+            @if (erreurMessage() && !form().nomEnseigne) {
+              <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Requis</p>
+            }
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -147,14 +152,19 @@
               <input type="text" [value]="form().ville"
                 (input)="updateForm('ville', $any($event.target).value)"
                 placeholder="Ex: Dakar"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+                [class.border-red-500]="erreurMessage() && !form().ville"
+                [class.bg-red-50]="erreurMessage() && !form().ville"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
+              @if (erreurMessage() && !form().ville) {
+                <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Requis</p>
+              }
             </div>
             <div>
               <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Région</label>
               <input type="text" [value]="form().region"
                 (input)="updateForm('region', $any($event.target).value)"
                 placeholder="Ex: Dakar"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
             </div>
           </div>
 
@@ -163,7 +173,7 @@
             <input type="text" [value]="form().rue"
               (input)="updateForm('rue', $any($event.target).value)"
               placeholder="Ex: 45 Rue du Commerce"
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -171,25 +181,25 @@
               <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Capacité max (colis)</label>
               <input type="number" [value]="form().capaciteMaxColis"
                 (input)="updateForm('capaciteMaxColis', +$any($event.target).value)"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
             </div>
             <div>
               <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Commission / colis (FCFA)</label>
               <input type="number" [value]="form().tauxCommissionParColis"
                 (input)="updateForm('tauxCommissionParColis', +$any($event.target).value)"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none">
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition-colors focus:border-navy">
             </div>
           </div>
         </div>
 
         <div class="px-6 py-4 border-t border-slate-100 flex gap-3 justify-end">
           <button (click)="fermerModal()"
-            class="px-4 py-2 text-sm text-slate-600 bg-slate-100 rounded-xl font-medium">
+            class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition-colors">
             Annuler
           </button>
           <button (click)="creerRelais()" [disabled]="isCreating()"
-            class="px-4 py-2 text-sm text-white bg-tt-orange rounded-xl font-semibold
-                   flex items-center gap-2 disabled:opacity-60">
+            class="px-4 py-2 text-sm text-white bg-tt-orange hover:bg-orange-600 rounded-xl font-semibold
+                   flex items-center gap-2 disabled:opacity-60 transition-colors shadow-sm shadow-orange-500/20">
             <i [class]="isCreating() ? 'ti ti-loader-2 animate-spin' : 'ti ti-plus'"></i>
             {{ isCreating() ? 'Création...' : 'Créer le relais' }}
           </button>
