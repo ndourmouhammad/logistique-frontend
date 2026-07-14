@@ -16,86 +16,50 @@
     <!-- Menu -->
     <nav class="flex-1 px-2 space-y-0.5">
 
-      <a routerLink="/admin/dashboard"
-        [class]="active === 'dashboard'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'dashboard' ? 'ti ti-layout-dashboard text-white text-base' : 'ti ti-layout-dashboard text-white/45 text-base'"></i>
-        <span [class]="active === 'dashboard' ? 'text-xs text-white' : 'text-xs text-white/55'">Tableau de bord</span>
-      </a>
+      @for (item of principalMenu; track item.route) {
+        <a [routerLink]="item.route"
+           routerLinkActive="active"
+           #rla="routerLinkActive"
+           class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg">
+          <i [class]="'ti ' + item.icon + ' text-base ' + (rla.isActive ? 'text-white' : (item.inactiveIconColor || 'text-white/45'))"></i>
+          <span [class]="'text-xs ' + (rla.isActive ? 'text-white' : (item.inactiveTextColor || 'text-white/55'))">{{ item.label }}</span>
+        </a>
+      }
 
-      <a routerLink="/admin/utilisateurs"
-        [class]="active === 'utilisateurs'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'utilisateurs' ? 'ti ti-users text-white text-base' : 'ti ti-users text-white/45 text-base'"></i>
-        <span [class]="active === 'utilisateurs' ? 'text-xs text-white' : 'text-xs text-white/55'">Utilisateurs</span>
-      </a>
-
-      <a routerLink="/admin/hubs"
-        [class]="active === 'hubs'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'hubs'
-          ? 'ti ti-building-warehouse text-white text-base'
-          : 'ti ti-building-warehouse text-white/45 text-base'"></i>
-        <span [class]="active === 'hubs' ? 'text-xs text-white' : 'text-xs text-white/55'">Hubs</span>
-      </a>
-
-      <a routerLink="/admin/relais"
-        [class]="active === 'relais'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'relais'
-          ? 'ti ti-building-store text-white text-base'
-          : 'ti ti-building-store text-white/45 text-base'"></i>
-        <span [class]="active === 'relais' ? 'text-xs text-white' : 'text-xs text-white/55'">Relais</span>
-      </a>
-
-      <a routerLink="/admin/flotte"
-        [class]="active === 'flotte'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'flotte' ? 'ti ti-truck text-white text-base' : 'ti ti-truck text-white/45 text-base'"></i>
-        <span [class]="active === 'flotte' ? 'text-xs text-white' : 'text-xs text-white/55'">Flotte</span>
-      </a>
-
-      <!-- <a routerLink="/admin/dispatch-litiges"
-        [class]="active === 'dispatch'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'dispatch' ? 'ti ti-arrows-shuffle text-white text-base' : 'ti ti-arrows-shuffle text-white/45 text-base'"></i>
-        <span [class]="active === 'dispatch' ? 'text-xs text-white flex-1' : 'text-xs text-white/55 flex-1'">Dispatch / Litiges</span>
+      <!-- 
+      <a routerLink="/admin/dispatch-litiges"
+         routerLinkActive="active"
+         #rlaDispatch="routerLinkActive"
+         class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg">
+        <i [class]="'ti ti-arrows-shuffle text-base ' + (rlaDispatch.isActive ? 'text-white' : 'text-white/45')"></i>
+        <span [class]="'text-xs flex-1 ' + (rlaDispatch.isActive ? 'text-white' : 'text-white/55')">Dispatch / Litiges</span>
         @if (badgeDispatch > 0) { <span class="bg-tt-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeDispatch }}</span> }
-      </a> -->
-
-      <a routerLink="/admin/rapports"
-        [class]="active === 'rapports'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'rapports' ? 'ti ti-chart-bar text-white text-base' : 'ti ti-chart-bar text-white/45 text-base'"></i>
-        <span [class]="active === 'rapports' ? 'text-xs text-white' : 'text-xs text-white/55'">Rapports</span>
-      </a>
+      </a> 
+      -->
 
       <!-- Section Système -->
       <div class="px-3 pt-4 pb-1 text-[9px] font-medium tracking-widest uppercase text-white/30">Système</div>
 
-      <a routerLink="/admin/parametres"
-        [class]="active === 'parametres'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'parametres' ? 'ti ti-settings text-white text-base' : 'ti ti-settings text-white/45 text-base'"></i>
-        <span [class]="active === 'parametres' ? 'text-xs text-white' : 'text-xs text-white/55'">Paramètres</span>
-      </a>
+      @for (item of systemMenu; track item.route) {
+        <a [routerLink]="item.route"
+           routerLinkActive="active"
+           #rlaSystem="routerLinkActive"
+           class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg">
+          <i [class]="'ti ' + item.icon + ' text-base ' + (rlaSystem.isActive ? 'text-white' : (item.inactiveIconColor || 'text-white/45'))"></i>
+          <span [class]="'text-xs ' + (rlaSystem.isActive ? 'text-white' : (item.inactiveTextColor || 'text-white/55'))">{{ item.label }}</span>
+        </a>
+      }
 
-      <!-- <a routerLink="/admin/incidents"
-        [class]="active === 'incidents'
-          ? 'nav-item active flex items-center gap-2.5 px-3 py-2 rounded-lg'
-          : 'nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg'">
-        <i [class]="active === 'incidents' ? 'ti ti-alert-circle text-white text-base' : 'ti ti-alert-circle text-red-400/70 text-base'"></i>
-        <span [class]="active === 'incidents' ? 'text-xs text-white flex-1' : 'text-xs text-red-400/70 flex-1'">Incidents</span>
+      <!-- 
+      <a routerLink="/admin/incidents"
+         routerLinkActive="active"
+         #rlaIncidents="routerLinkActive"
+         class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg">
+        <i [class]="'ti ti-alert-circle text-base ' + (rlaIncidents.isActive ? 'text-white' : 'text-red-400/70')"></i>
+        <span [class]="'text-xs flex-1 ' + (rlaIncidents.isActive ? 'text-white' : 'text-red-400/70')">Incidents</span>
         @if (badgeIncidents > 0) { <span class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ badgeIncidents }}</span> }
-      </a> -->
+      </a> 
+      -->
 
     </nav>
 

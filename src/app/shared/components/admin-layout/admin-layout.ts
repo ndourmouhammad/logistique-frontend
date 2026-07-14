@@ -3,6 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 
+interface MenuItem {
+  route: string;
+  icon: string;
+  label: string;
+  inactiveIconColor?: string;
+  inactiveTextColor?: string;
+}
+
 @Component({
   selector: 'app-admin-layout',
   imports: [CommonModule, RouterModule],
@@ -10,8 +18,18 @@ import { Auth } from '../../../core/services/auth';
   styleUrl: './admin-layout.scss',
 })
 export class AdminLayout implements OnInit {
-  @Input() active: 'dashboard' | 'utilisateurs' | 'hubs' | 'relais' | 'flotte' |
-                   'dispatch' | 'incidents' | 'rapports' | 'parametres' = 'dashboard';
+  principalMenu: MenuItem[] = [
+    { route: '/admin/dashboard', icon: 'ti-layout-dashboard', label: 'Tableau de bord' },
+    { route: '/admin/utilisateurs', icon: 'ti-users', label: 'Utilisateurs' },
+    { route: '/admin/hubs', icon: 'ti-building-warehouse', label: 'Hubs' },
+    { route: '/admin/relais', icon: 'ti-building-store', label: 'Relais' },
+    { route: '/admin/flotte', icon: 'ti-truck', label: 'Flotte' },
+    { route: '/admin/rapports', icon: 'ti-chart-bar', label: 'Rapports' },
+  ];
+
+  systemMenu: MenuItem[] = [
+    { route: '/admin/parametres', icon: 'ti-settings', label: 'Paramètres' },
+  ];
   @Input() badgeDispatch   = 0;
   @Input() badgeIncidents  = 0;
 
