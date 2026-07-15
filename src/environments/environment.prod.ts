@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://kolisgo-api-latest.onrender.com/api',
+  apiUrl: 'http://13.60.169.78:8080/api',
 };
