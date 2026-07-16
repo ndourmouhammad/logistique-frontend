@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://13.60.169.78:8080/api',
+  apiUrl: 'https://api.kolisgo.online/api' // Remplacez par votre nouvelle URL sécurisée !
 };
