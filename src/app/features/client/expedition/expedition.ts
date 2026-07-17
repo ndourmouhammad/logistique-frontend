@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +7,7 @@ import { ClientLayout } from '../../../shared/components/client-layout/client-la
 import { ExpeditionService } from '../../../core/services/expedition';
 import { RelaisService} from '../../../core/services/relais';
 import { Auth } from '../../../core/services/auth';
+import { ClientService } from '../../../core/services/client';
 import { EstimationResponse, ExpeditionFormData, EstimationRequest, ModeLivraison } from '../../../core/models/expedition.model';
 import { debounceTime, Subject, switchMap } from 'rxjs';
 import { PointRelaisListItem } from '../../../core/models/relais.model';
@@ -30,7 +32,7 @@ export class Expedition implements OnInit {
   isEstimating = signal(false);
   erreurMessage = signal('');
 
-  villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba', 'Bambey', 'Mbacke Baol'];
+  villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba', 'Bambey', 'Mbacke'];
 
   // ── AJOUT : points relais disponibles pour la ville de destination ───────
   pointsRelaisDisponibles = signal<PointRelaisListItem[]>([]);
@@ -41,8 +43,10 @@ export class Expedition implements OnInit {
   private expeditionService = inject(ExpeditionService);
   private relaisService = inject(RelaisService);
   private authService = inject(Auth);
+  private clientService = inject(ClientService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
     this.expeditionForm = this.fb.group({
@@ -82,18 +86,31 @@ export class Expedition implements OnInit {
       }
     }
 
-    this.expeditionForm.valueChanges.subscribe(() => {
+    // ── AJOUT : Préremplir avec le profil client s'il y a des infos vides ──
+    this.clientService.getProfil().subscribe({
+      next: (profil) => {
+        const currentForm = this.expeditionForm.value;
+        const rue = profil.rue || profil.adressePrincipale?.rue || '';
+        this.expeditionForm.patchValue({
+          nomExpediteur: currentForm.nomExpediteur || profil.nomComplet,
+          telExpediteur: currentForm.telExpediteur || profil.telephone,
+          adresseDepart: currentForm.adresseDepart || rue,
+        }, { emitEvent: false }); // On évite de déclencher l'estimation inutilement ici
+      }
+    });
+
+    this.expeditionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.onOptionsChange();
     });
 
     // ── AJOUT : recharger les points relais quand la ville ou le mode change ─
-    this.expeditionForm.get('ville')?.valueChanges.subscribe(() => {
+    this.expeditionForm.get('ville')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       if (this.expeditionForm.get('modeLivraison')?.value === 'RETRAIT_RELAIS') {
         this.chargerPointsRelais();
       }
     });
 
-    this.expeditionForm.get('modeLivraison')?.valueChanges.subscribe((mode: ModeLivraison) => {
+    this.expeditionForm.get('modeLivraison')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((mode: ModeLivraison) => {
       if (mode === 'RETRAIT_RELAIS') {
         this.chargerPointsRelais();
       } else {
@@ -117,7 +134,8 @@ export class Expedition implements OnInit {
             modeLivraison:  formValue.modeLivraison,        // ← AJOUT
           };
           return this.expeditionService.estimerTarif(payload);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (data) => {

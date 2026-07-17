@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
@@ -59,6 +60,7 @@ export class Dashboard implements OnInit {
 
   private auth = inject(Auth);
   private expeditionService = inject(ExpeditionService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
     this.nomUtilisateur.set(this.auth.getNomComplet()?.split(' ')[0] || 'Client');
@@ -72,7 +74,9 @@ export class Dashboard implements OnInit {
   }
 
   chargerDonnees(userId: number) {
-    this.expeditionService.getHistoriqueClient(userId).subscribe({
+    this.expeditionService.getHistoriqueClient(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (data) => {
         this.expeditions.set(data.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()));
         this.calculerKPIs();
