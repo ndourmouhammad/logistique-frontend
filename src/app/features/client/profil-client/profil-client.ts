@@ -74,7 +74,7 @@ export class ProfilClient implements OnInit {
     this.nomComplet.set(nom);
     if (nom) {
       this.initiales.set(
-        nom.split(' ')
+        nom.trim().split(/\s+/)
           .map(n => n.charAt(0))
           .join('')
           .substring(0, 2)
@@ -92,6 +92,7 @@ export class ProfilClient implements OnInit {
   onSubmit() {
     if (this.profilForm.invalid) {
       this.profilForm.markAllAsTouched();
+      this.errorMsg.set('Veuillez remplir correctement les champs obligatoires.');
       return;
     }
 

@@ -46,7 +46,7 @@ export class Historique implements OnInit{
     return this.expeditions().filter(e => {
       const matchRecherche = e.codeTracking.toLowerCase()
         .includes(this.recherche().toLowerCase())
-        || e.villeDestinataire?.toLowerCase()
+        || (e.villeDestinataire?.toLowerCase() || '')
         .includes(this.recherche().toLowerCase());
       const matchStatut = this.filtreStatut() === 'tous'
         || e.statut === this.filtreStatut();

@@ -47,17 +47,22 @@ export class Confirmation implements OnInit {
       const data    = sessionStorage.getItem('expeditionEnCours');
       const estData = sessionStorage.getItem('estimationExpedition');
       if (data) {
-        const exp: ExpeditionResponse = JSON.parse(data);
-        this.expedition.set(exp);
-        if (estData) {
-          this.montantPaye.set(JSON.parse(estData).total || exp.fraisLivraison);
-        } else {
-          this.montantPaye.set(exp.fraisLivraison);
+        try {
+          const exp: ExpeditionResponse = JSON.parse(data);
+          this.expedition.set(exp);
+          if (estData) {
+            this.montantPaye.set(JSON.parse(estData).total || exp.fraisLivraison);
+          } else {
+            this.montantPaye.set(exp.fraisLivraison);
+          }
+          this.isLoading.set(false);
+          sessionStorage.removeItem('expeditionEnCours');
+          sessionStorage.removeItem('formulaireExpedition');
+          sessionStorage.removeItem('estimationExpedition');
+        } catch (e) {
+          this.isLoading.set(false);
+          this.erreur.set('Données corrompues, impossible de charger la confirmation.');
         }
-        this.isLoading.set(false);
-        sessionStorage.removeItem('expeditionEnCours');
-        sessionStorage.removeItem('formulaireExpedition');
-        sessionStorage.removeItem('estimationExpedition');
       } else {
         this.isLoading.set(false);
         this.erreur.set('Aucune expédition trouvée.');
