@@ -4,9 +4,9 @@
   <!-- Header -->
   <div class="bg-navy px-4 py-3.5 flex items-center gap-3 relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute top-[-50%] right-[-30%] w-[200px] h-[200px] bg-tt-orange/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-[-50%] right-[-30%] w-50 h-50 bg-tt-orange/10 rounded-full blur-3xl"></div>
     </div>
-    <a routerLink="/connexion" class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center relative z-10">
+    <a (click)="goBack()" class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center relative z-10 cursor-pointer">
       <i class="ti ti-arrow-left text-white"></i>
     </a>
     <div class="relative z-10">
@@ -37,6 +37,15 @@
           <p class="text-xs text-slate-400">Remplissez vos données personnelles</p>
         </div>
       </div>
+      
+      <!-- Message d'erreur API -->
+      @if (erreurMessage()) {
+        <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-4">
+          <i class="ti ti-alert-circle text-sm"></i>
+          {{ erreurMessage() }}
+        </div>
+      }
+
       <div class="space-y-4">
         <!-- Nom complet -->
         <div>
@@ -58,16 +67,18 @@
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Numéro de téléphone</label>
           <div class="flex gap-2">
-            <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium transition-colors"
-                 [class.border-red-500]="submitted() && f['telephone'].invalid"
-                 [class.bg-red-50]="submitted() && f['telephone'].invalid"
-                 [class.text-red-600]="submitted() && f['telephone'].invalid">🇸🇳 +221</div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-20 text-center font-medium transition-colors"
+                 [class.border-red-500]="(submitted() && f['telephone'].invalid) || phoneError()"
+                 [class.bg-red-50]="(submitted() && f['telephone'].invalid) || phoneError()"
+                 [class.text-red-600]="(submitted() && f['telephone'].invalid) || phoneError()">🇸🇳 +221</div>
             <input type="tel" formControlName="telephone" placeholder="77 XXX XX XX"
-              [class.border-red-500]="submitted() && f['telephone'].invalid"
-              [class.bg-red-50]="submitted() && f['telephone'].invalid"
+              [class.border-red-500]="(submitted() && f['telephone'].invalid) || phoneError()"
+              [class.bg-red-50]="(submitted() && f['telephone'].invalid) || phoneError()"
               class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none transition-colors">
           </div>
-          @if (submitted() && f['telephone'].invalid) {
+          @if (phoneError()) {
+            <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> {{ phoneError() }}</p>
+          } @else if (submitted() && f['telephone'].invalid) {
             <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Numéro invalide.</p>
           }
         </div>
@@ -76,14 +87,16 @@
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
           <div class="relative">
             <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors"
-               [class.text-red-400]="submitted() && f['email'].invalid"
-               [class.text-slate-400]="!(submitted() && f['email'].invalid)"></i>
+               [class.text-red-400]="(submitted() && f['email'].invalid) || emailError()"
+               [class.text-slate-400]="!((submitted() && f['email'].invalid) || emailError())"></i>
             <input type="email" formControlName="email" placeholder="email@exemple.sn"
-              [class.border-red-500]="submitted() && f['email'].invalid"
-              [class.bg-red-50]="submitted() && f['email'].invalid"
+              [class.border-red-500]="(submitted() && f['email'].invalid) || emailError()"
+              [class.bg-red-50]="(submitted() && f['email'].invalid) || emailError()"
               class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-colors">
           </div>
-          @if (submitted() && f['email'].invalid) {
+          @if (emailError()) {
+            <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> {{ emailError() }}</p>
+          } @else if (submitted() && f['email'].invalid) {
             <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Email invalide.</p>
           }
         </div>
@@ -204,7 +217,7 @@
   <!-- Left Panel -->
   <div class="bg-navy p-12 flex flex-col justify-between relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute top-[-10%] right-[-15%] w-[500px] h-[500px] bg-linear-to-br from-tt-orange/8 to-transparent rounded-full blur-3xl"></div>
+      <div class="absolute top-[-10%] right-[-15%] w-125 h-125 bg-linear-to-br from-tt-orange/8 to-transparent rounded-full blur-3xl"></div>
     </div>
     <a routerLink="/" class="flex items-center gap-3 relative z-10">
       <img src="logos/kolisgo-logo-dark.svg" alt="KolisGo" class="h-10">
@@ -250,6 +263,15 @@
       <div class="fade-up">
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Créer votre compte</h2>
         <p class="text-sm text-slate-400 mb-7">Étape 1 — Vos informations personnelles</p>
+        
+        <!-- Message d'erreur API -->
+        @if (erreurMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2 mb-4">
+            <i class="ti ti-alert-circle text-sm"></i>
+            {{ erreurMessage() }}
+          </div>
+        }
+
         <div class="space-y-4">
           <!-- Nom complet -->
           <div>
@@ -271,16 +293,18 @@
           <div>
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Téléphone</label>
             <div class="flex gap-2">
-              <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-[80px] text-center font-medium transition-colors"
-                   [class.border-red-500]="submitted() && f['telephone'].invalid"
-                   [class.bg-red-50]="submitted() && f['telephone'].invalid"
-                   [class.text-red-600]="submitted() && f['telephone'].invalid">🇸🇳 +221</div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm min-w-20 text-center font-medium transition-colors"
+                   [class.border-red-500]="(submitted() && f['telephone'].invalid) || phoneError()"
+                   [class.bg-red-50]="(submitted() && f['telephone'].invalid) || phoneError()"
+                   [class.text-red-600]="(submitted() && f['telephone'].invalid) || phoneError()">🇸🇳 +221</div>
               <input type="tel" formControlName="telephone" placeholder="77 XXX XX XX"
-                [class.border-red-500]="submitted() && f['telephone'].invalid"
-                [class.bg-red-50]="submitted() && f['telephone'].invalid"
+                [class.border-red-500]="(submitted() && f['telephone'].invalid) || phoneError()"
+                [class.bg-red-50]="(submitted() && f['telephone'].invalid) || phoneError()"
                 class="input-focus flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none transition-colors">
             </div>
-            @if (submitted() && f['telephone'].invalid) {
+            @if (phoneError()) {
+              <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> {{ phoneError() }}</p>
+            } @else if (submitted() && f['telephone'].invalid) {
               <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Numéro invalide.</p>
             }
           </div>
@@ -289,14 +313,16 @@
             <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Email</label>
             <div class="relative">
               <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                 [class.text-red-400]="submitted() && f['email'].invalid"
-                 [class.text-slate-400]="!(submitted() && f['email'].invalid)"></i>
+                 [class.text-red-400]="(submitted() && f['email'].invalid) || emailError()"
+                 [class.text-slate-400]="!((submitted() && f['email'].invalid) || emailError())"></i>
               <input type="email" formControlName="email" placeholder="email@exemple.sn"
-                [class.border-red-500]="submitted() && f['email'].invalid"
-                [class.bg-red-50]="submitted() && f['email'].invalid"
+                [class.border-red-500]="(submitted() && f['email'].invalid) || emailError()"
+                [class.bg-red-50]="(submitted() && f['email'].invalid) || emailError()"
                 class="input-focus w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-colors">
             </div>
-            @if (submitted() && f['email'].invalid) {
+            @if (emailError()) {
+              <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> {{ emailError() }}</p>
+            } @else if (submitted() && f['email'].invalid) {
               <p class="text-[10px] text-red-500 mt-1 flex items-center gap-1"><i class="ti ti-alert-circle"></i> Email invalide.</p>
             }
           </div>
@@ -351,6 +377,9 @@
       <!-- Step 3 Desktop -->
       @if (etape() === 3) {
       <div class="fade-up">
+        <button (click)="goBack()" type="button" class="mb-6 flex items-center gap-2 text-sm text-slate-400 hover:text-navy transition-colors">
+          <i class="ti ti-arrow-left"></i> Retour
+        </button>
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Finalisez votre profil</h2>
         <p class="text-sm text-slate-400 mb-7">Étape 3 — Type de compte</p>
         <div class="space-y-3 mb-5">

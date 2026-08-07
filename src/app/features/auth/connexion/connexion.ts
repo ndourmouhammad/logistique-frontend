@@ -56,9 +56,13 @@ export class Connexion implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.erreurMessage.set(err.status === 401
-          ? 'Email ou mot de passe incorrect.'
-          : 'Erreur serveur. Réessayez plus tard.');
+        const msg = (err.error?.message || err.error || err.message || '').toString().toLowerCase();
+        
+        if (err.status === 401 || err.status === 403 || err.status === 400 || err.status === 500 || msg.includes('bad credentials')) {
+          this.erreurMessage.set('Email ou mot de passe incorrect.');
+        } else {
+          this.erreurMessage.set('Erreur serveur. Réessayez plus tard.');
+        }
       }
     });
   }

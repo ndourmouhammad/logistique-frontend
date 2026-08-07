@@ -18,6 +18,8 @@ export class Inscription implements OnInit {
   submitted        = signal(false);
   erreurMessage    = signal('');
   successMessage   = signal('');
+  emailError       = signal('');
+  phoneError       = signal('');
 
   // ── Inscription publique = CLIENT uniquement ─────────────────────────────
   // Les autres rôles sont créés par l'Admin (Semaine 2)
@@ -76,11 +78,21 @@ export class Inscription implements OnInit {
 
   goToStep2() {
     this.submitted.set(true);
+    this.emailError.set('');
+    this.phoneError.set('');
     const { nomComplet, telephone, email, motDePasse } = this.f;
     if (nomComplet.valid && telephone.valid && email.valid && motDePasse.valid) {
       this.submitted.set(false);
       // ── Étape 2 (OTP SMS) ignorée pour l'instant → passe directement à l'étape 3
       this.etape.set(3);
+    }
+  }
+
+  goBack() {
+    if (this.etape() > 1) {
+      this.etape.set(1);
+    } else {
+      this.router.navigate(['/connexion']);
     }
   }
 
@@ -115,16 +127,42 @@ export class Inscription implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         
-        // ── Lire le message texte renvoyé par le backend ─────────────────────
-        const message = err.error;
-        
-        if (typeof message === 'string' && message.includes('email')) {
-          this.erreurMessage.set('Un compte existe déjà avec cet email.');
-        } else if (typeof message === 'string' && message.includes('téléphone')) {
-          this.erreurMessage.set('Ce numéro de téléphone est déjà utilisé.');
-        } else {
-          this.erreurMessage.set('Erreur lors de la création du compte. Réessayez.');
+        let isHandled = false;
+
+        // Try to safely extract the message text
+        let messageStr = '';
+        if (typeof err.error === 'string') {
+          messageStr = err.error.toLowerCase();
+        } else if (err.error && typeof err.error.message === 'string') {
+          messageStr = err.error.message.toLowerCase();
+        } else if (err.message) {
+          messageStr = err.message.toLowerCase();
         }
+
+        // Backend can sometimes send 'Duplicate entry' without explicit field names but we can match values
+        if (messageStr.includes('email') || messageStr.includes('mail') || messageStr.includes(email.toLowerCase())) {
+          this.emailError.set('Un compte existe déjà avec cet email.');
+          isHandled = true;
+        } 
+        
+        if (messageStr.includes('téléphone') || messageStr.includes('telephone') || messageStr.includes('phone') || messageStr.includes('numéro') || messageStr.includes(telephone)) {
+          this.phoneError.set('Ce numéro est déjà utilisé.');
+          isHandled = true;
+        } 
+        
+        if (!isHandled) {
+          if (typeof err.error === 'string' && err.error.length < 100) {
+            this.erreurMessage.set(err.error);
+          } else {
+            this.erreurMessage.set('Erreur lors de la création du compte. Vérifiez vos informations.');
+          }
+        } else {
+          this.erreurMessage.set('');
+        }
+        
+        // Retourne à l'étape 1 pour afficher l'erreur et permettre de modifier
+        this.etape.set(1);
+        this.submitted.set(true);
       }
     });
   }
