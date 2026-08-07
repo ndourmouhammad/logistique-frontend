@@ -6,10 +6,15 @@
       <h1 class="text-sm font-semibold text-slate-800">Tableau de bord — {{ nomHub }}</h1>
       <p class="text-xs text-slate-400 mt-0.5">Vue d'ensemble temps réel</p>
     </div>
-    <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
-      <i class="ti ti-refresh text-sm"></i> Actualiser
-    </button>
-    <div class="w-8 h-8 bg-navy rounded-full flex items-center justify-center text-white text-xs font-medium">{{ gestionnaire }}</div>
+    <div class="flex items-center gap-3">
+      <a routerLink="/hub/creation-expedition" class="bg-tt-orange hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm shadow-orange-500/20">
+        <i class="ti ti-plus text-sm"></i> Nouveau colis (Guichet)
+      </a>
+      <button class="border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
+        <i class="ti ti-refresh text-sm"></i> Actualiser
+      </button>
+      <div class="w-8 h-8 bg-navy rounded-full flex items-center justify-center text-white text-xs font-medium">{{ gestionnaire }}</div>
+    </div>
   </header>
 
   <!-- Content -->

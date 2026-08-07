@@ -30,6 +30,7 @@ export interface PointRelaisListItem {
     ville:            string;
     capaciteMaxColis: number;
     stockActuel:      number;
+    rue?:             string;
 }
 
 export interface PointRelaisContext {

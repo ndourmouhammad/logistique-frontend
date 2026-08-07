@@ -68,6 +68,7 @@
               <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Capacité</th>
               <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Chauffeur</th>
               <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px]">Statut</th>
+              <th class="px-4 py-3 font-semibold text-slate-500 uppercase tracking-wider text-[10px] text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -111,6 +112,13 @@
                     {{ v.statut }}
                   </span>
                 </td>
+                <td class="px-4 py-3 text-right">
+                  <button (click)="ouvrirModalEdition(v)"
+                    class="p-1.5 text-slate-400 hover:text-tt-orange hover:bg-orange-50 rounded-lg transition"
+                    title="Modifier">
+                    <i class="ti ti-edit text-sm"></i>
+                  </button>
+                </td>
               </tr>
             }
             @if (!isLoading() && vehiculesFiltres().length === 0) {
@@ -139,8 +147,12 @@
 
         <div class="bg-navy px-6 py-4 flex items-center justify-between">
           <div>
-            <h3 class="text-sm font-semibold text-white">Ajouter un véhicule</h3>
-            <p class="text-xs text-white/50 mt-0.5">Enregistrer un nouveau véhicule</p>
+            <h3 class="text-sm font-semibold text-white">
+              {{ isEditMode() ? 'Modifier le véhicule' : 'Ajouter un véhicule' }}
+            </h3>
+            <p class="text-xs text-white/50 mt-0.5">
+              {{ isEditMode() ? 'Modifier les informations du véhicule' : 'Enregistrer un nouveau véhicule' }}
+            </p>
           </div>
           <button (click)="fermerModal()" class="text-white/50 hover:text-white transition">
             <i class="ti ti-x text-lg"></i>
@@ -231,11 +243,11 @@
             class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition-colors">
             Annuler
           </button>
-          <button (click)="creerVehicule()" [disabled]="isCreating()"
+          <button (click)="sauvegarderVehicule()" [disabled]="isCreating()"
             class="px-4 py-2 text-sm text-white bg-tt-orange hover:bg-orange-600 rounded-xl font-semibold
                    flex items-center gap-2 disabled:opacity-60 transition-colors shadow-sm shadow-orange-500/20">
-            <i [class]="isCreating() ? 'ti ti-loader-2 animate-spin' : 'ti ti-plus'"></i>
-            {{ isCreating() ? 'Ajout...' : 'Ajouter le véhicule' }}
+            <i [class]="isCreating() ? 'ti ti-loader-2 animate-spin' : (isEditMode() ? 'ti ti-check' : 'ti ti-plus')"></i>
+            {{ isCreating() ? 'Enregistrement...' : (isEditMode() ? 'Enregistrer' : 'Ajouter le véhicule') }}
           </button>
         </div>
 

@@ -13,14 +13,42 @@ export class Accueil {
   mobileMenuOpen = false;
   sectionActive = signal('accueil');
 
-  // ── Estimateur ──────────────────────────────────────────────────
+  
   villeDepart  = 'Dakar';
   villeArrivee = 'Diourbel';
   poids        = 2.5;
   service      = signal('Standard');
-  estimation   = 2500;
+  estimation   = 2300; 
 
   villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba'];
+
+  // Grille tarifaire exacte (Modèle Financier)
+  private readonly TARIFS_GRID: Record<string, Record<string, { '0-5': number; '5-20': number; '20-50': number }>> = {
+    Dakar: {
+      Dakar:     { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
+      'Thiès':    { '0-5': 1300, '5-20': 3500, '20-50': 6700 },
+      Diourbel:  { '0-5': 2300, '5-20': 4500, '20-50': 8700 },
+      Touba:     { '0-5': 2800, '5-20': 6500, '20-50': 8700 }
+    },
+    'Thiès': {
+      Dakar:     { '0-5': 1300, '5-20': 3500, '20-50': 6700 },
+      'Thiès':    { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
+      Diourbel:  { '0-5': 1800, '5-20': 3500, '20-50': 7700 },
+      Touba:     { '0-5': 2300, '5-20': 4500, '20-50': 5700 }
+    },
+    Diourbel: {
+      Dakar:     { '0-5': 2300, '5-20': 4500, '20-50': 8700 },
+      'Thiès':    { '0-5': 1800, '5-20': 3500, '20-50': 7700 },
+      Diourbel:  { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
+      Touba:     { '0-5': 1300, '5-20': 3000, '20-50': 4700 }
+    },
+    Touba: {
+      Dakar:     { '0-5': 2800, '5-20': 6500, '20-50': 8700 },
+      'Thiès':    { '0-5': 2300, '5-20': 4500, '20-50': 5700 },
+      Diourbel:  { '0-5': 1300, '5-20': 3000, '20-50': 4700 },
+      Touba:     { '0-5': 1000, '5-20': 2000, '20-50': 3500 }
+    }
+  };
 
   // ── Suivi rapide ───────────────────────────────────────────────
   codeTracking = '';
@@ -28,15 +56,15 @@ export class Accueil {
   // ── Témoignages ────────────────────────────────────────────────
   temoignages = [
     {
-      nom: 'Aminata Diallo',
+      nom: 'Bineta Sall',
       role: 'E-commerçante · Dakar',
       message: 'Grâce à KolisGo, mes clients reçoivent leurs commandes en 24h. Mon taux de satisfaction a explosé !',
       note: 5
     },
     {
-      nom: 'Moussa Ndiaye',
-      role: 'Particulier · Saint-Louis',
-      message: 'J\'ai envoyé un colis à ma famille à Ziguinchor, tout s\'est passé sans accroc. Le suivi GPS c\'est top !',
+      nom: 'Mamadou Ngom',
+      role: 'Particulier · Diourbel',
+      message: 'J\'ai envoyé un colis à ma famille à Diourbel, tout s\'est passé sans accroc. Le suivi GPS c\'est top !',
       note: 5
     },
     {
@@ -81,7 +109,24 @@ export class Accueil {
   }
 
   calculerEstimation() {
-    const base = 1500 + (this.poids * 400) + (this.service() === 'Express' ? 800 : 0);
+    const dep = this.villeDepart;
+    const arr = this.villeArrivee;
+    const routes = this.TARIFS_GRID[dep] || this.TARIFS_GRID['Dakar'];
+    const rates = routes[arr] || routes[dep] || { '0-5': 1000, '5-20': 2000, '20-50': 3500 };
+
+    let categorie: '0-5' | '5-20' | '20-50' = '0-5';
+    if (this.poids > 20) {
+      categorie = '20-50';
+    } else if (this.poids > 5) {
+      categorie = '5-20';
+    }
+
+    let base = rates[categorie];
+
+    if (this.service() === 'Express') {
+      base = base * 1.3;
+    }
+
     this.estimation = Math.round(base);
   }
 

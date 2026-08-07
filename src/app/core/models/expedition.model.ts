@@ -23,6 +23,28 @@ export interface ExpeditionRequest {
   pointRelaisDestinationId: number | null;  
 }
 
+export interface ExpeditionGuichetRequest {
+  nomClient: string;
+  telephoneClient: string;
+  emailClient?: string;
+  nomDestinataire: string;
+  telephoneDestinataire: string;
+  emailDestinataire?: string;
+  poids: number;
+  volume: number;
+  descriptionContenu: string;
+  modeLivraison: ModeLivraison;
+  pointRelaisDestinationId?: number;
+  hubDestinationId?: number;
+  rue?: string;
+  ville?: string;
+  region?: string;
+  codePostal?: string;
+  pays?: string;
+  hubId: number;
+}
+
+
 export interface ExpeditionResponse {
   id:                    number;
   codeTracking:          string;

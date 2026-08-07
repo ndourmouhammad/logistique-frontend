@@ -26,6 +26,9 @@ export class Flotte implements OnInit {
   typesVehicule  = ['CAMIONNETTE', 'VOITURE', 'MOTOCYCLE'];
   statutsVehicule = ['DISPONIBLE', 'EN_SERVICE', 'EN_MAINTENANCE', 'EN_PANNE'];
 
+  editingVehiculeId = signal<number | null>(null);
+  isEditMode        = signal(false);
+
   form = signal<VehiculeRequest>({
     immatriculation: '', type: 'CAMIONNETTE',
     capaciteMaxPoids: 500, capaciteMaxVolume: 2.0,
@@ -60,10 +63,27 @@ export class Flotte implements OnInit {
   }
 
   ouvrirModal() {
+    this.isEditMode.set(false);
+    this.editingVehiculeId.set(null);
     this.form.set({
       immatriculation: '', type: 'CAMIONNETTE',
       capaciteMaxPoids: 500, capaciteMaxVolume: 2.0,
       statut: 'DISPONIBLE', chauffeurId: undefined
+    });
+    this.erreurMessage.set('');
+    this.showModal.set(true);
+  }
+
+  ouvrirModalEdition(vehicule: VehiculeAdmin) {
+    this.isEditMode.set(true);
+    this.editingVehiculeId.set(vehicule.id);
+    this.form.set({
+      immatriculation: vehicule.immatriculation,
+      type: vehicule.type as 'CAMIONNETTE' | 'VOITURE' | 'MOTOCYCLE',
+      capaciteMaxPoids: vehicule.capaciteMaxPoids || 500,
+      capaciteMaxVolume: vehicule.capaciteMaxVolume || 2.0,
+      statut: vehicule.statut as 'DISPONIBLE' | 'EN_SERVICE' | 'EN_MAINTENANCE' | 'EN_PANNE',
+      chauffeurId: vehicule.chauffeurId
     });
     this.erreurMessage.set('');
     this.showModal.set(true);
@@ -75,7 +95,7 @@ export class Flotte implements OnInit {
     this.form.update(f => ({ ...f, [field]: value }));
   }
 
-  creerVehicule() {
+  sauvegarderVehicule() {
     const f = this.form();
     if (!f.immatriculation) {
       this.erreurMessage.set("L'immatriculation est requise.");
@@ -85,11 +105,15 @@ export class Flotte implements OnInit {
     this.isCreating.set(true);
     this.erreurMessage.set('');
 
-    this.adminService.creerVehicule(f).subscribe({
+    const operation = this.isEditMode() && this.editingVehiculeId()
+      ? this.adminService.modifierVehicule(this.editingVehiculeId()!, f)
+      : this.adminService.creerVehicule(f);
+
+    operation.subscribe({
       next: () => {
         this.isCreating.set(false);
         this.showModal.set(false);
-        this.successMessage.set('Véhicule ajouté avec succès.');
+        this.successMessage.set(this.isEditMode() ? 'Véhicule modifié avec succès.' : 'Véhicule ajouté avec succès.');
         this.chargerDonnees();
         setTimeout(() => this.successMessage.set(''), 3000);
       },
@@ -98,7 +122,7 @@ export class Flotte implements OnInit {
         this.erreurMessage.set(
           err.error?.includes('immatriculation')
             ? 'Cette immatriculation existe déjà.'
-            : 'Erreur lors de la création.'
+            : 'Erreur lors de la sauvegarde.'
         );
       }
     });

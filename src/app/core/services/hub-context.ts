@@ -8,20 +8,23 @@ export class HubContext {
 
   hub = signal<HubResponse | null>(null);
   isLoaded = signal(false);
+  private currentUserId = signal<number | null>(null);
 
   private hubService = inject(HubService);
   private authService = inject(Auth);
 
   chargerHub() {
-    if (this.isLoaded()) return;
-
     const gestionnaireId = this.authService.getUserId();
     if (!gestionnaireId) return;
+
+    // Si on a déjà chargé le hub pour CET utilisateur, on ne refait pas la requête
+    if (this.isLoaded() && this.currentUserId() === gestionnaireId) return;
 
     this.hubService.getMonHub(gestionnaireId).subscribe({
       next: (hub) => {
         this.hub.set(hub);
         this.isLoaded.set(true);
+        this.currentUserId.set(gestionnaireId);
       },
       error: () => {
         console.error('Impossible de charger le hub du gestionnaire');

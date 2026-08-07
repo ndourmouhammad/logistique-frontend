@@ -22,6 +22,9 @@ export class AdminRelais implements OnInit {
   successMessage = signal('');
   recherche      = signal('');
 
+  editingRelaisId = signal<number | null>(null);
+  isEditMode      = signal(false);
+
   form = signal<RelaisRequest>({
     nomEnseigne: '', capaciteMaxColis: 50,
     tauxCommissionParColis: 250,
@@ -49,10 +52,27 @@ export class AdminRelais implements OnInit {
   }
 
   ouvrirModal() {
+    this.isEditMode.set(false);
+    this.editingRelaisId.set(null);
     this.form.set({
       nomEnseigne: '', capaciteMaxColis: 50,
       tauxCommissionParColis: 250,
       rue: '', ville: '', region: ''
+    });
+    this.erreurMessage.set('');
+    this.showModal.set(true);
+  }
+
+  ouvrirModalEdition(relais: RelaisAdmin) {
+    this.isEditMode.set(true);
+    this.editingRelaisId.set(relais.id);
+    this.form.set({
+      nomEnseigne: relais.nomEnseigne,
+      capaciteMaxColis: relais.capaciteMaxColis || 50,
+      tauxCommissionParColis: relais.tauxCommissionParColis || 250,
+      rue: relais.rue || '',
+      ville: relais.ville || '',
+      region: relais.region || ''
     });
     this.erreurMessage.set('');
     this.showModal.set(true);
@@ -64,7 +84,7 @@ export class AdminRelais implements OnInit {
     this.form.update(f => ({ ...f, [field]: value }));
   }
 
-  creerRelais() {
+  sauvegarderRelais() {
     const f = this.form();
     if (!f.nomEnseigne || !f.ville) {
       this.erreurMessage.set('Le nom et la ville sont requis.');
@@ -74,17 +94,21 @@ export class AdminRelais implements OnInit {
     this.isCreating.set(true);
     this.erreurMessage.set('');
 
-    this.adminService.creerRelais(f).subscribe({
+    const operation = this.isEditMode() && this.editingRelaisId()
+      ? this.adminService.modifierRelais(this.editingRelaisId()!, f)
+      : this.adminService.creerRelais(f);
+
+    operation.subscribe({
       next: () => {
         this.isCreating.set(false);
         this.showModal.set(false);
-        this.successMessage.set('Point relais créé avec succès.');
+        this.successMessage.set(this.isEditMode() ? 'Point relais modifié avec succès.' : 'Point relais créé avec succès.');
         this.chargerRelais();
         setTimeout(() => this.successMessage.set(''), 3000);
       },
       error: () => {
         this.isCreating.set(false);
-        this.erreurMessage.set('Erreur lors de la création.');
+        this.erreurMessage.set('Erreur lors de la sauvegarde.');
       }
     });
   }

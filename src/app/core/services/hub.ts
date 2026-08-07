@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ChauffeurResponse, DispatchChauffeurRequest, ExpeditionResponse, LivreurResponse } from '../models/expedition.model';
+import { ChauffeurResponse, DispatchChauffeurRequest, ExpeditionResponse, LivreurResponse, ExpeditionGuichetRequest } from '../models/expedition.model';
 import { DispatchRequest, ExpeditionListItem } from '../models/relais.model';
 import { HubResponse } from '../models/hub.model';
 
@@ -45,6 +45,11 @@ export class HubService {
     );
   }
 
+  // ── Création d'expédition au guichet ──────────────────────────────────────
+  enregistrerExpeditionGuichet(request: ExpeditionGuichetRequest): Observable<ExpeditionResponse> {
+    return this.http.post<ExpeditionResponse>(`${this.apiUrl}/expeditions/guichet`, request);
+  }
+
   getLivreursDisponibles(zone: string): Observable<LivreurResponse[]> {
     return this.http.get<LivreurResponse[]>(
       `${environment.apiUrl}/livreur/disponibles?zone=${zone}`,
@@ -69,7 +74,11 @@ getMonHub(gestionnaireId: number): Observable<HubResponse> {
   );
 }
 
-// Ajoutez cette méthode dans HubService
+// Liste tous les hubs — endpoint accessible au GESTIONNAIRE_HUB
+getTousLesHubs(): Observable<HubResponse[]> {
+  return this.http.get<HubResponse[]>(`${this.apiUrl}/tous-les-hubs`);
+}
+
 deposerAuRelais(expeditionId: number, pointRelaisId: number, forcerSubstitution: boolean = false): Observable<any> {
   return this.http.post(
     `${this.apiUrl}/expeditions/${expeditionId}/depot-relais?pointRelaisId=${pointRelaisId}&forcerSubstitution=${forcerSubstitution}`,

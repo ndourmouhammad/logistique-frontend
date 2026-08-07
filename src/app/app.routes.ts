@@ -53,6 +53,7 @@ export const routes: Routes = [
   { path: 'hub/preparation',       canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/preparation-expedition/preparation-expedition').then(m => m.PreparationExpedition) },
   { path: 'hub/validation-depart', canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/validation-depart/validation-depart').then(m => m.ValidationDepart) },
   { path: 'hub/remise-guichet',    canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/remise-guichet/remise-guichet').then(m => m.RemiseGuichet) },
+  { path: 'hub/creation-expedition', canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/creation-expedition-guichet/creation-expedition-guichet').then(m => m.CreationExpeditionGuichet) },
   { path: 'hub/depot-relais',      canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/depot-relais-hub/depot-relais-hub').then(m => m.DepotRelaisHub) },
   { path: 'hub/profil',              canActivate: [authGuard], data: { roles: ['ROLE_GESTIONNAIRE_HUB'] }, loadComponent: () => import('./features/hub/profil-hub/profil-hub').then(m => m.ProfilHub) },
   // Admin

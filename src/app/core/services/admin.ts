@@ -40,6 +40,10 @@ export class AdminService {
     return this.http.post<HubAdmin>(`${this.apiUrl}/hubs`, request);
   }
 
+  modifierHub(id: number, request: HubRequest): Observable<HubAdmin> {
+    return this.http.put<HubAdmin>(`${this.apiUrl}/hubs/${id}`, request);
+  }
+
   // ── Relais ────────────────────────────────────────────────────────────────
   getRelais(): Observable<RelaisAdmin[]> {
     return this.http.get<RelaisAdmin[]>(`${this.apiUrl}/relais`);
@@ -49,6 +53,10 @@ export class AdminService {
     return this.http.post(`${this.apiUrl}/relais`, request, { responseType: 'text' });
   }
 
+  modifierRelais(id: number, request: RelaisRequest): Observable<any> {
+    return this.http.put(`${this.apiUrl}/relais/${id}`, request, { responseType: 'text' });
+  }
+
   // ── Véhicules ─────────────────────────────────────────────────────────────
   getVehicules(): Observable<VehiculeAdmin[]> {
     return this.http.get<VehiculeAdmin[]>(`${this.apiUrl}/vehicules`);
@@ -56,6 +64,10 @@ export class AdminService {
 
   creerVehicule(request: VehiculeRequest): Observable<VehiculeAdmin> {
     return this.http.post<VehiculeAdmin>(`${this.apiUrl}/vehicules`, request);
+  }
+
+  modifierVehicule(id: number, request: VehiculeRequest): Observable<VehiculeAdmin> {
+    return this.http.put<VehiculeAdmin>(`${this.apiUrl}/vehicules/${id}`, request);
   }
 
   assignerChauffeur(vehiculeId: number, chauffeurId: number): Observable<VehiculeAdmin> {

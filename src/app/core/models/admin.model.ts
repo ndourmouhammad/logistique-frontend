@@ -40,6 +40,9 @@ export interface HubAdmin {
   id:   number;
   nom:  string;
   ville: string;
+  capaciteStockage?: number;
+  rue?: string;
+  region?: string;
 }
 
 export interface HubRequest {
@@ -56,6 +59,9 @@ export interface RelaisAdmin {
   ville:           string;
   capaciteMaxColis: number;
   stockActuel:     number;
+  tauxCommissionParColis?: number;
+  rue?: string;
+  region?: string;
 }
 
 export interface RelaisRequest {
@@ -84,5 +90,5 @@ export interface VehiculeRequest {
   capaciteMaxPoids: number;
   capaciteMaxVolume: number;
   statut:           string;
-  chauffeurId?:     number;
+  chauffeurId?:     number | null;
 }
