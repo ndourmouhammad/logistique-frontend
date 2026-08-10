@@ -85,4 +85,9 @@ deposerAuRelais(expeditionId: number, pointRelaisId: number, forcerSubstitution:
     {}
   );
 }
+
+// ── Stock du hub (colis physiquement présents) ─────────────────────────────
+getStock(hubId: number): Observable<ExpeditionListItem[]> {
+  return this.http.get<ExpeditionListItem[]>(`${this.apiUrl}/${hubId}/stock`);
+}
 }

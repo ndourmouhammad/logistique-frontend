@@ -8,6 +8,7 @@ export interface ExpeditionListItem {
   fraisLivraison:    number;
   modeLivraison:     'RETRAIT_HUB' | 'RETRAIT_RELAIS' | 'LIVRAISON_DOMICILE';
   villePointRelais:  string | null;
+  dateReception:     string | null;
 }
 
 export interface DispatchRequest {
