@@ -54,6 +54,7 @@ export class Recapitulatif implements OnInit {
       clientId,
       nomDestinataire:       form.nomDestinataire,
       telephoneDestinataire: form.telDestinataire,
+      emailDestinataire:     form.emailDestinataire,
       adresseDepart:         form.adresseDepart,
       villeDepart:           form.villeDepart,
       rue:                   form.rue,

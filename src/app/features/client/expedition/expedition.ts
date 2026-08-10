@@ -57,6 +57,7 @@ export class Expedition implements OnInit {
       telExpediteur:      [''],
       nomDestinataire:    ['', Validators.required],
       telDestinataire:    ['', Validators.required],
+      emailDestinataire:  ['', [Validators.required, Validators.email]],
       rue:                [''],
       quartierArrivee:    [''],
       ville:              ['Thiès', Validators.required],
@@ -89,7 +90,7 @@ export class Expedition implements OnInit {
     // ── AJOUT : Préremplir avec le profil client s'il y a des infos vides ──
     this.clientService.getProfil().subscribe({
       next: (profil) => {
-        const currentForm = this.expeditionForm.value;
+        const currentForm = this.expeditionForm.getRawValue();
         const rue = profil.rue || profil.adressePrincipale?.rue || '';
         this.expeditionForm.patchValue({
           nomExpediteur: currentForm.nomExpediteur || profil.nomComplet,
@@ -123,7 +124,7 @@ export class Expedition implements OnInit {
         debounceTime(400),
         switchMap(() => {
           this.isEstimating.set(true);
-          const formValue = this.expeditionForm.value;
+          const formValue = this.expeditionForm.getRawValue();
           const payload: EstimationRequest = {
             poids:          formValue.poids          || 0,
             volume:         formValue.volume         || 0,
@@ -153,6 +154,8 @@ export class Expedition implements OnInit {
     if (this.expeditionForm.get('modeLivraison')?.value === 'RETRAIT_RELAIS') {
       this.chargerPointsRelais();
     }
+
+
   }
 
   // ── AJOUT : charger les points relais selon la ville sélectionnée ────────
@@ -195,7 +198,7 @@ export class Expedition implements OnInit {
     this.isLoading.set(true);
     this.erreurMessage.set('');
 
-    const formData: ExpeditionFormData = this.expeditionForm.value;
+    const formData: ExpeditionFormData = this.expeditionForm.getRawValue();
 
     sessionStorage.setItem('formulaireExpedition', JSON.stringify(formData));
     sessionStorage.setItem('estimationExpedition', JSON.stringify(this.estimation()));

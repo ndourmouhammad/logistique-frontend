@@ -4,6 +4,7 @@ export interface ExpeditionRequest {
   clientId: number;
   nomDestinataire: string;
   telephoneDestinataire: string;
+  emailDestinataire?: string;
   adresseDepart: string;
   villeDepart: string;
   rue: string;
@@ -94,6 +95,7 @@ export interface ExpeditionFormData {
   telExpediteur: string;
   nomDestinataire: string;
   telDestinataire: string;
+  emailDestinataire: string;
   rue: string;
   quartierArrivee: string;
   ville: string;
