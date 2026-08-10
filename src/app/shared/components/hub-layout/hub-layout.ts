@@ -38,7 +38,7 @@ export class HubLayout {
     { id: 'reception', route: '/hub/reception',      icon: 'ti-package',            label: 'Réception colis' },
     { id: 'plan',      route: '/hub/plan',           icon: 'ti-building-warehouse', label: 'Stock / Plan' },
     { id: 'tri',       route: '/hub/tri',            icon: 'ti-truck',              label: 'Tri & Préparation' },
-    { id: 'guichet',   route: '/hub/remise-guichet', icon: 'ti-hand-finger',        label: 'Guichet' },
+    { id: 'guichet',   route: '/hub/remise-guichet', icon: 'ti-hand-finger',        label: 'Remise au guichet' },
   ];
 
   isActive(id: string): boolean {
