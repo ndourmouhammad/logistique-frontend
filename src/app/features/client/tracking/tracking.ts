@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientLayout } from '../../../shared/components/client-layout/client-layout';
 import { ExpeditionService } from '../../../core/services/expedition';
-import { TrackingResponse } from '../../../core/models/expedition.model';
+import { Auth } from '../../../core/services/auth';
+import { ExpeditionResponse, TrackingResponse } from '../../../core/models/expedition.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -18,11 +19,25 @@ export class Tracking implements OnInit {
   tracking      = signal<TrackingResponse | null>(null);
   isLoading     = signal(false);
   erreur        = signal('');
+  mesExpeditions = signal<ExpeditionResponse[]>([]);
 
   private expeditionService = inject(ExpeditionService);
   private route = inject(ActivatedRoute);
+  private auth = inject(Auth);
 
   ngOnInit() {
+    // Si l'utilisateur est connecté, charger ses expéditions récentes
+    const userId = this.auth.getUserId();
+    if (userId) {
+      this.expeditionService.getHistoriqueClient(userId).subscribe({
+        next: (data) => {
+          // Trier par date décroissante pour avoir les plus récents
+          const triees = data.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime());
+          this.mesExpeditions.set(triees);
+        }
+      });
+    }
+
     // Si code passé en query param → tracker directement
     this.route.queryParams.subscribe(params => {
       if (params['code']) {
@@ -30,6 +45,14 @@ export class Tracking implements OnInit {
         this.rechercher();
       }
     });
+  }
+
+  onSelectCode(event: Event) {
+    const code = (event.target as HTMLSelectElement).value;
+    if (code) {
+      this.codeRecherche.set(code);
+      this.rechercher();
+    }
   }
 
   rechercher() {

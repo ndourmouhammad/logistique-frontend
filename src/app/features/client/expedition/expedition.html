@@ -216,18 +216,24 @@
               <div>
                 <label class="text-xs font-medium text-slate-500 mb-1.5 block">Téléphone</label>
                 <input type="text" formControlName="telDestinataire" placeholder="+221 000 00 00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none"
-                       [class.border-red-400]="expeditionForm.get('telDestinataire')?.invalid && expeditionForm.get('telDestinataire')?.touched">
+                       [class.border-red-400]="(expeditionForm.get('telDestinataire')?.invalid && expeditionForm.get('telDestinataire')?.touched) || erreurTelephone()">
                 @if (expeditionForm.get('telDestinataire')?.invalid && expeditionForm.get('telDestinataire')?.touched) {
                   <div class="text-xs text-red-500 mt-1">Le téléphone du destinataire est requis</div>
+                }
+                @if (erreurTelephone()) {
+                  <div class="text-xs text-red-500 mt-1">{{ erreurTelephone() }}</div>
                 }
               </div>
             </div>
             <div class="mt-4">
               <label class="text-xs font-medium text-slate-500 mb-1.5 block">Email du destinataire (pour les notifications)</label>
               <input type="email" formControlName="emailDestinataire" placeholder="destinataire@exemple.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-navy placeholder:text-slate-400 outline-none"
-                     [class.border-red-400]="expeditionForm.get('emailDestinataire')?.invalid && expeditionForm.get('emailDestinataire')?.touched">
+                     [class.border-red-400]="(expeditionForm.get('emailDestinataire')?.invalid && expeditionForm.get('emailDestinataire')?.touched) || erreurEmail()">
               @if (expeditionForm.get('emailDestinataire')?.invalid && expeditionForm.get('emailDestinataire')?.touched) {
                 <div class="text-xs text-red-500 mt-1">Une adresse email valide est requise</div>
+              }
+              @if (erreurEmail()) {
+                <div class="text-xs text-red-500 mt-1">{{ erreurEmail() }}</div>
               }
             </div>
           </div>
@@ -247,7 +253,7 @@
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" formControlName="avecRamassage"  class="sr-only peer">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
             <!-- <div>
@@ -283,7 +289,7 @@
               </div>
               <div class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" formControlName="estExpress"  class="sr-only peer">
-                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy"></div>
               </div>
             </label>
           </div>

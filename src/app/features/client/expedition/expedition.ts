@@ -31,6 +31,9 @@ export class Expedition implements OnInit {
   isLoading    = signal(false);
   isEstimating = signal(false);
   erreurMessage = signal('');
+  erreurTelephone = signal('');
+  erreurEmail = signal('');
+  emailExpediteur = signal('');
 
   villes = ['Dakar', 'Thiès', 'Diourbel', 'Touba', 'Bambey', 'Mbacke'];
 
@@ -92,6 +95,7 @@ export class Expedition implements OnInit {
       next: (profil) => {
         const currentForm = this.expeditionForm.getRawValue();
         const rue = profil.rue || profil.adressePrincipale?.rue || '';
+        this.emailExpediteur.set(profil.email || '');
         this.expeditionForm.patchValue({
           nomExpediteur: currentForm.nomExpediteur || profil.nomComplet,
           telExpediteur: currentForm.telExpediteur || profil.telephone,
@@ -197,8 +201,29 @@ export class Expedition implements OnInit {
 
     this.isLoading.set(true);
     this.erreurMessage.set('');
+    this.erreurTelephone.set('');
+    this.erreurEmail.set('');
 
     const formData: ExpeditionFormData = this.expeditionForm.getRawValue();
+
+    let hasIdenticalError = false;
+
+    // ── AJOUT : empêcher le même email / téléphone ─────────────────────────
+    if (formData.telExpediteur && formData.telDestinataire && formData.telExpediteur.trim() === formData.telDestinataire.trim()) {
+      this.erreurTelephone.set("Le numéro de téléphone du destinataire ne peut pas être identique à celui de l'expéditeur.");
+      hasIdenticalError = true;
+    }
+    
+    if (this.emailExpediteur() && formData.emailDestinataire && this.emailExpediteur().trim().toLowerCase() === formData.emailDestinataire.trim().toLowerCase()) {
+      this.erreurEmail.set("L'adresse email du destinataire ne peut pas être la vôtre.");
+      hasIdenticalError = true;
+    }
+
+    if (hasIdenticalError) {
+      this.isLoading.set(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
 
     sessionStorage.setItem('formulaireExpedition', JSON.stringify(formData));
     sessionStorage.setItem('estimationExpedition', JSON.stringify(this.estimation()));

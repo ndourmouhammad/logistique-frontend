@@ -3,6 +3,27 @@
     <!-- Panel -->
     <div class="p-5 border-r border-slate-200 overflow-y-auto">
       
+      <!-- Sélection d'une expédition existante -->
+      @if (mesExpeditions().length > 0) {
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Mes expéditions récentes</label>
+          <div class="relative">
+            <select (change)="onSelectCode($event)" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-tt-orange focus:border-tt-orange block w-full p-3 font-semibold appearance-none cursor-pointer shadow-sm">
+              <option value="" disabled selected>-- Choisir un de mes colis --</option>
+              @for (exp of mesExpeditions(); track exp.id) {
+                <option [value]="exp.codeTracking">{{ exp.codeTracking }} - {{ exp.statut }} ({{ exp.dateCreation | date:'dd/MM' }})</option>
+              }
+            </select>
+            <i class="ti ti-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+          <div class="h-px bg-slate-200 flex-1"></div>
+          <span class="text-[10px] uppercase font-bold text-slate-400">Ou saisir un code</span>
+          <div class="h-px bg-slate-200 flex-1"></div>
+        </div>
+      }
+
       <!-- Barre de recherche -->
       <div class="flex gap-2 mb-6">
         <input [value]="codeRecherche()"
@@ -82,7 +103,7 @@
     </div>
     
     <!-- Map -->
-    <div class="lg:col-span-2 bg-slate-200 relative min-h-[300px]">
+    <div class="lg:col-span-2 bg-slate-200 relative min-h-75">
       @if (tracking(); as trk) {
       <svg class="w-full h-full absolute inset-0" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
         <defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#94a3b8" stroke-width="0.5"/></pattern></defs>
