@@ -92,7 +92,7 @@
                     </span>
                   </td>
                   <td class="px-5 py-4 text-right">
-                    <a [routerLink]="exp.statut === 'LIVRE' ? '/client/recapitulatif' : '/client/tracking'" class="text-xs text-navy font-semibold border border-slate-200 hover:bg-slate-50 px-4 py-1.5 rounded-xl transition">
+                    <a [routerLink]="['/client/tracking']" [queryParams]="{ code: exp.codeTracking }" class="text-xs text-navy font-semibold border border-slate-200 hover:bg-slate-50 px-4 py-1.5 rounded-xl transition">
                       {{ exp.statut === 'LIVRE' ? 'Détail' : 'Suivre' }}
                     </a>
                   </td>
