@@ -40,4 +40,11 @@ collecterExpedition(expeditionId: number, livreurId: number): Observable<any> {
     {}
   );
 }
+
+getHistorique(livreurId: number): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${this.apiUrl}/historique?livreurId=${livreurId}`
+  );
+}
+
 }
