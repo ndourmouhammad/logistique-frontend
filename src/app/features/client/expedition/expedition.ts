@@ -9,7 +9,7 @@ import { RelaisService} from '../../../core/services/relais';
 import { Auth } from '../../../core/services/auth';
 import { ClientService } from '../../../core/services/client';
 import { EstimationResponse, ExpeditionFormData, EstimationRequest, ModeLivraison } from '../../../core/models/expedition.model';
-import { debounceTime, Subject, switchMap } from 'rxjs';
+import { debounceTime, Subject, switchMap, catchError, of } from 'rxjs';
 import { PointRelaisListItem } from '../../../core/models/relais.model';
 
 @Component({
@@ -22,10 +22,10 @@ export class Expedition implements OnInit {
   expeditionForm!: FormGroup;
 
   estimation = signal<EstimationResponse>({
-    fraisTransport: 1500,
+    fraisTransport: 1000,
     fraisRamassage: 0,
     fraisAssurance: 0,
-    total:          1500
+    total:          1000
   });
 
   isLoading    = signal(false);
@@ -136,15 +136,24 @@ export class Expedition implements OnInit {
             avecRamassage:  formValue.avecRamassage,
             assurance:      formValue.assurance,
             valeurDeclaree: formValue.valeurDeclaree || 0,
-            modeLivraison:  formValue.modeLivraison,        // ← AJOUT
+            modeLivraison:  formValue.modeLivraison,
+            villeDepart:    formValue.villeDepart    || 'Dakar',
+            villeArrivee:   formValue.ville          || 'Thiès'
           };
-          return this.expeditionService.estimerTarif(payload);
+          return this.expeditionService.estimerTarif(payload).pipe(
+            catchError((err) => {
+              console.error("Erreur lors de l'estimation:", err);
+              return of(null);
+            })
+          );
         }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (data) => {
-          this.estimation.set(data);
+          if (data) {
+            this.estimation.set(data);
+          }
           this.isEstimating.set(false);
         },
         error: () => {

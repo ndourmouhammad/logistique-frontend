@@ -25,29 +25,36 @@ export class Accueil {
   // Grille tarifaire exacte (Modèle Financier)
   private readonly TARIFS_GRID: Record<string, Record<string, { '0-5': number; '5-20': number; '20-50': number }>> = {
     Dakar: {
-      Dakar:     { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
-      'Thiès':    { '0-5': 1300, '5-20': 3500, '20-50': 6700 },
-      Diourbel:  { '0-5': 2300, '5-20': 4500, '20-50': 8700 },
-      Touba:     { '0-5': 2800, '5-20': 6500, '20-50': 8700 }
+      Dakar:     { '0-5': 0, '5-20': 0, '20-50': 0 },
+      'Thiès':    { '0-5': 1000, '5-20': 3000, '20-50': 6000 },
+      Diourbel:  { '0-5': 2000, '5-20': 4000, '20-50': 8000 },
+      Touba:     { '0-5': 2500, '5-20': 6000, '20-50': 8000 }
     },
     'Thiès': {
-      Dakar:     { '0-5': 1300, '5-20': 3500, '20-50': 6700 },
-      'Thiès':    { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
-      Diourbel:  { '0-5': 1800, '5-20': 3500, '20-50': 7700 },
-      Touba:     { '0-5': 2300, '5-20': 4500, '20-50': 5700 }
+      Dakar:     { '0-5': 1000, '5-20': 3000, '20-50': 6000 },
+      'Thiès':    { '0-5': 0, '5-20': 0, '20-50': 0 },
+      Diourbel:  { '0-5': 1500, '5-20': 3000, '20-50': 7000 },
+      Touba:     { '0-5': 2000, '5-20': 4000, '20-50': 5000 }
     },
     Diourbel: {
-      Dakar:     { '0-5': 2300, '5-20': 4500, '20-50': 8700 },
-      'Thiès':    { '0-5': 1800, '5-20': 3500, '20-50': 7700 },
-      Diourbel:  { '0-5': 1000, '5-20': 2000, '20-50': 3500 },
-      Touba:     { '0-5': 1300, '5-20': 3000, '20-50': 4700 }
+      Dakar:     { '0-5': 2000, '5-20': 4000, '20-50': 8000 },
+      'Thiès':    { '0-5': 1500, '5-20': 3000, '20-50': 7000 },
+      Diourbel:  { '0-5': 0, '5-20': 0, '20-50': 0 },
+      Touba:     { '0-5': 1000, '5-20': 2500, '20-50': 4000 }
     },
     Touba: {
-      Dakar:     { '0-5': 2800, '5-20': 6500, '20-50': 8700 },
-      'Thiès':    { '0-5': 2300, '5-20': 4500, '20-50': 5700 },
-      Diourbel:  { '0-5': 1300, '5-20': 3000, '20-50': 4700 },
-      Touba:     { '0-5': 1000, '5-20': 2000, '20-50': 3500 }
+      Dakar:     { '0-5': 2500, '5-20': 6000, '20-50': 8000 },
+      'Thiès':    { '0-5': 2000, '5-20': 4000, '20-50': 5000 },
+      Diourbel:  { '0-5': 1000, '5-20': 2500, '20-50': 4000 },
+      Touba:     { '0-5': 0, '5-20': 0, '20-50': 0 }
     }
+  };
+
+  private readonly FRAIS_SUPP_GRID: Record<string, { '0-5': number; '5-20': number; '20-50': number }> = {
+    Dakar:    { '0-5': 1000, '5-20': 1200, '20-50': 1400 },
+    'Thiès':   { '0-5': 700,  '5-20': 900,  '20-50': 1100 },
+    Diourbel: { '0-5': 500,  '5-20': 700,  '20-50': 900 },
+    Touba:    { '0-5': 500,  '5-20': 700,  '20-50': 900 }
   };
 
   // ── Suivi rapide ───────────────────────────────────────────────
@@ -109,25 +116,25 @@ export class Accueil {
   }
 
   calculerEstimation() {
-    const dep = this.villeDepart;
-    const arr = this.villeArrivee;
-    const routes = this.TARIFS_GRID[dep] || this.TARIFS_GRID['Dakar'];
-    const rates = routes[arr] || routes[dep] || { '0-5': 1000, '5-20': 2000, '20-50': 3500 };
-
-    let categorie: '0-5' | '5-20' | '20-50' = '0-5';
+    const destination = this.TARIFS_GRID[this.villeDepart][this.villeArrivee];
+    
+    let tranche: '0-5' | '5-20' | '20-50' = '0-5';
     if (this.poids > 20) {
-      categorie = '20-50';
+      tranche = '20-50';
     } else if (this.poids > 5) {
-      categorie = '5-20';
+      tranche = '5-20';
     }
 
-    let base = rates[categorie];
+    const tarifBase = destination[tranche] || 1500;
 
+    let total = tarifBase;
+
+    // Majoration Express (+30%)
     if (this.service() === 'Express') {
-      base = base * 1.3;
+      total = total * 1.30;
     }
 
-    this.estimation = Math.round(base);
+    this.estimation = Math.round(total);
   }
 
   choisirService(s: string) {

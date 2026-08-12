@@ -122,6 +122,8 @@ export interface EstimationRequest {
   assurance:      boolean;
   valeurDeclaree: number;
   modeLivraison:  ModeLivraison;
+  villeDepart:    string;
+  villeArrivee:   string;
 }
 
 export interface TrackingResponse {

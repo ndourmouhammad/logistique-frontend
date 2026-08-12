@@ -25,6 +25,12 @@ export interface CommissionResponse {
   codeTrackingExpedition:  string;
 }
 
+export interface LivreurStats {
+  coursesLivrees: number;
+  gainsTotal:     number;
+  tauxReussite:   number;
+}
+
 export interface PointRelaisListItem {
     id:               number;
     nomEnseigne:      string;

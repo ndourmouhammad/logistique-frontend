@@ -5,6 +5,7 @@ import { LivreurLayout } from '../../../shared/components/livreur-layout/livreur
 import { LivreurService } from '../../../core/services/livreur';
 import { Auth } from '../../../core/services/auth';
 import { ExpeditionListItem } from '../../../core/models/relais.model';
+import { LivreurStats } from '../../../core/models/relais.model';
 
 @Component({
   selector: 'app-dashboard-livreur',
@@ -19,10 +20,11 @@ export class DashboardLivreur implements OnInit {
   zone       = signal('');
   enService  = signal(true);
 
-  livraisons = signal<ExpeditionListItem[]>([]);
-  isLoading  = signal(false);
+  livraisons    = signal<ExpeditionListItem[]>([]);
+  isLoading     = signal(false);
+  isLoadingStats = signal(false);
 
-  stats = { courses: 0, gains: 0, taux: 98 };
+  stats = signal<LivreurStats>({ coursesLivrees: 0, gainsTotal: 0, tauxReussite: 0 });
 
   private livreurService = inject(LivreurService);
   private authService    = inject(Auth);
@@ -32,7 +34,7 @@ export class DashboardLivreur implements OnInit {
     const livreurId = this.authService.getUserId();
     if (!livreurId) return;
 
-    // ── CORRECTION : utiliser getNomComplet() au lieu de getUser() ──────────
+    // ── Infos du livreur ──────────────────────────────────────────────────────
     const nomComplet = this.authService.getNomComplet() || 'Livreur';
     this.nomLivreur.set(nomComplet);
     this.initiales.set(
@@ -44,13 +46,24 @@ export class DashboardLivreur implements OnInit {
         .toUpperCase()
     );
 
-    // Charger les livraisons affectées
+    // ── Charger les stats dynamiques ──────────────────────────────────────────
+    this.isLoadingStats.set(true);
+    this.livreurService.getStats(livreurId).subscribe({
+      next: (data) => {
+        this.stats.set(data);
+        this.isLoadingStats.set(false);
+      },
+      error: () => {
+        this.isLoadingStats.set(false);
+      }
+    });
+
+    // ── Charger les livraisons en cours ────────────────────────────────────────
     this.isLoading.set(true);
     this.livreurService.getMesLivraisons(livreurId).subscribe({
       next: (data) => {
         this.isLoading.set(false);
         this.livraisons.set(data);
-        this.stats.courses = data.length;
       },
       error: () => {
         this.isLoading.set(false);

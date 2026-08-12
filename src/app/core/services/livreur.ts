@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExpeditionListItem } from '../models/relais.model';
+import { ExpeditionListItem, LivreurStats } from '../models/relais.model';
 
 @Injectable({ providedIn: 'root' })
 export class LivreurService {
@@ -13,6 +13,12 @@ export class LivreurService {
   getMesLivraisons(livreurId: number): Observable<ExpeditionListItem[]> {
     return this.http.get<ExpeditionListItem[]>(
       `${this.apiUrl}/mes-livraisons?livreurId=${livreurId}`
+    );
+  }
+
+  getStats(livreurId: number): Observable<LivreurStats> {
+    return this.http.get<LivreurStats>(
+      `${this.apiUrl}/stats?livreurId=${livreurId}`
     );
   }
 
