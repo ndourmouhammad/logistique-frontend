@@ -72,3 +72,10 @@ export interface EtapeFeuilleRoute {
   detail: string;
   statut: 'DONE' | 'ACTIVE' | 'PENDING';
 }
+
+export interface TourneeHistoriqueResponse {
+  trajet: string;
+  date: string;
+  nbLots: number;
+  statut: string;
+}

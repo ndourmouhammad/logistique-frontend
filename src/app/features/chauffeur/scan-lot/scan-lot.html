@@ -1,79 +1,116 @@
-<div class="bg-slate-900 h-screen flex flex-col text-white">
+<div class="bg-slate-900 min-h-[calc(100vh-4rem)] text-white pb-80 relative">
 
   <!-- Header -->
-  <div class="bg-slate-900 px-4 pt-6 pb-4 flex items-center gap-3 z-10 border-b border-white/10">
-    <a routerLink="/chauffeur/feuille-route" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center shrink-0">
+  <div class="bg-slate-900 px-4 pt-6 pb-4 flex items-center gap-3 z-10 border-b border-white/5 sticky top-0">
+    <a routerLink="/chauffeur/feuille-route" class="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center shrink-0 transition-colors">
       <i class="ti ti-arrow-left text-xl"></i>
     </a>
     <div class="flex-1">
-      <h1 class="font-bold text-base">Mes colis à transporter</h1>
-      <p class="text-xs text-white/50">{{ hubNom }} · Chargement</p>
+      <h1 class="font-bold text-lg tracking-tight">Mes colis à transporter</h1>
+      <p class="text-xs text-white/50 flex items-center gap-1.5 mt-0.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-tt-orange animate-pulse"></span>
+        {{ hubNom }} · Chargement
+      </p>
     </div>
-    <div class="bg-white/10 rounded-lg px-2.5 py-1 text-xs font-bold text-emerald-400 border border-emerald-500/30">
+    <div class="bg-emerald-500/10 rounded-lg px-3 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/20 shadow-sm shadow-emerald-500/10">
       {{ colisCharges() }}/{{ totalColis() }}
     </div>
   </div>
 
   <!-- Zone principale -->
-  <div class="flex-1 overflow-y-auto px-4 py-4">
+  <div class="px-4 py-6">
 
     @if (erreurMessage()) {
-      <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4 text-red-400 text-sm">
-        {{ erreurMessage() }}
+      <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 mb-6 text-red-400 text-sm flex items-start gap-3 backdrop-blur-sm">
+        <i class="ti ti-alert-circle text-lg shrink-0 mt-0.5"></i>
+        <p>{{ erreurMessage() }}</p>
       </div>
     }
 
     @if (isLoading()) {
-      <div class="text-center py-10">
-        <i class="ti ti-loader-2 animate-spin text-3xl text-tt-orange"></i>
+      <div class="text-center py-20 flex flex-col items-center justify-center">
+        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 border border-white/10">
+          <i class="ti ti-loader-2 animate-spin text-2xl text-tt-orange"></i>
+        </div>
+        <p class="text-white/40 text-sm font-medium">Chargement des données...</p>
       </div>
     } @else {
       @if (expeditions().length === 0) {
-        <div class="text-center py-10 text-white/40">
-          <i class="ti ti-package-off text-4xl mb-3 block"></i>
-          Aucune expédition affectée pour l'instant.
+        <div class="text-center py-20 flex flex-col items-center justify-center">
+          <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-5 border border-white/5">
+            <i class="ti ti-package-off text-4xl text-white/20"></i>
+          </div>
+          <h3 class="text-white/80 font-semibold mb-1">Aucune expédition</h3>
+          <p class="text-white/40 text-sm">Vous n'avez aucun colis affecté pour l'instant.</p>
         </div>
       } @else {
-        <div class="space-y-2 mb-4">
+        <div class="space-y-3">
           @for (e of expeditions(); track e.id) {
-            <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3">
-              <div class="w-7 h-7 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center shrink-0">
-                <i class="ti ti-check text-sm"></i>
+            <div class="group relative overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white/[0.04]">
+              <!-- Effet de brillance subtil sur la carte -->
+              <div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+              
+              <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 border border-emerald-500/20 shadow-inner">
+                <i class="ti ti-check text-lg"></i>
               </div>
               <div class="flex-1 min-w-0">
-                <div class="font-mono text-sm font-semibold">{{ e.codeTracking }}</div>
-                <div class="text-xs text-white/50 truncate">
-                  {{ e.nomDestinataire }} →
-                  {{ e.modeLivraison === 'RETRAIT_RELAIS' && e.villePointRelais
-                     ? e.villePointRelais
-                     : e.villeDestinataire }}
+                <div class="font-mono text-[15px] tracking-wide font-semibold text-white/90 mb-1">{{ e.codeTracking }}</div>
+                <div class="text-xs text-white/40 truncate flex items-center gap-1.5">
+                  <i class="ti ti-user text-[10px]"></i> {{ e.nomDestinataire }} 
+                  <i class="ti ti-arrow-right text-[10px] text-white/20"></i>
+                  <span class="text-white/60 font-medium">
+                    {{ e.modeLivraison === 'RETRAIT_RELAIS' && e.villePointRelais ? e.villePointRelais : e.villeDestinataire }}
+                  </span>
                 </div>
               </div>
-              <span class="text-[10px] bg-white/10 text-white/60 px-2 py-0.5 rounded-full font-semibold shrink-0">
-                {{ e.poids }} kg
-              </span>
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <span class="text-xs bg-slate-800 text-white/70 px-2.5 py-1 rounded-lg font-semibold shadow-sm border border-white/5">
+                  {{ e.poids }} kg
+                </span>
+              </div>
             </div>
           }
+        </div>
+        
+        <!-- BARRE DE PROGRESSION ORANGE COMPLETEMENT ISOLEE EN HAUT -->
+        <div class="mt-8 bg-white/[0.03] border border-white/10 rounded-2xl p-5 shadow-sm">
+          <div class="flex justify-between items-end mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white/90 flex items-center gap-2">
+                <i class="ti ti-box text-tt-orange text-lg"></i>
+                Progression du chargement
+              </h3>
+              <p class="text-xs text-white/50 mt-1">Colis scannés et prêts</p>
+            </div>
+            <div class="text-xl font-black text-tt-orange">
+              {{ colisCharges() }}/{{ totalColis() }}
+            </div>
+          </div>
+          <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden shadow-inner border border-white/5">
+            <div class="h-full bg-gradient-to-r from-tt-orange to-orange-400 rounded-full transition-all duration-700 ease-out relative" [style.width]="progression() + '%'">
+              <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
+            </div>
+          </div>
         </div>
       }
     }
   </div>
 
-  <!-- Bottom Panel -->
-  <div class="bg-slate-900 rounded-t-3xl px-4 py-6 border-t border-white/10 relative z-20 pb-28">
-    <div class="flex justify-between items-center mb-3">
-      <h3 class="text-sm font-semibold">Colis chargés ({{ colisCharges() }}/{{ totalColis() }})</h3>
-      <div class="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
-        <div class="h-full bg-tt-orange rounded-full transition-all" [style.width]="progression() + '%'"></div>
-      </div>
-    </div>
+  <!-- Panneau Flottant positionné au-dessus de la barre de navigation du bas -->
+  <div class="fixed bottom-16 left-0 right-0 p-4 z-40 pointer-events-none">
+    <div class="pointer-events-auto">
 
-    <button (click)="validerEtDemarrer()"
-      [disabled]="isValidating() || expeditions().length === 0"
-      class="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 disabled:opacity-40 transition-opacity">
-      <i [class]="isValidating() ? 'ti ti-loader-2 animate-spin' : 'ti ti-truck'"></i>
-      {{ isValidating() ? 'Démarrage en cours...' : 'Valider et démarrer le trajet' }}
-    </button>
+      <!-- Bouton d'action uniquement -->
+      <button (click)="validerEtDemarrer()"
+        [disabled]="isValidating() || expeditions().length === 0"
+        class="relative w-full bg-emerald-500 text-slate-900 py-4 rounded-2xl text-[16px] font-bold flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:bg-slate-800 disabled:text-white/30 transition-all hover:bg-emerald-400 hover:scale-[1.01] active:scale-95 shadow-[0_10px_30px_rgba(16,185,129,0.3)] disabled:shadow-none overflow-hidden group">
+        
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
+        
+        <i [class]="isValidating() ? 'ti ti-loader-2 animate-spin text-2xl' : 'ti ti-truck-delivery text-2xl'"></i>
+        {{ isValidating() ? 'Démarrage en cours...' : 'Valider et démarrer le trajet' }}
+      </button>
+    </div>
   </div>
 
 </div>

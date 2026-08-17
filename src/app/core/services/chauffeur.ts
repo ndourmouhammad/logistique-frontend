@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExpeditionListItem, FeuilleRouteResponse } from '../models/relais.model';
+import { ExpeditionListItem, FeuilleRouteResponse, TourneeHistoriqueResponse } from '../models/relais.model';
 
 @Injectable({ providedIn: 'root' })
 export class ChauffeurService {
@@ -58,6 +58,12 @@ confirmerArrivee(chauffeurId: number): Observable<ExpeditionListItem[]> {
 getFeuilleRoute(chauffeurId: number): Observable<FeuilleRouteResponse> {
   return this.http.get<FeuilleRouteResponse>(
     `${this.apiUrl}/feuille-route?chauffeurId=${chauffeurId}`
+  );
+}
+
+getHistoriqueTournees(chauffeurId: number): Observable<TourneeHistoriqueResponse[]> {
+  return this.http.get<TourneeHistoriqueResponse[]>(
+    `${this.apiUrl}/historique-tournees?chauffeurId=${chauffeurId}`
   );
 }
 
