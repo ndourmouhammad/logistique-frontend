@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ChauffeurLayout } from '../../../shared/components/chauffeur-layout/chauffeur-layout';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-historique-tournees',
@@ -9,9 +10,17 @@ import { ChauffeurLayout } from '../../../shared/components/chauffeur-layout/cha
   templateUrl: './historique-tournees.html',
   styleUrl: './historique-tournees.scss',
 })
-export class HistoriqueTournees {
-  nomChauffeur = 'Modou Diagne';
-  initiales    = 'MD';
+export class HistoriqueTournees implements OnInit {
+  nomChauffeur = '';
+  initiales    = '';
+
+  private authService = inject(Auth);
+
+  ngOnInit() {
+    const nom = this.authService.getNomComplet() || 'Chauffeur';
+    this.nomChauffeur = nom;
+    this.initiales = nom.trim().split(/\s+/).map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase();
+  }
 
   tourneeActive = {
     code:     'T-DKR-STL-01',

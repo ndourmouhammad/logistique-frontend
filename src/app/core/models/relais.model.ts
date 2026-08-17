@@ -45,3 +45,30 @@ export interface PointRelaisContext {
   nomEnseigne: string;
   ville:       string;
 }
+
+export interface FeuilleRouteResponse {
+  trajetJour: TrajetJourFeuilleRoute;
+  kpis: KpisFeuilleRoute;
+  etapes: EtapeFeuilleRoute[];
+}
+
+export interface TrajetJourFeuilleRoute {
+  depart: string;
+  arrivee: string;
+  heure: string;
+}
+
+export interface KpisFeuilleRoute {
+  hubs: number;
+  colis: number;
+  duree: string;
+}
+
+export interface EtapeFeuilleRoute {
+  num: number;
+  nom: string;
+  action: string;
+  heure: string;
+  detail: string;
+  statut: 'DONE' | 'ACTIVE' | 'PENDING';
+}
