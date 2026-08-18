@@ -43,7 +43,17 @@ export class FeuilleRoute implements OnInit {
         if (res) {
           this.trajetJour = res.trajetJour || { depart: '?', arrivee: '?', heure: '?' };
           this.kpis = res.kpis || { hubs: 0, colis: 0, duree: '0h' };
-          this.etapes = res.etapes || [];
+          
+          let fetchedEtapes = res.etapes || [];
+          // Adaptation dynamique côté frontend : si l'étape est terminée, on change le libellé
+          fetchedEtapes = fetchedEtapes.map((etape: any) => {
+            if (etape.statut === 'DONE' && etape.detail && etape.detail.includes('à charger')) {
+              etape.detail = etape.detail.replace('à charger', 'chargés');
+            }
+            return etape;
+          });
+          
+          this.etapes = fetchedEtapes;
           this.cdr.detectChanges(); // Forcer la mise à jour de la vue
         }
       },
@@ -53,7 +63,18 @@ export class FeuilleRoute implements OnInit {
     });
   }
 
-  demarrerChargement() {
-    this.router.navigate(['/chauffeur/scan-lot']);
+  get isChargementTermine(): boolean {
+    if (this.etapes && this.etapes.length > 0) {
+      return this.etapes[0].statut === 'DONE';
+    }
+    return false;
+  }
+
+  actionPrincipale() {
+    if (this.isChargementTermine) {
+      this.router.navigate(['/chauffeur/trajet']);
+    } else {
+      this.router.navigate(['/chauffeur/scan-lot']);
+    }
   }
 }

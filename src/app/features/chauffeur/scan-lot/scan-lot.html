@@ -46,9 +46,9 @@
       } @else {
         <div class="space-y-3">
           @for (e of expeditions(); track e.id) {
-            <div class="group relative overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white/[0.04]">
+            <div class="group relative overflow-hidden bg-white/2 border border-white/5 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white/4">
               <!-- Effet de brillance subtil sur la carte -->
-              <div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+              <div class="absolute top-0 left-0 w-1/2 h-full bg-linear-to-r from-transparent via-white/5 to-transparent -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
               
               <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 border border-emerald-500/20 shadow-inner">
                 <i class="ti ti-check text-lg"></i>
@@ -73,7 +73,7 @@
         </div>
         
         <!-- BARRE DE PROGRESSION ORANGE COMPLETEMENT ISOLEE EN HAUT -->
-        <div class="mt-8 bg-white/[0.03] border border-white/10 rounded-2xl p-5 shadow-sm">
+        <div class="mt-8 bg-white/3 border border-white/10 rounded-2xl p-5 shadow-sm">
           <div class="flex justify-between items-end mb-3">
             <div>
               <h3 class="text-sm font-bold text-white/90 flex items-center gap-2">
@@ -87,7 +87,7 @@
             </div>
           </div>
           <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden shadow-inner border border-white/5">
-            <div class="h-full bg-gradient-to-r from-tt-orange to-orange-400 rounded-full transition-all duration-700 ease-out relative" [style.width]="progression() + '%'">
+            <div class="h-full bg-linear-to-r from-tt-orange to-orange-400 rounded-full transition-all duration-700 ease-out relative" [style.width]="progression() + '%'">
               <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
             </div>
           </div>
@@ -105,7 +105,7 @@
         [disabled]="isValidating() || expeditions().length === 0"
         class="relative w-full bg-emerald-500 text-slate-900 py-4 rounded-2xl text-[16px] font-bold flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:bg-slate-800 disabled:text-white/30 transition-all hover:bg-emerald-400 hover:scale-[1.01] active:scale-95 shadow-[0_10px_30px_rgba(16,185,129,0.3)] disabled:shadow-none overflow-hidden group">
         
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
         
         <i [class]="isValidating() ? 'ti ti-loader-2 animate-spin text-2xl' : 'ti ti-truck-delivery text-2xl'"></i>
         {{ isValidating() ? 'Démarrage en cours...' : 'Valider et démarrer le trajet' }}
