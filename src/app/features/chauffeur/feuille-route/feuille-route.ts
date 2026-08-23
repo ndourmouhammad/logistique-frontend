@@ -45,10 +45,15 @@ export class FeuilleRoute implements OnInit {
           this.kpis = res.kpis || { hubs: 0, colis: 0, duree: '0h' };
           
           let fetchedEtapes = res.etapes || [];
+          
           // Adaptation dynamique côté frontend : si l'étape est terminée, on change le libellé
           fetchedEtapes = fetchedEtapes.map((etape: any) => {
             if (etape.statut === 'DONE' && etape.detail && etape.detail.includes('à charger')) {
               etape.detail = etape.detail.replace('à charger', 'chargés');
+            }
+            // Aligner l'heure de la première étape sur l'heure de départ prévue pour éviter la confusion (les -15 min)
+            if (etape.num === 1 && this.trajetJour && this.trajetJour.heure) {
+              etape.heure = this.trajetJour.heure;
             }
             return etape;
           });

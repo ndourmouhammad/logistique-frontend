@@ -80,7 +80,7 @@
             <div class="w-6 h-6 rounded-full bg-tt-orange text-white flex items-center justify-center shrink-0 font-bold text-xs">{{ etape.num }}</div>
             <div class="flex-1">
               <div class="font-bold text-navy text-sm">{{ etape.nom }}</div>
-              <div class="text-xs text-slate-600">Arrivée prévue · {{ etape.heure }}</div>
+              <div class="text-xs text-slate-600">{{ etape.num === 1 ? 'Départ prévu' : 'Arrivée prévue' }} · {{ etape.heure }}</div>
             </div>
           </div>
           <div class="pl-9 flex gap-2 flex-wrap items-center">
