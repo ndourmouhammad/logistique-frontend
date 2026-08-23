@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminLayout } from '../../../shared/components/admin-layout/admin-layout';
@@ -18,6 +18,14 @@ export class DashboardAdmin implements OnInit {
   isLoading = signal(false);
 
   expeditionsRecentes: any[] = [];
+
+  regionEntries = computed(() => {
+    const rep = this.stats()?.repartitionParRegion;
+    if (!rep) return [];
+    return Object.entries(rep)
+      .map(([key, value]) => ({ key, value }))
+      .sort((a, b) => b.value - a.value);
+  });
 
   private adminService = inject(AdminService);
 
@@ -54,9 +62,14 @@ export class DashboardAdmin implements OnInit {
       'EN_COURS_LIVRAISON': 'En livraison',
       'EN_TRANSIT':         'En transit',
       'RECU_AU_HUB':        'Au hub',
-      'LIVRE':              'Livré',
+      'LIVRE':              'LivrÃ©',
       'EN_LITIGE':          'En litige',
     };
     return map[statut] || statut;
+  }
+
+  getRegionColor(index: number): string {
+    const colors = ['bg-navy', 'bg-tt-orange', 'bg-sky-500', 'bg-slate-300', 'bg-emerald-500', 'bg-purple-500'];
+    return colors[index % colors.length];
   }
 }

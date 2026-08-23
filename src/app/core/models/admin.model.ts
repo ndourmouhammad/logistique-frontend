@@ -9,6 +9,7 @@ export interface AdminStats {
   totalRelais:        number;
   totalVehicules:     number;
   tauxLivraison:      number;
+  repartitionParRegion?: { [key: string]: number };
 }
 
 export interface UtilisateurAdmin {
